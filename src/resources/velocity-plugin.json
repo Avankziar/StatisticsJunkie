@@ -1,8 +1,8 @@
-{"id":"basetemplate",
-"name":"BaseTemplate",
-"version":"x-x-x",
-"description":"base for template",
+{"id":"statisticsjunkie",
+"name":"StatisticsJunkie",
+"version":"1-0-0",
+"description":"A MC plugin for statistical purpose.",
 "authors":["Avankziar"],
-"url":"https://example.com",
+"url":"TBA",
 "dependencies":[{id='interfacehub', version='null', optional=false}],
-"main":"main.java.me.avankziar.bm.velocity.bm"}
+"main":"me.avankziar.sj.velocity.SJ"}

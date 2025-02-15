@@ -1,4 +1,4 @@
-name: BaseTemplate
-main: main.java.me.avankziar.base.bungee.BM
+name: StatisticsJunkie
+main: me.avankziar.sj.bungee.SJ
 version: 1
 author: Avankziar
