@@ -79,5 +79,32 @@ public class StatisticIncrementListener implements Listener
 					mat != null ? mat.toString() : (ent != null ? ent.toString() : "null"), add);
 			SJ.getPlugin().getMysqlHandler().create(se);
 		}
+		switch(statisticType)
+		{
+		default:
+			return;
+		case DROP_ITEM:
+		case PICKUP_ITEM:
+		case MINE_BLOCK:
+		case USE_ITEM:
+		case BREAK_ITEM:
+		case CRAFT_ITEM:
+		case KILL_ENTITY:
+		case ENTITY_KILLED_BY:
+			se = SJ.getPlugin().getMysqlHandler().getData(new StatisticEntry(), 
+					"`player_uuid` = ? AND `statistic_type` = ? AND `material_or_entitytype` = ?", 
+					uuid.toString(), statisticType.toString(), "null");
+			if(se != null)
+			{
+				se.setStatisticValue(se.getStatisticValue() + (long) add);
+				SJ.getPlugin().getMysqlHandler().updateData(se,
+						"`player_uuid` = ? AND `statistic_type` = ? AND `material_or_entitytype` = ?", 
+						uuid.toString(), statisticType.toString(), "null");
+			} else
+			{
+				se = new StatisticEntry(0, uuid, statisticType, "null", add);
+				SJ.getPlugin().getMysqlHandler().create(se);
+			}
+		}
 	}
 }

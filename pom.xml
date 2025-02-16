@@ -111,6 +111,12 @@
 	    </repository>
 	</repositories>
 	<dependencies>
+		<!-- InterfaceHub -->
+		<repository>
+	        <id>github</id>
+      		<name>GitHub Avankziar Apache Maven Packages</name>
+	        <url>https://maven.pkg.github.com/Avankziar/InterfaceHub</url>
+	    </repository>
 		<!--Spigot API-->
 		<dependency>
 			<groupId>org.spigotmc</groupId>
@@ -168,6 +174,12 @@
 		    <artifactId>worldguard-bukkit</artifactId>
 		    <version>7.0.10</version>
 		    <scope>provided</scope>
+		</dependency>
+		<!-- Apache Commons IO -->
+		<dependency>
+		  <groupId>commons-io</groupId>
+		  <artifactId>commons-io</artifactId>
+		  <version>2.16.1</version>
 		</dependency>
 	</dependencies>
 </project>

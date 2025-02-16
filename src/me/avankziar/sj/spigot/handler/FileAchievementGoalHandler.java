@@ -1,7 +1,11 @@
 package me.avankziar.sj.spigot.handler;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.bukkit.Material;
 
@@ -16,6 +20,27 @@ public class FileAchievementGoalHandler
 	public static HashMap<String, FileAchievementGoal> getFileAchievementGoal()
 	{
 		return fileAchievementGoalMap;
+	}
+	
+	public static List<Entry<String, FileAchievementGoal>> getGuiSortedFileAchievement()
+	{
+		List<Map.Entry<String, FileAchievementGoal>> sortedEntries = new ArrayList<>(fileAchievementGoalMap.entrySet());
+        sortedEntries.sort(Comparator.comparingInt(entry -> entry.getValue().getGuiSlot()));
+        return sortedEntries;
+	}
+	
+	public static ArrayList<FileAchievementGoal> getGuiSortedFileAchievement(int start, int end)
+	{
+		List<Map.Entry<String, FileAchievementGoal>> sortedEntries = getGuiSortedFileAchievement();
+		ArrayList<FileAchievementGoal> sublist = new ArrayList<>();
+		for(int i = 0; i < sortedEntries.size(); i++)
+		{
+			if(i >= start && i <= end)
+			{
+				sublist.add(sortedEntries.get(i).getValue());
+			}
+		}
+		return sublist;
 	}
 	
 	public static void init(boolean reload)

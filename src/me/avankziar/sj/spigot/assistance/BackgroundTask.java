@@ -10,13 +10,15 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.avankziar.sj.general.objects.AchievementGoal;
 import me.avankziar.sj.general.objects.FileAchievementGoal;
+import me.avankziar.sj.general.objects.StatisticEntry;
 import me.avankziar.sj.spigot.SJ;
 import me.avankziar.sj.spigot.handler.FileAchievementGoalHandler;
+import me.avankziar.sj.spigot.handler.MessageHandler;
 
 public class BackgroundTask
 {
 	private static SJ plugin;
-	private static HashMap<UUID, ArrayList<FileAchievementGoal>> playerAchievementGoal = new HashMap<>();
+	public static HashMap<UUID, ArrayList<FileAchievementGoal>> playerAchievementGoal = new HashMap<>();
 	
 	public BackgroundTask(SJ plugin)
 	{
@@ -29,7 +31,7 @@ public class BackgroundTask
 		return true;
 	}
 	
-	private void checkAchievementGoal(Player player)
+	public static void checkAchievementGoal(Player player)
 	{
 		if(player != null)
 		{
@@ -53,17 +55,31 @@ public class BackgroundTask
 				final UUID uuid = player.getUniqueId();
 				ArrayList<FileAchievementGoal> l = playerAchievementGoal.get(uuid);
 				AchievementGoal ag = new AchievementGoal();
+				StatisticEntry se = new StatisticEntry();
 				for(Iterator<FileAchievementGoal> iter = l.iterator(); 
 						iter.hasNext();)
 				{
 					FileAchievementGoal favg = iter.next();
-					if(SJ.getPlugin().getMysqlHandler().exist(ag, "`player_uuid` = ? AND `achievement_goal_uniquename` = ?", 
+					if(SJ.getPlugin().getMysqlHandler().exist(ag, 
+							"`player_uuid` = ? AND `achievement_goal_uniquename` = ?", 
 							uuid.toString(), favg.getAchievementGoalUniqueName()))
 					{
 						l.remove(favg);
 						continue;
 					}
-					
+					if(!SJ.getPlugin().getMysqlHandler().exist(se, 
+							"`player_uuid` = ? AND `statistic_type` = ? AND `material_or_entitytype` = ? AND `statistic_value` >= ?",
+							uuid.toString(), favg.getStatisticType().toString(), favg.getMaterialEntityType(), favg.getStatisticValue()))
+					{
+						continue;
+					}
+					AchievementGoal avg = new AchievementGoal(0, uuid, favg.getAchievementGoalUniqueName(), System.currentTimeMillis());
+					SJ.getPlugin().getMysqlHandler().create(avg);
+					if(favg.isBroadcast())
+					{
+						MessageHandler.sendMessage(favg.getBroadcastMessage()
+								.toArray(new String[favg.getBroadcastMessage().size()]));
+					}
 				}
 				playerAchievementGoal.put(uuid, l);
 			}

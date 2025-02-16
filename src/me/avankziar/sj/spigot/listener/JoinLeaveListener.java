@@ -2,6 +2,7 @@ package me.avankziar.sj.spigot.listener;
 
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -11,6 +12,7 @@ import me.avankziar.sj.general.objects.PlayerData;
 import me.avankziar.sj.general.objects.StatisticEntry;
 import me.avankziar.sj.general.objects.StatisticType;
 import me.avankziar.sj.spigot.SJ;
+import me.avankziar.sj.spigot.assistance.BackgroundTask;
 
 public class JoinLeaveListener implements Listener
 {
@@ -70,5 +72,6 @@ public class JoinLeaveListener implements Listener
 			se = new StatisticEntry(0, uuid, statisticType, "null", 1);
 			SJ.getPlugin().getMysqlHandler().create(se);
 		}
+		BackgroundTask.checkAchievementGoal(Bukkit.getPlayer(uuid));
 	}
 }

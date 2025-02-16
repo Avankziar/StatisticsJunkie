@@ -19,8 +19,11 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.SimplePluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import me.avankziar.ifh.spigot.administration.Administration;
+import me.avankziar.ifh.spigot.tobungee.chatlike.MessageToBungee;
+import me.avankziar.ifh.spigot.tovelocity.chatlike.MessageToVelocity;
 import me.avankziar.sj.general.assistance.Utility;
 import me.avankziar.sj.general.cmdtree.BaseConstructor;
 import me.avankziar.sj.general.cmdtree.CommandConstructor;
@@ -54,6 +57,9 @@ public class SJ extends JavaPlugin
 	private static boolean worldGuard = false;
 	
 	private Administration administrationConsumer;
+	
+	private MessageToVelocity mtvConsumer;
+	private MessageToBungee mtbConsumer;
 	
 	public void onLoad() 
 	{
@@ -335,7 +341,94 @@ public class SJ extends JavaPlugin
 	
 	public void setupIFHConsumer()
 	{
-		
+		setupIFHMessageToVelocity();
+	}
+	
+	private void setupIFHMessageToVelocity() 
+	{
+        if(Bukkit.getPluginManager().getPlugin("InterfaceHub") == null) 
+        {
+            return;
+        }
+        new BukkitRunnable()
+        {
+        	int i = 0;
+			@Override
+			public void run()
+			{
+				try
+				{
+					if(i == 20)
+				    {
+						cancel();
+						setupIFHMessageTBungee();
+						return;
+				    }
+				    RegisteredServiceProvider<me.avankziar.ifh.spigot.tovelocity.chatlike.MessageToVelocity> rsp = 
+		                             getServer().getServicesManager().getRegistration(
+		                            		 me.avankziar.ifh.spigot.tovelocity.chatlike.MessageToVelocity.class);
+				    if(rsp == null) 
+				    {
+				    	i++;
+				        return;
+				    }
+				    mtvConsumer = rsp.getProvider();
+				    logger.info(pluginname + " detected InterfaceHub >>> MessageToVelocity.class is consumed!");
+				    cancel();
+				} catch(NoClassDefFoundError e)
+				{
+					cancel();
+				}			    
+			}
+        }.runTaskTimer(plugin, 20L, 20*2);
+	}
+	
+	public MessageToVelocity getMtV()
+	{
+		return mtvConsumer;
+	}
+	
+	private void setupIFHMessageTBungee() 
+	{
+        if(Bukkit.getPluginManager().getPlugin("InterfaceHub") == null) 
+        {
+            return;
+        }
+        new BukkitRunnable()
+        {
+        	int i = 0;
+			@Override
+			public void run()
+			{
+				try
+				{
+					if(i == 20)
+				    {
+						cancel();
+						return;
+				    }
+				    RegisteredServiceProvider<me.avankziar.ifh.spigot.tobungee.chatlike.MessageToBungee> rsp = 
+		                             getServer().getServicesManager().getRegistration(
+		                            		 me.avankziar.ifh.spigot.tobungee.chatlike.MessageToBungee.class);
+				    if(rsp == null) 
+				    {
+				    	i++;
+				        return;
+				    }
+				    mtbConsumer = rsp.getProvider();
+				    logger.info(pluginname + " detected InterfaceHub >>> MessageToBungee.class is consumed!");
+				    cancel();
+				} catch(NoClassDefFoundError e)
+				{
+					cancel();
+				}			    
+			}
+        }.runTaskTimer(plugin, 20L, 20*2);
+	}
+	
+	public MessageToBungee getMtB()
+	{
+		return mtbConsumer;
 	}
 	
 	private void setupWordEditGuard()

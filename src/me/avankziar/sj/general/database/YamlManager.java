@@ -6,8 +6,12 @@ import java.util.EnumSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import org.bukkit.Material;
+
 import me.avankziar.sj.general.database.Language.ISO639_2B;
+import me.avankziar.sj.general.objects.StatisticType;
 import me.avankziar.sj.spigot.ModifierValueEntry.Bypass;
+import me.avankziar.sj.spigot.gui.objects.GuiType;
 
 public class YamlManager
 {	
@@ -19,7 +23,7 @@ public class YamlManager
 	private ISO639_2B languageType = ISO639_2B.GER;
 	//The default language of your plugin. Mine is german.
 	private ISO639_2B defaultLanguageType = ISO639_2B.GER;
-	private Type type;
+	private static Type type;
 	
 	//Per Flatfile a linkedhashmap.
 	private static LinkedHashMap<String, Language> configKeys = new LinkedHashMap<>();
@@ -31,16 +35,17 @@ public class YamlManager
 	 * Here are mutiplefiles in one "double" map. The first String key is the filename
 	 * So all filename muss be predefine. For example in the config.
 	 */
-	private static LinkedHashMap<String, LinkedHashMap<String, Language>> guisKeys = new LinkedHashMap<>();
+	private static LinkedHashMap<GuiType, LinkedHashMap<String, Language>> guisKeys = new LinkedHashMap<>();
 	
 	public YamlManager(Type type)
 	{
-		this.type = type;
+		YamlManager.type = type;
 		initConfig();
 		if(type == Type.SPIGOT)
 		{
 			initCommands();
 			initLanguage();
+			initFileAchievementGoal();
 		}
 		initModifierValueEntryLanguage();
 	}
@@ -85,7 +90,7 @@ public class YamlManager
 		return achievementgoalKeys;
 	}
 	
-	public LinkedHashMap<String, LinkedHashMap<String, Language>> getGUIKey()
+	public LinkedHashMap<GuiType, LinkedHashMap<String, Language>> getGUIKey()
 	{
 		return guisKeys;
 	}
@@ -303,9 +308,9 @@ public class YamlManager
 		}
 	}
 	
-	private String convertMiniMessageToBungee(String s)
+	public static String convertMiniMessageToBungee(String s)
 	{
-		if(type != Type.BUNGEE)
+		if(type == null || type != Type.BUNGEE)
 		{
 			//If Server is not Bungee, there is no need to convert.
 			return s;
@@ -808,6 +813,104 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&c✖",
 						"&c✖"}));
+	}
+	
+	public void initFileAchievementGoal() 
+	{
+		setFileAchievementGoal("block_break_1M",
+				"<red>Blöcke Abbauen: <white>1 Millionen",
+				"<red>Block break: <white>1 Million",
+				StatisticType.MINE_BLOCK, "null", 1000000,
+				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
+				new Object[] {
+				"<bold><gold>Gratulation!",
+				"<gold>Spieler <white>%player% <gold>hat 1 Millionen Blöcke abgebaut!",
+				"<bold><gold>Congratulations!",
+				"<gold>Player <white>%player% <gold>has mined 1 million blocks!"}, 1, 
+				Material.STONE, new Object[] {
+						"<reset><green>Blöcke Abbauen: <white>1 Millionen",
+						"<reset><green>Block mined: <white>1 million"},
+				new Object[] {
+						"<reset>Du hast 1 Millionen",
+						"<reset>Blöcke aller Art abgebaut!",
+						"<reset>You have mined 1 million",
+						"<reset>blocks of all types!"
+				}, true, 
+				Material.BARRIER, new Object[] {
+						"<reset><red>Blöcke Abbauen: <white>1 Millionen",
+						"<reset><red>Block break: <white>1 Million"},
+				null, false);
+	}
+	
+	private void setFileAchievementGoal(String unique, String displayGER, String displayENG, StatisticType st, String matOrEnt,
+			long statisticValue,
+			Object[] executeCmd, boolean broadcast, Object[] broadcastMsg, int guiSlot,
+			Material item, Object[] itemDisplay, Object[] itemLore, boolean itemEnchGlintOverride,
+			Material itemIfNot, Object[] itemDisplayIfNot, Object[] itemLoreIfNot, Boolean itemEnchGlintOverrideIfNot)
+	{
+		LinkedHashMap<String, Language> goal = new LinkedHashMap<>();
+		goal.put("Uniquename", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						unique}));
+		goal.put("Displayname", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						displayGER,
+						displayENG}));
+		goal.put("StatisticType", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						st.toString()}));
+		goal.put("MaterialOrEntityType", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						matOrEnt}));
+		goal.put("GoalValue", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						statisticValue}));
+		goal.put("Reward.ExecuteCommandAsConsole", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, executeCmd));
+		goal.put("Reward.Broadcast", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						broadcast}));
+		goal.put("Reward.BroadcastMessage", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, broadcastMsg));
+		goal.put("Gui.SlotNumber", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						guiSlot}));
+		goal.put("Gui.Item.Material", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						item}));
+		goal.put("Gui.Item.Displayname", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, itemDisplay));
+		if(itemLore != null)
+		{
+			goal.put("Gui.Item.Lore", 
+					new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, itemLore));
+		}
+		goal.put("Gui.Item.EnchantmentGlintOverride", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						itemEnchGlintOverride}));
+		if(itemIfNot != null)
+		{
+			goal.put("Gui.ItemIfNotAchieved.Material", 
+					new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+							itemIfNot}));
+			if(itemDisplayIfNot != null)
+			{
+				goal.put("Gui.ItemIfNotAchieved.Displayname", 
+						new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, itemDisplayIfNot));
+				if(itemLoreIfNot != null)
+				{
+					goal.put("Gui.ItemIfNotAchieved.Lore", 
+							new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, itemLoreIfNot));
+				}
+				if(itemEnchGlintOverrideIfNot != null)
+				{
+					goal.put("Gui.ItemIfNotAchieved.EnchantmentGlintOverride", 
+							new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+									itemEnchGlintOverrideIfNot}));
+				}
+			}
+		}
+		achievementgoalKeys.put(unique, goal);
 	}
 	
 	public void initModifierValueEntryLanguage() //INFO:BonusMalusLanguages

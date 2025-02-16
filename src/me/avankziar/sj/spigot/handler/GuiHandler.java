@@ -1,10 +1,68 @@
 package me.avankziar.sj.spigot.handler;
 
+import java.net.URL;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.UUID;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Color;
+import org.bukkit.DyeColor;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
+import org.bukkit.block.banner.Pattern;
+import org.bukkit.block.banner.PatternType;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Axolotl;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.TropicalFish;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ArmorMeta;
+import org.bukkit.inventory.meta.AxolotlBucketMeta;
+import org.bukkit.inventory.meta.BannerMeta;
+import org.bukkit.inventory.meta.BookMeta;
+import org.bukkit.inventory.meta.BookMeta.Generation;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.inventory.meta.Repairable;
+import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.inventory.meta.TropicalFishBucketMeta;
+import org.bukkit.inventory.meta.trim.ArmorTrim;
+import org.bukkit.inventory.meta.trim.TrimMaterial;
+import org.bukkit.inventory.meta.trim.TrimPattern;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.profile.PlayerProfile;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import dev.dejvokep.boostedyaml.YamlDocument;
+import me.avankziar.sj.general.assistance.ChatApiS;
+import me.avankziar.sj.general.assistance.TimeHandler;
+import me.avankziar.sj.general.objects.AchievementGoal;
+import me.avankziar.sj.general.objects.FileAchievementGoal;
+import me.avankziar.sj.spigot.SJ;
+import me.avankziar.sj.spigot.assistance.BackgroundTask;
+import me.avankziar.sj.spigot.gui.GUIApi;
+import me.avankziar.sj.spigot.gui.events.ClickFunction;
+import me.avankziar.sj.spigot.gui.objects.ClickFunctionType;
+import me.avankziar.sj.spigot.gui.objects.ClickType;
+import me.avankziar.sj.spigot.gui.objects.GuiType;
+import me.avankziar.sj.spigot.gui.objects.SettingsLevel;
+
 public class GuiHandler
 {
-	/*private static BM plugin = BM.getPlugin();
-	public static String PDT_PAGE = "page",
-			PDT_PLOT_ID = "plot_id";
+	private static SJ plugin = SJ.getPlugin();
+	public static String PDT_PAGE = "page";
 	
 	//Replacer for Displayname & Lore
 	public static String 
@@ -17,85 +75,125 @@ public class GuiHandler
 			TAX_COST = "%tax%",
 			OWNER = "%owner%";
 	
-	public static void openGs(Player player, SettingsLevel settingsLevel, Inventory inv, boolean closeInv, int pagination)
+	public static void openAchievement(Player player, SettingsLevel settingsLevel, Inventory inv, boolean closeInv, int pagination, UUID other, String othername)
 	{
-		GuiType gt = GuiType.GS;
-		GUIApi gui = new GUIApi(plugin.pluginName, gt.toString(), null, 6, ChatApi.tl(plugin.getYamlHandler().getLang().getString("Gui.Title", "<gold>Immobilen")),
-				settingsLevel == null ? SettingsLevel.NOLEVEL : settingsLevel);
-		openGui(player, gt, gui, closeInv, pagination);		
+		GuiType gt = GuiType.ACHIEVEMENT;
+		GUIApi gui = new GUIApi(SJ.pluginname, gt.toString(), null, 6, ChatApiS.tlItem(plugin.getYamlHandler().getLang().getString("Gui.Title", "<gold>Achievements")));
+		openGui(player, gt, gui, closeInv, pagination, other, othername);		
 	}
 	
-	private static void openGui(Player player, GuiType gt, GUIApi gui, boolean closeInv, int pagination)
+	private static void openGui(Player player, GuiType gt, GUIApi gui, boolean closeInv, int pagination, UUID other, String othername)
 	{
 		boolean fillNotDefineGuiSlots = true;
 		Material filler = Material.BLACK_STAINED_GLASS_PANE;
-		YamlDocument y = plugin.getYamlHandler().getGui(gt.toString());
+		YamlDocument y = plugin.getYamlHandler().getGui(gt);
 		switch(gt)
 		{
-		case GS:
-			ArrayList<Plot> plots = Plot.convert(plugin.getMysqlHandler().getList(MysqlType.PLOT, "`id` ASC", pagination*45, 45, "`id` > ?", 0));
-			for(int i = 0; i < 45; i++)
+		case ACHIEVEMENT:
+			ArrayList<FileAchievementGoal> list = FileAchievementGoalHandler.getGuiSortedFileAchievement(pagination*45, pagination*45 + 45);
+			ArrayList<FileAchievementGoal> notAchieved = BackgroundTask.playerAchievementGoal.get(other);
+			int i = 0;
+			for(FileAchievementGoal favg : list)
 			{
-				if(plots.size() == 0)
+				boolean notA = false;
+				for(FileAchievementGoal nAfavg : notAchieved)
 				{
-					PlotHandler.log("plots.size() == 0 || plots.size() < i :"+plots.size()+" "+i);
-					break;
+					if(nAfavg.getAchievementGoalUniqueName().equals(favg.getAchievementGoalUniqueName()))
+					{
+						notA = true;
+						break;
+					}
 				}
-				if(plots.size() <= i)
+				ItemStack is = null;
+				if(notA)
 				{
-					break;
-				}
-				Plot plot = plots.get(i);
-				if(plot == null)
+					if(favg.getDisplayItemIfNotAchievedMaterial() == null)
+					{
+						continue;
+					}
+					is = new ItemStack(favg.getDisplayItemIfNotAchievedMaterial());
+					if(favg.getDisplayItemIfNotAchievedDisplayName() != null)
+					{
+						ItemMeta im = is.getItemMeta();
+						im.setDisplayName(ChatApiS.tlItem(favg.getDisplayItemIfNotAchievedDisplayName().replace("%player%", othername)));
+						if(favg.getDisplayItemIfNotAchievedLore() != null && !favg.getDisplayItemIfNotAchievedLore().isEmpty())
+						{
+							ArrayList<String> l = new ArrayList<>();
+							favg.getDisplayItemIfNotAchievedLore().forEach(x -> 
+							{
+								l.add(ChatApiS.tlItem(x
+										.replace("%player%", othername)
+										
+										));
+							});
+							im.setLore(l);
+						}
+						if(favg.isDisplayItemIfNotAchievedEnchantmentGlintOverride())
+						{
+							im.setEnchantmentGlintOverride(true);
+						}
+						is.setItemMeta(im);
+					}
+				} else
 				{
-					PlotHandler.log("plot == null :"+plots.size()+" "+i);
-					filler(gui, i, filler, fillNotDefineGuiSlots);
-					continue;
+					AchievementGoal ag = plugin.getMysqlHandler().getData(new AchievementGoal(), 
+							"`player_uuid` = ? AND `achievement_goal_uniquename` = ?", 
+							other.toString(), favg.getAchievementGoalUniqueName());
+					if(favg.getDisplayItemMaterial() == null || ag == null)
+					{
+						continue;
+					}
+					is = new ItemStack(favg.getDisplayItemMaterial());
+					if(favg.getDisplayItemDisplayName() != null)
+					{
+						ItemMeta im = is.getItemMeta();
+						im.setDisplayName(ChatApiS.tlItem(favg.getDisplayItemDisplayName().replace("%player%", othername)));
+						if(favg.getDisplayItemLore() != null && !favg.getDisplayItemLore().isEmpty())
+						{
+							ArrayList<String> l = new ArrayList<>();
+							favg.getDisplayItemLore().forEach(x -> 
+							{
+								l.add(ChatApiS.tlItem(x
+										.replace("%player%", othername)
+										.replace("%time%", TimeHandler.getDateTime(ag.getReceivedTime()))
+										));
+							});
+							im.setLore(l);
+						}
+						if(favg.isDisplayItemEnchantmentGlintOverride())
+						{
+							im.setEnchantmentGlintOverride(true);
+						}
+						is.setItemMeta(im);
+					}
 				}
-				String path = null;
-				switch(plot.getBuyStatus())
-				{
-				case BUYABLE:
-					path = "green";
-					break;
-				case BLOCKED_TAX_NOT_PAID:
-					path = "orange";
-					break;
-				case BOUGHT:
-					path = "red";
-					break;
-				}
-				ItemStack is = generateItem(y, path, 0, player, plot);
 				LinkedHashMap<String, Entry<GUIApi.Type, Object>> map = new LinkedHashMap<>();
 				map.put(PDT_PAGE, new AbstractMap.SimpleEntry<GUIApi.Type, Object>(GUIApi.Type.INTEGER,
 						pagination));
-				map.put(PDT_PLOT_ID, new AbstractMap.SimpleEntry<GUIApi.Type, Object>(GUIApi.Type.INTEGER,
-						plot.getID()));
-				gui.add(i, is, SettingsLevel.BASE, true, true, map, getClickFunction(y, path));
+				gui.add(i, is, SettingsLevel.BASE, true, map, new ClickFunction[0]);
+				i++;
 			}
 		}
-		int allgs = plugin.getMysqlHandler().getCount(MysqlType.PLOT, "`id` > ?", 0);
-		double pagecount = (double) allgs / 45.0;
+		int allAchiv = FileAchievementGoalHandler.getFileAchievementGoal().size();
+		double pagecount = (double) allAchiv / 45.0;
 		boolean lastpage = pagecount <= Double.valueOf(pagination+1);
-		PlotHandler.log("allgs :"+allgs+" | pagecount : "+pagecount+" | lastpage : "+lastpage);
 		for(int i = 0; i < 54; i++)
 		{
 			if(y.get(i+".Material") == null)
 			{
-				PlotHandler.log("y.get(i+.Material) == null :"+gui.isSlotOccupied(i)+" "+i);
 				filler(gui, i, filler, fillNotDefineGuiSlots);
 				continue;
 			}
-			ItemStack is = generateItem(y, String.valueOf(i), 0, player, null);
+			ItemStack is = generateItem(y, String.valueOf(i), 0, player);
 			switch(gt)
 			{
-			case GS:
+			case ACHIEVEMENT:
 				LinkedHashMap<String, Entry<GUIApi.Type, Object>> map = new LinkedHashMap<>();
 				ClickFunction[] cf = getClickFunction(y, String.valueOf(i));
 				boolean breaks = false;
 				for(ClickFunction c : cf)
 				{
-					if(c.getFunction().equals(ClickFunctionType.GS_PAGE_NEXT.toString()))
+					if(c.getFunction().equals(ClickFunctionType.PAGE_NEXT.toString()))
 					{
 						if(lastpage)
 						{
@@ -111,7 +209,7 @@ public class GuiHandler
 							map.put(PDT_PAGE, new AbstractMap.SimpleEntry<GUIApi.Type, Object>(GUIApi.Type.INTEGER,
 									pagination+1));
 						}
-					} else if(c.getFunction().equals(ClickFunctionType.GS_PAGE_PAST.toString()))
+					} else if(c.getFunction().equals(ClickFunctionType.PAGE_PAST.toString()))
 					{
 						if(lastpage)
 						{
@@ -134,7 +232,7 @@ public class GuiHandler
 					filler(gui, i, filler, fillNotDefineGuiSlots);
 					break;
 				}
-				gui.add(i, is, SettingsLevel.BASE, true, true, map, cf);
+				gui.add(i, is, SettingsLevel.BASE, true, map, cf);
 			}
 		}
 		new BukkitRunnable()
@@ -152,7 +250,7 @@ public class GuiHandler
 	}
 	
 	@SuppressWarnings("deprecation")
-	public static ItemStack generateItem(YamlDocument y, String parentPath, int overrideAmount, Player player, Plot plot)
+	public static ItemStack generateItem(YamlDocument y, String parentPath, int overrideAmount, Player player)
 	{
 		if(y.get(parentPath+".Material") == null)
 		{
@@ -179,7 +277,7 @@ public class GuiHandler
 		ItemMeta im = is.getItemMeta();
 		if(y.get(parentPath+".Displayname") != null)
 		{
-			im.displayName(ChatApi.tl(getStringPlaceHolder(player, plot, y.getString(parentPath+".Displayname"), player.getName())));
+			im.setDisplayName(ChatApiS.tlItem(getStringPlaceHolder(player, y.getString(parentPath+".Displayname"), player.getName())));
 		}
 		if(y.get(parentPath+".CustomModelData") != null)
 		{
@@ -210,7 +308,7 @@ public class GuiHandler
 					{
 						if(!s.isEmpty() || !s.isBlank())
 						{
-							MDGS.logger.info("Enchantment Failed! '"+s+"' Lenght != 2 ");
+							SJ.logger.info("Enchantment Failed! '"+s+"' Lenght != 2 ");
 						}
 						continue;
 					}					
@@ -221,7 +319,7 @@ public class GuiHandler
 						esm.addStoredEnchant(e, Integer.parseInt(split[1]), true);
 					} catch(Exception e)
 					{
-						MDGS.logger.info("Enchantment Failed! '"+s+"' | "+e.getCause().getClass().getName());
+						SJ.logger.info("Enchantment Failed! '"+s+"' | "+e.getCause().getClass().getName());
 						continue;
 					}
 				}
@@ -239,7 +337,7 @@ public class GuiHandler
 					{
 						if(!s.isEmpty() || !s.isBlank())
 						{
-							MDGS.logger.info("Enchantment Failed! '"+s+"' Lenght != 2 ");
+							SJ.logger.info("Enchantment Failed! '"+s+"' Lenght != 2 ");
 						}
 						continue;
 					}					
@@ -250,7 +348,7 @@ public class GuiHandler
 						im.addEnchant(e, Integer.parseInt(split[1]), true);
 					} catch(Exception e)
 					{
-						MDGS.logger.info("Enchantment Failed! "+s+" | "+e.getCause().getClass().getName());
+						SJ.logger.info("Enchantment Failed! "+s+" | "+e.getCause().getClass().getName());
 						continue;
 					}
 				}
@@ -259,13 +357,12 @@ public class GuiHandler
 		if(y.get(parentPath+".Lore") != null)
 		{
 			ArrayList<String> lo = new ArrayList<>();
-			ArrayList<Component> lore = new ArrayList<>();
 			for(String s : y.getStringList(parentPath+".Lore"))
 			{
 				lo.add(s);
 			}
-			lore = (ArrayList<Component>) getLorePlaceHolder(player, plot, lo, player.getName());
-			im.lore(lore);
+			lo = (ArrayList<String>) getLorePlaceHolder(player, lo, player.getName());
+			im.setLore(lo);
 		}
 		is.setItemMeta(im);
 		if(y.get(parentPath+".ArmorMeta.TrimMaterial") != null 
@@ -424,57 +521,49 @@ public class GuiHandler
 	}
 	
 	@SuppressWarnings("deprecation")
-	public static ItemStack getSkull(String url, int amount) 
+	public static ItemStack getSkull(String paramString, int amount) 
 	{
-        ItemStack skull = new ItemStack(Material.PLAYER_HEAD, amount, (short) 3);
-        if (url == null || url.isEmpty())
-            return skull;
-        SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
-        GameProfile profile = new GameProfile(UUID.randomUUID(), "null");
-        byte[] encodedData = org.apache.commons.codec.binary.Base64.encodeBase64(String.format("{textures:{SKIN:{url:\"%s\"}}}", url).getBytes());
-        profile.getProperties().put("textures", new Property("textures", new String(encodedData)));
-        Field profileField = null;
-        try {
-            profileField = skullMeta.getClass().getDeclaredField("profile");
-        } catch (NoSuchFieldException | SecurityException e) {
-            e.printStackTrace();
-        }
-        profileField.setAccessible(true);
-        try {
-            profileField.set(skullMeta, profile);
-        } catch (IllegalArgumentException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        skull.setItemMeta(skullMeta);
-        return skull;
-    }
+		ItemStack is = new ItemStack(Material.PLAYER_HEAD, amount);
+		SkullMeta paramSkullMeta = (SkullMeta) is.getItemMeta();
+	    try 
+	    {
+	    	UUID uuid = UUID.randomUUID();
+	        PlayerProfile playerProfile = Bukkit.createPlayerProfile(uuid, "null");
+	        playerProfile.getTextures().setSkin(new URL(paramString));
+	        paramSkullMeta.setOwnerProfile(playerProfile);
+	    } catch (IllegalArgumentException|SecurityException|java.net.MalformedURLException illegalArgumentException) {
+	      illegalArgumentException.printStackTrace();
+	    }
+	    is.setItemMeta(paramSkullMeta);
+	    return is;
+	}
 	
-	public static List<Component> getLorePlaceHolder(Player player, Plot plot,
+	public static List<String> getLorePlaceHolder(Player player,
 			List<String> lore, String playername)
 	{
-		List<Component> list = new ArrayList<>();
+		List<String> list = new ArrayList<>();
 		for(String s : lore)
 		{
-			String a = getStringPlaceHolder(player, plot, s, playername);
+			String a = getStringPlaceHolder(player, s, playername);
 			if(a == null)
 			{
 				continue;
 			}
-			a = getStringPlaceHolderVault(player, plot, a, playername);
+			a = getStringPlaceHolderVault(player, a, playername);
 			if(a == null)
 			{
 				continue;
 			}
-			list.add(ChatApi.tl(a));
+			list.add(ChatApiS.tlItem(a));
 		}
 		return list;
 	}
 	
-	private static String getStringPlaceHolder(Player player, Plot plot,
+	private static String getStringPlaceHolder(Player player,
 			String text, String playername)
 	{
 		String s = text;
-		if(plot != null)
+		/*if(plot != null)
 		{
 			if(text.contains(ID))
 			{
@@ -500,15 +589,15 @@ public class GuiHandler
 			{
 				s = s.replace(PLOT_NAME, String.valueOf(plot.getName()));
 			}
-		}
+		}*/
 		return s;
 	}
 	
-	private static String getStringPlaceHolderVault(Player player, Plot plot,
+	private static String getStringPlaceHolderVault(Player player,
 			String text, String playername)
 	{
 		String s = text;
-		if(plot != null)
+		/*if(plot != null)
 		{
 			if(text.contains(BUY_COST))
 			{
@@ -518,7 +607,7 @@ public class GuiHandler
 			{
 				s = s.replace(TAX_COST, String.valueOf(plot.getTax(PlotHandler.getCostPerBlock())+plugin.getVaultEco().currencyNamePlural()));
 			}
-		}
+		}*/
 		return s;
 	}
 	
@@ -786,10 +875,10 @@ public class GuiHandler
 		im.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 		im.addItemFlags(ItemFlag.HIDE_DESTROYS);
 		im.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-		im.displayName(ChatApi.tl("&0"));
-		im.lore(new ArrayList<>());
+		im.setDisplayName(ChatApiS.tlItem("&0"));
+		im.setLore(new ArrayList<>());
 		is.setItemMeta(im);
 		LinkedHashMap<String, Entry<GUIApi.Type, Object>> map = new LinkedHashMap<>();
-		gui.add(i, is, SettingsLevel.NOLEVEL, true, false, map, new ClickFunction[0]);
-	}*/
+		gui.add(i, is, SettingsLevel.NOLEVEL, true, map, new ClickFunction[0]);
+	}
 }

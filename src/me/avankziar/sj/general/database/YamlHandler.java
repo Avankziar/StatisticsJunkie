@@ -18,6 +18,7 @@ import dev.dejvokep.boostedyaml.settings.loader.LoaderSettings;
 import dev.dejvokep.boostedyaml.settings.updater.UpdaterSettings;
 import me.avankziar.sj.general.database.Language.ISO639_2B;
 import me.avankziar.sj.general.database.YamlManager.Type;
+import me.avankziar.sj.spigot.gui.objects.GuiType;
 
 public class YamlHandler implements YamlHandling
 {	
@@ -63,6 +64,12 @@ public class YamlHandler implements YamlHandling
 	public YamlDocument getMVELang()
 	{
 		return mvelang;
+	}
+	
+	private LinkedHashMap<GuiType, YamlDocument> gui;
+	public YamlDocument getGui(GuiType guiType)
+	{
+		return gui.get(guiType);
 	}
 	
 	private ArrayList<YamlDocument> fileAchievementGoal;
@@ -134,6 +141,10 @@ public class YamlHandler implements YamlHandling
 			return false;
 		}
 		if(!mkdirFileAchievementGoal(type))
+		{
+			return false;
+		}
+		if(!mkdirGui(type))
 		{
 			return false;
 		}
@@ -220,6 +231,56 @@ public class YamlHandler implements YamlHandling
 			}
 		}
 		
+		return true;
+	}
+	
+
+	private boolean mkdirGui(YamlManager.Type type)
+	{
+		if(type != Type.SPIGOT)
+		{
+			return true;
+		}
+		File directory = new File(dataDirectory.getParent().toFile(), "/"+pluginname+"/Gui/");
+		if(!directory.exists())
+		{
+			directory.mkdirs();
+			for(Entry<GuiType, LinkedHashMap<String, Language>> e : yamlManager.getGUIKey().entrySet())
+			{
+				GuiType gt = e.getKey();
+				YamlDocument y;
+				try 
+				{
+					y = YamlDocument.create(new File(directory, gt.toString()+".yml"),
+							getClass().getResourceAsStream("/default.yml"),gsd,lsd,dsd,usd);
+					if(!setupStaticFile(gt.toString(), y, e.getValue()))
+					{
+						return false;
+					}
+				} catch (IOException e1) 
+				{
+					continue;
+				}
+			}
+		} else
+		{
+			for(File f : directory.listFiles())
+			{
+				if(f.isDirectory())
+				{
+					continue;
+				}
+				try
+				{
+					YamlDocument y = YamlDocument
+							.create(f, getClass().getResourceAsStream("/default.yml"),gsd,lsd,dsd,usd);
+					gui.put(GuiType.valueOf(y.getFile().getName()), y);
+				} catch(Exception e)
+				{
+					continue;
+				}
+			}
+		}
 		return true;
 	}
 	

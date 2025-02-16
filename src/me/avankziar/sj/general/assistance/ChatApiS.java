@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 public class ChatApiS
 {
@@ -96,6 +97,11 @@ public class ChatApiS
 			//new kyori adventure pattern
 			return BungeeComponentSerializer.get().serialize(all.deserialize(s));
 		}
+	}
+	
+	public static String tlItem(String s)
+	{
+		return LegacyComponentSerializer.legacySection().serialize(all.deserialize(s));
 	}
 	
 	public static String oldBukkitFormatShort(String s)

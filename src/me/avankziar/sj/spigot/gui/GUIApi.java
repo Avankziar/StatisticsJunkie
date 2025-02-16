@@ -7,6 +7,7 @@ import java.util.UUID;
 import javax.annotation.Nullable;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -333,10 +334,16 @@ public class GUIApi
 			this.inventory.setItem(slot, i);
 		}
 	}
+	
+	public boolean isSlotOccupied(int slot)
+	{
+		return !(this.inventory.getItem(slot) == null || this.inventory.getItem(slot).getType() != Material.AIR);
+	}
 
-	public void open(Player player) 
+	public void open(Player player, GuiType gt) 
 	{
 		if(this.inventory != null) player.openInventory(this.inventory);
+		addInGui(player.getUniqueId(), inventoryIdentifier, gt, SettingsLevel.BASE);
 	}
 	
 	//Key == playeruuid
