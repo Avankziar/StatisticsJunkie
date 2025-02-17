@@ -1,10 +1,10 @@
-name: StatisticsJunkie
-main: me.avankziar.sj.spigot.SJ
+name: StatisticalAchievementJunkie
+main: me.avankziar.saj.spigot.SAJ
 version: 1
 author: Avankziar
 api-version: 1.21
 description: A MC Plugin for statistical purpose
 depend: [InterfaceHub]
-softdepend: [RootAdministration]
+softdepend: [RootAdministration, VotifierPlus, NuVotifier]
 website: TBA
 prefix: SJ

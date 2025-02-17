@@ -1,8 +1,8 @@
-{"id":"statisticsjunkie",
-"name":"StatisticsJunkie",
+{"id":"statisticalachievementjunkie",
+"name":"StatisticalAchievementJunkie",
 "version":"1-0-0",
 "description":"A MC plugin for statistical purpose.",
 "authors":["Avankziar"],
 "url":"TBA",
 "dependencies":[{id='interfacehub', version='null', optional=false}],
-"main":"me.avankziar.sj.velocity.SJ"}
+"main":"me.avankziar.saj.velocity.SAJ"}

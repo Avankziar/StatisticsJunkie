@@ -1,4 +1,4 @@
-name: StatisticsJunkie
-main: me.avankziar.sj.bungee.SJ
+name: StatisticalAchievementJunkie
+main: me.avankziar.saj.bungee.SAJ
 version: 1
 author: Avankziar
