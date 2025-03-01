@@ -8,7 +8,8 @@ import java.util.List;
 
 import org.bukkit.Material;
 
-import me.avankziar.ifh.general.enums.StatisticType;
+import me.avankziar.ifh.general.statistic.StatisticType;
+import me.avankziar.ifh.general.statistic.StatisticType.SortingType;
 import me.avankziar.saj.general.database.Language.ISO639_2B;
 import me.avankziar.saj.spigot.ModifierValueEntry.Bypass;
 import me.avankziar.saj.spigot.gui.objects.ClickFunctionType;
@@ -494,7 +495,7 @@ public class YamlManager
 				"If 'true' is entered, but IFH Administration is not available, the own config values are automatically used."});
 		addConfig("IFHAdministrationPath", 
 				new Object[] {
-				"bm"},
+				"saj"},
 				new Object[] {
 				"",
 				"Diese Funktion sorgt dafür, dass das Plugin auf das IFH Interface Administration zugreifen kann.",
@@ -646,6 +647,31 @@ public class YamlManager
 				"Ein Asynchroner Task in Minuten, der checkt ob Spieler irgendwelche AchievementGoals erreicht haben.",
 				"",
 				""});
+		addConfig("Task.UpdateStatisticIncrementToDatabase",
+				new Object[] {
+				2},
+				new Object[] {
+				"",
+				"Ein Asynchroner Task in Minuten, der die normalen Minecraft Statistischen Inkrements in die Datenbank einfügt.",
+				"",
+				""});
+		addConfig("Statistic.UsedDistanceUnits.Kilometer",
+				new Object[] {
+				true},
+				new Object[] {
+				"",
+				"Definiert für die Distanze Statistik ob man in Kilometer rechnen möchte.",
+				"KiloMeter wird immer priorisiert vor der Meile, falls beide aktiv sein sollten.",
+				"",
+				""});
+		addConfig("Statistic.UsedDistanceUnits.Mile",
+				new Object[] {
+				false},
+				new Object[] {
+				"",
+				"",
+				"",
+				""});
 	}
 	
 	@SuppressWarnings("unused") //INFO:Commands
@@ -669,15 +695,104 @@ public class YamlManager
 				"<aque>Commandright for <white>/achievement",
 				"<yellow>Öffnet das Achievement Gui.",
 				"<yellow>Opens the Achievement Gui.");
-		String basePermission = "perm.base.";
+		String basePermission = "achievement";
 		argumentInput("achievement_info", "info", basePermission,
-				"/achievement info <playername> <id>", "/achievement info <playername> ", false,
-				"<red>/achievement info <playername> <white>| Zeigt Informationen über die Anzahl der Achievements des Spielers an.",
+				"/achievement info <playername>", "/achievement info ", false,
+				"<red>/achievement info <Spielername> <white>| Zeigt Informationen über die Anzahl der Achievements des Spielers an.",
 				"<red>/achievement info <playername> <white>| Displays information about the number of achievements the player has.",
 				"<aque>Befehlsrecht für <white>/achievement info",
 				"<aque>Commandright for <white>/achievement info",
 				"<yellow>Zeigt Informationen über die Anzahl der Achievements des Spielers an.",
 				"<yellow>Displays information about the number of achievements the player has.");
+		commandsInput("statistic", "statistic", "statistic.cmd", 
+				"/statistic", "/statistic ", false,
+				"<red>/statistic <white>| Zeigt eine Liste klickbarere Nachichten an, welche Statistikkategorien es gibt. Mit zusammengezählten Zahlen pro Kategorie.",
+				"<red>/statistic <white>| Shows a list of clickable messages, which statistics categories there are. With total numbers per category.",
+				"<aque>Befehlsrecht für <white>/statistic",
+				"<aque>Commandright for <white>/statistic",
+				"<yellow>Zeigt eine Liste klickbarere Nachichten an, welche Statistikkategorien es gibt. Mit zusammengezählten Zahlen pro Kategorie.",
+				"<yellow>Shows a list of clickable messages, which statistics categories there are. With total numbers per category.");
+		basePermission = "statistic";
+		argumentInput("statistic_damageanddeath", "damageanddeath", basePermission,
+				"/statistic damageanddeath [page] [playername]", "/statistic damageanddeath ", false,
+				"<red>/statistic damageanddeath [Seite] [Spielername] <white>| Zeigt alle Statistiken zu Schaden und Toden an.",
+				"<red>/statistic damageanddeath [page] [playername] <white>| Displays all damage and death statistics.",
+				"<aque>Befehlsrecht für <white>/statistic damageanddeath",
+				"<aque>Commandright for <white>/statistic damageanddeath",
+				"<yellow>Zeigt alle Statistiken zu Schaden und Toden an.",
+				"<yellow>Displays all damage and death statistics.");
+		argumentInput("statistic_economy", "economy", basePermission,
+				"/statistic economy [page] [playername]", "/statistic economy ", false,
+				"<red>/statistic economy [Seite] [Spielername] <white>| Zeigt alle Statistiken zu Geldwerten an.",
+				"<red>/statistic economy [page] [playername] <white>| Displays all statistics related to monetary values.",
+				"<aque>Befehlsrecht für <white>/statistic economy",
+				"<aque>Commandright for <white>/statistic economy",
+				"<yellow>Zeigt alle Statistiken zu Geldwerten an.",
+				"<yellow>Displays all statistics related to monetary values.");
+		argumentInput("statistic_interactionwithblocks", "interactionwithblocks", basePermission,
+				"/statistic interactionwithblocks [page] [playername]", "/statistic interactionwithblocks ", false,
+				"<red>/statistic interactionwithblocks [Seite] [Spielername] <white>| Zeigt alle Statistiken zu Interaktionen mit Blöcken an.",
+				"<red>/statistic interactionwithblocks [page] [playername] <white>| Displays all statistics about block interactions.",
+				"<aque>Befehlsrecht für <white>/statistic interactionwithblocks",
+				"<aque>Commandright for <white>/statistic interactionwithblocks",
+				"<yellow>Zeigt alle Statistiken zu Interaktionen mit Blöcken an.",
+				"<yellow>Displays all statistics about block interactions.");
+		argumentInput("statistic_miscellaneous", "miscellaneous", basePermission,
+				"/statistic miscellaneous [page] [playername]", "/statistic miscellaneous ", false,
+				"<red>/statistic miscellaneous [Seite] [Spielername] <white>| Zeigt alle Statistiken zu Sonstigem an.",
+				"<red>/statistic miscellaneous [page] [playername] <white>| Displays all statistics about block interactions.",
+				"<aque>Befehlsrecht für <white>/statistic miscellaneous",
+				"<aque>Commandright for <white>/statistic miscellaneous",
+				"<yellow>Zeigt alle Statistiken zu Sonstigem an.",
+				"<yellow>Displays all statistics about block interactions.");
+		argumentInput("statistic_movement", "movement", basePermission,
+				"/statistic movement [page] [playername]", "/statistic movement ", false,
+				"<red>/statistic movement [Seite] [Spielername] <white>| Zeigt alle Statistiken zu Bewegung an.",
+				"<red>/statistic movement [page] [playername] <white>| Displays all movement statistics.",
+				"<aque>Befehlsrecht für <white>/statistic movement",
+				"<aque>Commandright for <white>/statistic movement",
+				"<yellow>Zeigt alle Statistiken zu Bewegung an.",
+				"<yellow>Displays all movement statistics.");
+		argumentInput("statistic_plugins", "plugins", basePermission,
+				"/statistic plugins [page] [playername]", "/statistic plugins ", false,
+				"<red>/statistic plugins [Seite] [Spielername] <white>| Zeigt alle Statistiken zu custom Plugins an.",
+				"<red>/statistic plugins [page] [playername] <white>| Shows all statistics about custom plugins.",
+				"<aque>Befehlsrecht für <white>/statistic plugins",
+				"<aque>Commandright for <white>/statistic plugins",
+				"<yellow>Zeigt alle Statistiken zu custom Plugins an.",
+				"<yellow>Shows all statistics about custom plugins.");
+		argumentInput("statistic_skill", "skill", basePermission,
+				"/statistic skill [page] [playername]", "/statistic skill ", false,
+				"<red>/statistic skill [Seite] [Spielername] <white>| Zeigt alle Statistiken zu Skillwerten an.",
+				"<red>/statistic skill [page] [playername] <white>| Shows all statistics about skill.",
+				"<aque>Befehlsrecht für <white>/statistic skill",
+				"<aque>Commandright for <white>/statistic skill",
+				"<yellow>Zeigt alle Statistiken zu Skillwerten an.",
+				"<yellow>Shows all statistics about skill.");
+		argumentInput("statistic_special", "special", basePermission,
+				"/statistic special [page] [playername]", "/statistic special ", false,
+				"<red>/statistic special [Seite] [Spielername] <white>| Zeigt alle Statistiken zu Spezialwerten an.",
+				"<red>/statistic special [page] [playername] <white>| Displays all statistics on special values.",
+				"<aque>Befehlsrecht für <white>/statistic special",
+				"<aque>Commandright for <white>/statistic special",
+				"<yellow>Zeigt alle Statistiken zu Spezialwerten an.",
+				"<yellow>Displays all statistics on special values.");
+		argumentInput("statistic_time", "time", basePermission,
+				"/statistic time [page] [playername]", "/statistic time ", false,
+				"<red>/statistic time [Seite] [Spielername] <white>| Zeigt alle Statistiken zu Zeitwerten an.",
+				"<red>/statistic time [page] [playername] <white>| Displays all statistics on time values.",
+				"<aque>Befehlsrecht für <white>/statistic time",
+				"<aque>Commandright for <white>/statistic time",
+				"<yellow>Zeigt alle Statistiken zu Zeitwerten an.",
+				"<yellow>Displays all statistics on time values.");
+		argumentInput("statistic_withsubstatistic", "withsubstatistic", basePermission,
+				"/statistic withsubstatistic <substatistic> [page] [playername]", "/statistic withsubstatistic ", false,
+				"<red>/statistic withsubstatistic [Substatistik] [Seite] [Spielername] <white>| Zeigt alle Statistiken mit Substatistiken an. Wahlweise im Detail oder zusammengefasst.",
+				"<red>/statistic withsubstatistic [substatistic] [page] [playername] <white>| Shows all statistics with substatistics. Either in detail or summarized.",
+				"<aque>Befehlsrecht für <white>/statistic withsubstatistic",
+				"<aque>Commandright for <white>/statistic withsubstatistic",
+				"<yellow>Zeigt alle Statistiken mit Substatistiken an. Wahlweise im Detail oder zusammengefasst.",
+				"<yellow>Shows all statistics with substatistics. Either in detail or summarized.");
 	}
 	
 	private void comBypass() //INFO:ComBypass
@@ -687,19 +802,7 @@ public class YamlManager
 		{
 			commandsKeys.put("Bypass."+ept.toString().replace("_", ".")
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					"base."+ept.toString().toLowerCase().replace("_", ".")}));
-		}
-		
-		List<Bypass.Counter> list2 = new ArrayList<Bypass.Counter>(EnumSet.allOf(Bypass.Counter.class));
-		for(Bypass.Counter ept : list2)
-		{
-			if(!ept.forPermission())
-			{
-				continue;
-			}
-			commandsKeys.put("Count."+ept.toString().replace("_", ".")
-					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					"base."+ept.toString().toLowerCase().replace("_", ".")}));
+					"saj."+ept.toString().toLowerCase().replace("_", ".")}));
 		}
 	}
 	
@@ -803,6 +906,10 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"<yellow>Klick mich!",
 						"<yellow>Click me!"}));
+		languageKeys.put("Headline", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"<yellow>=====<gray>[<gold>StatisticalAchievementJunkie<gray>]<yellow>=====",
+						"<yellow>=====<gray>[<gold>StatisticalAchievementJunkie<gray>]<yellow>====="}));
 		languageKeys.put("Next", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"<yellow><understrike>nächste Seite <yellow>==>",
@@ -825,24 +932,147 @@ public class YamlManager
 						"<gold>Achievements of %player%"}));
 		languageKeys.put("Achievement.Info.Headline", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"<gray>========<gold>Achievement Info <white>%player% <gray>========",
-						"<gray>========<gold>Achievement Info <white>%player% <gray>========"}));
+						"<gray>========<gold>Achievement Info <white>%player%<gray>========",
+						"<gray>========<gold>Achievement Info <white>%player%<gray>========"}));
 		languageKeys.put("Achievement.Info.AchievedVersusTotal", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"<white>Platz <gold>%place%<gray>. <white>mit <green>%achieved%<white>/<gray>%total% <white>Achievements erreicht.",
 						"<white>Place <gold>%place%<gray>. <white>with <green>%achieved%<white>/<gray>%total% <white>Achievements achieved."}));
 		languageKeys.put("Achievement.Info.PlayerCount", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"<white>Insgesamt haben <gold>>%playercount% <white>Spieler <gold>%achievementtotal% <white>Achievements erreicht.",
-						"<white>In total, <gold>>%player count% <white>players have achieved <gold>%achievement total% <white>achievements."}));
+						"<white>Insgesamt haben <gold>%playercount% <white>Spieler <gold>%achievementtotal% <white>Achievements erreicht.",
+						"<white>In total, <gold>%player count% <white>players have achieved <gold>%achievement total% <white>achievements."}));
 		languageKeys.put("Achievement.Info.AverageAndMedian", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"<white>Der Durschnitt liegt dabei bei <gold>%average%<white>/Spieler und der Median bei <gold>%median%<white>.",
+						"<white>Der Durchschnitt liegt dabei bei <gold>%average%<white>/Spieler und der Median bei <gold>%median%<white>.",
 						"<white>The average is <gold>%average%<white>/player and the median is <gold>%median%<white>."}));
+		initCmdStatistic();
+	}
+	
+	private void initCmdStatistic()
+	{
+		languageKeys.put("Statistic.NoEntry", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"<red>Es gibt keine Statistik in diesem Sortierungswert.",
+						"<red>There are no statistics in this sorting value."}));
+		languageKeys.put("Statistic.Unit.Meter", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"<white>m",
+						"<white>m"}));
+		languageKeys.put("Statistic.Unit.Kilometer", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"<white>km",
+						"<white>km"}));
+		languageKeys.put("Statistic.Unit.Yard", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"<white>yd",
+						"<white>yd"}));
+		languageKeys.put("Statistic.Base.Headline", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"<gray>========<gold>Statistik <white>%player%<gray>========",
+						"<gray>========<gold>Statistic <white>%player%<gray>========"}));
+		languageKeys.put("Statistic.Base."+SortingType.MOVEMENT.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"<hover:show_text:'<yello>Klicke hier für die Bewegungsstatistik!'><click:run_command:'%statisticcmd% MOVEMENT'><red>Insgesamte Bewegung: %value%</click></hover>",
+						"<hover:show_text:'<yello>Click here for the movement statistics!'><click:run_command:'%statisticcmd% MOVEMENT'><red>Total movement: %value%</click></hover>"}));
+		languageKeys.put("Statistic.Base."+SortingType.DAMAGE_AND_DEATH.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"<hover:show_text:'<yello>Klicke hier für die Schaden- und Todesstatistik!'><click:run_command:'%statisticcmd% DAMAGE_AND_DEATH'><red>Insgesamter Schaden und Tode: %value%</click></hover>",
+						"<hover:show_text:'<yello>Click here for the damage and death statistics!'><click:run_command:'%statisticcmd% DAMAGE_AND_DEATH'><red>Total damage and deaths: %value%</click></hover>"}));
+		languageKeys.put("Statistic.Base."+SortingType.ECONOMY.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"<hover:show_text:'<yello>Klicke hier für die Schaden- und Todesstatistik!'><click:run_command:'%statisticcmd% ECONOMY'><red>Insgesamte Vermögenswerte: %value%</click></hover>",
+						"<hover:show_text:'<yello>Click here for damage and death statistics!'><click:run_command:'%statisticcmd% ECONOMY'><red>Total assets: %value%</click></hover>"}));
+		languageKeys.put("Statistic.Base."+SortingType.INTERACTION_WITH_BLOCKS.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"<hover:show_text:'<yello>Klicke hier für die Schaden- und Todesstatistik!'><click:run_command:'%statisticcmd% INTERACTION_WITH_BLOCKS'><red>Insgesamte Interaktion mit Blöcken: %value%</click></hover>",
+						"<hover:show_text:'<yello>Click here for damage and death statistics!'><click:run_command:'%statisticcmd% INTERACTION_WITH_BLOCKS'><red>Total interaction with blocks: %value%</click></hover>"}));
+		languageKeys.put("Statistic.Base."+SortingType.MISCELLANEOUS.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"<hover:show_text:'<yello>Klicke hier für die Schaden- und Todesstatistik!'><click:run_command:'%statisticcmd% MISCELLANEOUS'><red>Insgesamtes Sonstiges: %value%</click></hover>",
+						"<hover:show_text:'<yello>Click here for the damage and death statistics!'><click:run_command:'%statisticcmd% MISCELLANEOUS'><red>Total miscellaneous: %value%</click></hover>"}));
+		languageKeys.put("Statistic.Base."+SortingType.PLUGINS.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"<hover:show_text:'<yello>Klicke hier für die Schaden- und Todesstatistik!'><click:run_command:'%statisticcmd% PLUGINS'><red>Insgesamte Custom Pluginswerte: %value%</click></hover>",
+						"<hover:show_text:'<yello>Click here for the damage and death statistics!'><click:run_command:'%statisticcmd% PLUGINS'><red>Total custom plugin values: %value%</click></hover>"}));
+		languageKeys.put("Statistic.Base."+SortingType.SKILL.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"<hover:show_text:'<yello>Klicke hier für die Schaden- und Todesstatistik!'><click:run_command:'%statisticcmd% SKILL'><red>Insgesamter Skillwerte: %value%</click></hover>",
+						"<hover:show_text:'<yello>Click here for damage and death statistics!'><click:run_command:'%statisticcmd% SKILL'><red>Total skill value: %value%</click></hover>"}));
+		languageKeys.put("Statistic.Base."+SortingType.SPECIAL.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"<hover:show_text:'<yello>Klicke hier für die Schaden- und Todesstatistik!'><click:run_command:'%statisticcmd% SPECIAL'><red>Insgesamte Spezialwerte: %value%</click></hover>",
+						"<hover:show_text:'<yello>Click here for damage and death statistics!'><click:run_command:'%statisticcmd% SPECIAL'><red>Total special values: %value%</click></hover>"}));
+		languageKeys.put("Statistic.Base."+SortingType.TIME.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"<hover:show_text:'<yello>Klicke hier für die Schaden- und Todesstatistik!'><click:run_command:'%statisticcmd% TIME'><red>Insgesamte Zeitwerde: %value%</click></hover>",
+						"<hover:show_text:'<yello>Click here for damage and death statistics!'><click:run_command:'%statisticcmd% TIME'><red>Total time: %value%</click></hover>"}));
+		languageKeys.put("Statistic.Base."+SortingType.WITH_SUBSTATISTIC.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"<hover:show_text:'<yello>Klicke hier für die Schaden- und Todesstatistik!'><click:run_command:'%statisticcmd% WITH_SUBSTATISTIC'><red>Insgesamte Werte mit Substatistiken: %value%</click></hover>",
+						"<hover:show_text:'<yello>Click here for the damage and death statistics!'><click:run_command:'%statisticcmd% WITH_SUBSTATISTIC'><red>Total values ​​with substats: %value%</click></hover>"}));
+		languageKeys.put("Statistic.Headline", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"<gray>========<yellow>Statistik %statistic%<gray>========",
+						"<gray>========<yellow>Statistik %statistic%<gray>========"}));
+		languageKeys.put("Statistic.Substatistic.Info", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"<red>%statistic%<white>: %value%",
+						"<red>%statistic%<white>: %value%"}));
+		languageKeys.put("Statistic.Statistic.Info", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"<red>%statistic%<white>: %value%",
+						"<red>%statistic%<white>: %value%"}));
 	}
 	
 	public void initFileAchievementGoal() 
 	{
+		setFileAchievementGoal("block_break_10",
+				"<red>Blöcke Abbauen: <white>10",
+				"<red>Block break: <white>10",
+				StatisticType.MINE_BLOCK, "null", 10,
+				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
+				new Object[] {
+				"<bold><gold>Gratulation!",
+				"<gold>Spieler <white>%player% <gold>hat 10 Blöcke abgebaut!",
+				"<bold><gold>Congratulations!",
+				"<gold>Player <white>%player% <gold>has mined 10 blocks!"}, 0, 
+				Material.STONE, new Object[] {
+						"<reset><green>Blöcke Abbauen: <white>10",
+						"<reset><green>Block mined: <white>10"},
+				new Object[] {
+						"<reset>Du hast 10",
+						"<reset>Blöcke aller Art abgebaut!",
+						"<reset>You have mined 10",
+						"<reset>blocks of all types!"
+				}, true, 
+				Material.BARRIER, new Object[] {
+						"<reset><red>Blöcke Abbauen: <white>10",
+						"<reset><red>Block break: <white>10"},
+				null, false);
+		setFileAchievementGoal("block_break_100",
+				"<red>Blöcke Abbauen: <white>100",
+				"<red>Block break: <white>100",
+				StatisticType.MINE_BLOCK, "null", 100,
+				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
+				new Object[] {
+				"<bold><gold>Gratulation!",
+				"<gold>Spieler <white>%player% <gold>hat 100 Blöcke abgebaut!",
+				"<bold><gold>Congratulations!",
+				"<gold>Player <white>%player% <gold>has mined 100 blocks!"}, 1, 
+				Material.STONE, new Object[] {
+						"<reset><green>Blöcke Abbauen: <white>100",
+						"<reset><green>Block mined: <white>100"},
+				new Object[] {
+						"<reset>Du hast 100",
+						"<reset>Blöcke aller Art abgebaut!",
+						"<reset>You have mined 100",
+						"<reset>blocks of all types!"
+				}, true, 
+				Material.BARRIER, new Object[] {
+						"<reset><red>Blöcke Abbauen: <white>100",
+						"<reset><red>Block break: <white>100"},
+				null, false);
 		setFileAchievementGoal("block_break_1M",
 				"<red>Blöcke Abbauen: <white>1 Millionen",
 				"<red>Block break: <white>1 Million",
@@ -852,7 +1082,7 @@ public class YamlManager
 				"<bold><gold>Gratulation!",
 				"<gold>Spieler <white>%player% <gold>hat 1 Millionen Blöcke abgebaut!",
 				"<bold><gold>Congratulations!",
-				"<gold>Player <white>%player% <gold>has mined 1 million blocks!"}, 1, 
+				"<gold>Player <white>%player% <gold>has mined 1 million blocks!"}, 3, 
 				Material.STONE, new Object[] {
 						"<reset><green>Blöcke Abbauen: <white>1 Millionen",
 						"<reset><green>Block mined: <white>1 million"},
@@ -977,7 +1207,7 @@ public class YamlManager
 						"So from 45 onwards the second page etc."}));
 		goal.put("Gui.Item.Material", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						item}));
+						item.toString()}));
 		goal.put("#Gui.Item.Material", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"",
@@ -1000,7 +1230,7 @@ public class YamlManager
 		{
 			goal.put("Gui.ItemIfNotAchieved.Material", 
 					new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-							itemIfNot}));
+							itemIfNot.toString()}));
 			goal.put("#Gui.ItemIfNotAchieved.Material", 
 					new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 							"",

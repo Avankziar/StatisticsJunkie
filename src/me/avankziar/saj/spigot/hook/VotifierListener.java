@@ -6,7 +6,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import com.vexsoftware.votifier.model.VotifierEvent;
 
-import me.avankziar.ifh.general.enums.StatisticType;
+import me.avankziar.ifh.general.statistic.StatisticType;
 import me.avankziar.saj.general.objects.PlayerData;
 import me.avankziar.saj.general.objects.StatisticEntry;
 import me.avankziar.saj.spigot.SAJ;

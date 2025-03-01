@@ -2,10 +2,10 @@ package me.avankziar.saj.bungee.listener;
 
 import java.util.UUID;
 
+import me.avankziar.ifh.general.statistic.StatisticType;
 import me.avankziar.saj.bungee.SAJ;
 import me.avankziar.saj.general.objects.PlayerData;
 import me.avankziar.saj.general.objects.StatisticEntry;
-import me.avankziar.saj.general.objects.StatisticType;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;

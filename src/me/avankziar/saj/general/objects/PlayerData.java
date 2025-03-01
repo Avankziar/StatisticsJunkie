@@ -71,7 +71,7 @@ public class PlayerData implements MysqlTable<PlayerData>
 
 	public String getMysqlTableName()
 	{
-		return "sjPlayerData";
+		return "sajPlayerData";
 	}
 	
 	public boolean setupMysql(MysqlBaseSetup mysqlSetup, ServerType serverType)

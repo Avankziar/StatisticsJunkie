@@ -6,6 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.logging.Logger;
 
@@ -21,6 +22,8 @@ import org.bukkit.plugin.SimplePluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import me.avankziar.ifh.general.statistic.StatisticType;
+import me.avankziar.ifh.general.statistic.StatisticType.SortingType;
 import me.avankziar.ifh.spigot.administration.Administration;
 import me.avankziar.ifh.spigot.tobungee.chatlike.MessageToBungee;
 import me.avankziar.ifh.spigot.tovelocity.chatlike.MessageToVelocity;
@@ -37,16 +40,30 @@ import me.avankziar.saj.spigot.ModifierValueEntry.Bypass;
 import me.avankziar.saj.spigot.assistance.BackgroundTask;
 import me.avankziar.saj.spigot.cmd.AchievementCommandExecutor;
 import me.avankziar.saj.spigot.cmd.SAJCommandExecutor;
+import me.avankziar.saj.spigot.cmd.StatisticCommandExecutor;
 import me.avankziar.saj.spigot.cmd.TabCompletion;
 import me.avankziar.saj.spigot.cmd.achievement.ARG_Info;
+import me.avankziar.saj.spigot.cmd.statistic.ARG_DamageAndDeath;
+import me.avankziar.saj.spigot.cmd.statistic.ARG_Economy;
+import me.avankziar.saj.spigot.cmd.statistic.ARG_InteractionWithBlocks;
+import me.avankziar.saj.spigot.cmd.statistic.ARG_Miscellaneous;
+import me.avankziar.saj.spigot.cmd.statistic.ARG_Movement;
+import me.avankziar.saj.spigot.cmd.statistic.ARG_Plugins;
+import me.avankziar.saj.spigot.cmd.statistic.ARG_Skill;
+import me.avankziar.saj.spigot.cmd.statistic.ARG_Special;
+import me.avankziar.saj.spigot.cmd.statistic.ARG_Time;
+import me.avankziar.saj.spigot.cmd.statistic.ARG_WithSubstatistic;
 import me.avankziar.saj.spigot.cmdtree.ArgumentModule;
 import me.avankziar.saj.spigot.database.MysqlHandler;
 import me.avankziar.saj.spigot.database.MysqlSetup;
+import me.avankziar.saj.spigot.gui.listener.GuiPreListener;
 import me.avankziar.saj.spigot.gui.listener.UpperListener;
 import me.avankziar.saj.spigot.handler.FileAchievementGoalHandler;
+import me.avankziar.saj.spigot.handler.StatisticHandler;
 import me.avankziar.saj.spigot.hook.VotifierListener;
 import me.avankziar.saj.spigot.hook.WorldGuardHook;
 import me.avankziar.saj.spigot.listener.JoinLeaveListener;
+import me.avankziar.saj.spigot.listener.PlayerMoveListener;
 import me.avankziar.saj.spigot.listener.StatisticIncrementListener;
 import me.avankziar.saj.spigot.metric.Metrics;
 
@@ -54,7 +71,7 @@ public class SAJ extends JavaPlugin
 {
 	public static Logger logger;
 	private static SAJ plugin;
-	public static String pluginname = "StatisticsJunkie";
+	public static String pluginname = "StatisticalAchievementJunkie";
 	private YamlHandler yamlHandler;
 	private YamlManager yamlManager;
 	private MysqlSetup mysqlSetup;
@@ -78,13 +95,13 @@ public class SAJ extends JavaPlugin
 		plugin = this;
 		logger = getLogger();
 		
-		//https://patorjk.com/software/taag/#p=display&f=ANSI%20Shadow&t=SJ
-		logger.info("  | API-Version: "+plugin.getDescription().getAPIVersion());
-		logger.info("  | Author: "+plugin.getDescription().getAuthors().toString());
-		logger.info("  | Plugin Website: "+plugin.getDescription().getWebsite());
-		logger.info("  | Depend Plugins: "+plugin.getDescription().getDepend().toString());
-		logger.info("  | SoftDepend Plugins: "+plugin.getDescription().getSoftDepend().toString());
-		logger.info("  | LoadBefore: "+plugin.getDescription().getLoadBefore().toString());
+		//https://patorjk.com/software/taag/#p=display&f=ANSI%20Shadow&t=SAJ
+		logger.info(" ███████╗ █████╗      ██╗ | API-Version: "+plugin.getDescription().getAPIVersion());
+		logger.info(" ██╔════╝██╔══██╗     ██║ | Author: "+plugin.getDescription().getAuthors().toString());
+		logger.info(" ███████╗███████║     ██║ | Plugin Website: "+plugin.getDescription().getWebsite());
+		logger.info(" ╚════██║██╔══██║██   ██║ | Depend Plugins: "+plugin.getDescription().getDepend().toString());
+		logger.info(" ███████║██║  ██║╚█████╔╝ | SoftDepend Plugins: "+plugin.getDescription().getSoftDepend().toString());
+		logger.info(" ╚══════╝╚═╝  ╚═╝ ╚════╝  | LoadBefore: "+plugin.getDescription().getLoadBefore().toString());
 		
 		setupIFHAdministration();
 		
@@ -117,6 +134,7 @@ public class SAJ extends JavaPlugin
 		setupIFHConsumer();
 		setupBstats();
 		FileAchievementGoalHandler.init(false);
+		StatisticHandler.processStatistic();
 	}
 	
 	public void onDisable()
@@ -195,6 +213,28 @@ public class SAJ extends JavaPlugin
 		
 		playerMapI.put(1, playerarray);
 		
+		ArrayList<String> sortingType = new ArrayList<>();
+		new ArrayList<StatisticType.SortingType>(EnumSet.allOf(StatisticType.SortingType.class)).forEach(x -> sortingType.add(x.toString()));
+		
+		LinkedHashMap<Integer, ArrayList<String>> statistic_page_playername = new LinkedHashMap<>();
+		statistic_page_playername.put(1, sortingType);
+		statistic_page_playername.put(3, playerarray);
+		
+		ArrayList<String> withSubStatistic = new ArrayList<>();
+		HashSet<StatisticType> hm = StatisticType.getStatisticTypes(SortingType.WITH_SUBSTATISTIC);
+		if(hm != null)
+		{
+			for(StatisticType sct : hm)
+			{
+				withSubStatistic.add(sct.toString());
+			}
+		}		
+		
+		LinkedHashMap<Integer, ArrayList<String>> statistic_sub_page_playername = new LinkedHashMap<>();
+		statistic_sub_page_playername.put(1, sortingType);
+		statistic_sub_page_playername.put(2, withSubStatistic);
+		statistic_sub_page_playername.put(4, playerarray);
+		
 		TabCompletion tab = new TabCompletion();
 		
 		CommandConstructor saj = new CommandConstructor(CommandSuggest.Type.SAJ, "saj", false, false);
@@ -208,23 +248,49 @@ public class SAJ extends JavaPlugin
 		registerCommand(achievement, new AchievementCommandExecutor(plugin, achievement), tab);
 		
 		new ARG_Info(ach_info);
+		
+		ArgumentConstructor st_dad = new ArgumentConstructor(Type.STATISTIC_DAMAGEANDDEATH, "statistic_damageanddeath",
+				0, 0, 2, false, false, statistic_page_playername);
+		ArgumentConstructor st_eco = new ArgumentConstructor(Type.STATISTIC_ECONOMY, "statistic_economy",
+				0, 0, 2, false, false, statistic_page_playername);
+		ArgumentConstructor st_iwb = new ArgumentConstructor(Type.STATISTIC_INTERACTIONWITHBLOCKS, "statistic_interactionwithblocks",
+				0, 0, 2, false, false, statistic_page_playername);
+		ArgumentConstructor st_misc = new ArgumentConstructor(Type.STATISTIC_MISCELLANEOUS, "statistic_miscellaneous",
+				0, 0, 2, false, false, statistic_page_playername);
+		ArgumentConstructor st_move = new ArgumentConstructor(Type.STATISTIC_MOVEMENT, "statistic_movement",
+				0, 0, 2, false, false, statistic_page_playername);
+		ArgumentConstructor st_plugin = new ArgumentConstructor(Type.STATISTIC_PLUGINS, "statistic_plugins",
+				0, 0, 2, false, false, statistic_page_playername);
+		ArgumentConstructor st_skill = new ArgumentConstructor(Type.STATISTIC_SKILL, "statistic_skill",
+				0, 0, 2, false, false, statistic_page_playername);
+		ArgumentConstructor st_special = new ArgumentConstructor(Type.STATISTIC_SPECIAL, "statistic_special",
+				0, 0, 2, false, false, statistic_page_playername);
+		ArgumentConstructor st_time = new ArgumentConstructor(Type.STATISTIC_TIME, "statistic_time",
+				0, 0, 2, false, false, statistic_page_playername);
+		ArgumentConstructor st_wsub = new ArgumentConstructor(Type.STATISTIC_WITHSUBSTATISTIC, "statistic_withsubstatistic",
+				0, 0, 3, false, false, statistic_sub_page_playername);
+		
+		CommandConstructor statistic = new CommandConstructor(CommandSuggest.Type.STATISTIC, "statistic", false, false,
+				st_dad, st_eco, st_iwb, st_misc, st_move, st_plugin, st_skill, st_special, st_time, st_wsub);
+		registerCommand(statistic, new StatisticCommandExecutor(plugin, statistic), tab);
+		new ARG_DamageAndDeath(st_dad);
+		new ARG_Economy(st_eco);
+		new ARG_InteractionWithBlocks(st_iwb);
+		new ARG_Miscellaneous(st_misc);
+		new ARG_Movement(st_move);
+		new ARG_Plugins(st_plugin);
+		new ARG_Skill(st_skill);
+		new ARG_Special(st_special);
+		new ARG_Time(st_time);
+		new ARG_WithSubstatistic(st_wsub);
 	}
 	
-	public void setupBypassPerm()
+	private void setupBypassPerm()
 	{
-		String path = "Count.";
-		for(Bypass.Counter bypass : new ArrayList<Bypass.Counter>(EnumSet.allOf(Bypass.Counter.class)))
-		{
-			if(!bypass.forPermission())
-			{
-				continue;
-			}
-			Bypass.set(bypass, yamlHandler.getCommands().getString(path+bypass.toString()));
-		}
-		path = "Bypass.";
+		String path = "Bypass.";
 		for(Bypass.Permission bypass : new ArrayList<Bypass.Permission>(EnumSet.allOf(Bypass.Permission.class)))
 		{
-			Bypass.set(bypass, yamlHandler.getCommands().getString(path+bypass.toString()));
+			Bypass.set(bypass, yamlHandler.getCommands().getString(path+bypass.toString().replace("_", ".")));
 		}
 	}
 	
@@ -319,12 +385,14 @@ public class SAJ extends JavaPlugin
 		return BaseConstructor.getArgumentMapSpigot();
 	}
 	
-	public void setupListeners()
+	private void setupListeners()
 	{
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvents(new JoinLeaveListener(), plugin);
 		pm.registerEvents(new StatisticIncrementListener(), plugin);
+		pm.registerEvents(new PlayerMoveListener(), plugin);
 		
+		pm.registerEvents(new GuiPreListener(plugin), plugin);
 		pm.registerEvents(new UpperListener(plugin), plugin);
 		if(!SAJ.getPlugin().getYamlHandler().getConfig().getBoolean("IsInstalledOnProxy"))
 		{
@@ -475,7 +543,7 @@ public class SAJ extends JavaPlugin
 	
 	public void setupBstats()
 	{
-		int pluginId = 15925;
+		int pluginId = 24848;
         new Metrics(this, pluginId);
 	}
 	

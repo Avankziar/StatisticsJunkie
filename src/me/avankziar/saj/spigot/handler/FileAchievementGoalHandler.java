@@ -10,8 +10,8 @@ import java.util.Map.Entry;
 import org.bukkit.Material;
 
 import dev.dejvokep.boostedyaml.YamlDocument;
+import me.avankziar.ifh.general.statistic.StatisticType;
 import me.avankziar.saj.general.objects.FileAchievementGoal;
-import me.avankziar.saj.general.objects.StatisticType;
 import me.avankziar.saj.spigot.SAJ;
 
 public class FileAchievementGoalHandler 
@@ -49,6 +49,7 @@ public class FileAchievementGoalHandler
 		{
 			fileAchievementGoalMap = new HashMap<>();
 		}
+		SAJ.logger.info(SAJ.getPlugin().getYamlHandler().getFileAchievementGoal().size()+" AchievementGoals loading...");
 		for(YamlDocument y : SAJ.getPlugin().getYamlHandler().getFileAchievementGoal())
 		{
 			if(y.get("Uniquename") == null
@@ -115,5 +116,6 @@ public class FileAchievementGoalHandler
 				SAJ.logger.warning("Error at AchievementGoal "+y.getFile().getName()+"!");
 			}
 		}
+		SAJ.logger.info(fileAchievementGoalMap.size()+" AchievementGoals loaded!");
 	}
 }

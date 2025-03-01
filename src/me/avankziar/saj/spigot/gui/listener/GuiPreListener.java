@@ -16,9 +16,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import me.avankziar.saj.spigot.SAJ;
 import me.avankziar.saj.spigot.gui.GUIApi;
-import me.avankziar.saj.spigot.gui.events.BottomGuiClickEvent;
 import me.avankziar.saj.spigot.gui.events.UpperGuiClickEvent;
 import me.avankziar.saj.spigot.gui.objects.ClickType;
 import me.avankziar.saj.spigot.gui.objects.SettingsLevel;
@@ -76,11 +74,6 @@ public class GuiPreListener implements Listener
 		}
 		event.setCancelled(true);
 		event.setResult(Result.DENY);
-		BottomGuiClickEvent gce = new BottomGuiClickEvent(
-				event, 
-				SAJ.pluginname,
-				GUIApi.getGui(uuid));
-		Bukkit.getPluginManager().callEvent(gce);
 	}
 	
 	private void getUpperGuiEvent(JavaPlugin plugin, InventoryClickEvent event)

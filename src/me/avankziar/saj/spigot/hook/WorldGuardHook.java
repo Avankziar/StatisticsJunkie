@@ -13,16 +13,16 @@ import com.sk89q.worldguard.protection.regions.RegionQuery;
 
 public class WorldGuardHook
 {
-	public static StateFlag SJ_ACCEPT_STATISTIC_CHANGE;
+	public static StateFlag SAJ_STATISTIC_CHANGE;
 	
 	public static boolean init()
 	{
 		FlagRegistry registry = WorldGuard.getInstance().getFlagRegistry();
 		try 
 		{
-			StateFlag sj_asc = new StateFlag("sj_accept_statistic_change", true);
-	        registry.register(sj_asc);
-	        SJ_ACCEPT_STATISTIC_CHANGE = sj_asc;
+			StateFlag saj_asc = new StateFlag("saj-statistic-change", true);
+	        registry.register(saj_asc);
+	        SAJ_STATISTIC_CHANGE = saj_asc;
 	    } catch (FlagConflictException e) 
 		{
 	        return false;
@@ -34,6 +34,6 @@ public class WorldGuardHook
 	{
 		RegionQuery query = WorldGuard.getInstance().getPlatform().getRegionContainer().createQuery();
         return query.testState(BukkitAdapter.adapt(pointOne), 
-        		WorldGuardPlugin.inst().wrapPlayer(player), SJ_ACCEPT_STATISTIC_CHANGE);
+        		WorldGuardPlugin.inst().wrapPlayer(player), SAJ_STATISTIC_CHANGE);
 	}
 }

@@ -17,7 +17,6 @@ import me.avankziar.saj.general.objects.PlayerData;
 import me.avankziar.saj.spigot.SAJ;
 import me.avankziar.saj.spigot.cmdtree.ArgumentModule;
 import me.avankziar.saj.spigot.handler.GuiHandler;
-import me.avankziar.saj.spigot.handler.MessageHandler;
 import net.md_5.bungee.api.chat.ClickEvent;
 
 public class AchievementCommandExecutor  implements CommandExecutor
@@ -53,7 +52,6 @@ public class AchievementCommandExecutor  implements CommandExecutor
 				return false;
 			}
 			baseCommands(player, args[0]); //Base and Info Command
-			return true;
 		} else if(args.length == 0)
 		{
 			if (!(sender instanceof Player)) 
@@ -152,7 +150,7 @@ public class AchievementCommandExecutor  implements CommandExecutor
 		PlayerData pd = SAJ.getPlugin().getMysqlHandler().getData(new PlayerData(), "`player_name` = ?", playername);
 		if(pd == null)
 		{
-			MessageHandler.sendMessage(player, plugin.getYamlHandler().getLang().getString("NoPlayerExist"));
+			//return to normal args
 			return;
 		}
 		GuiHandler.openAchievement(player, null, null, true, 0, pd.getUUID(), playername);

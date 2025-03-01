@@ -70,7 +70,7 @@ public class AchievementGoal implements MysqlTable<AchievementGoal>
 
 	public String getMysqlTableName()
 	{
-		return "sjAchievementGoal";
+		return "sajAchievementGoal";
 	}
 	
 	public boolean setupMysql(MysqlBaseSetup mysqlSetup, ServerType serverType)

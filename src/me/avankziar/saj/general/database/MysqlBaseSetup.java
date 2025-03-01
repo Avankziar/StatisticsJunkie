@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 
 import javax.annotation.Nullable;
 
+import me.avankziar.saj.general.objects.AchievementGoal;
 import me.avankziar.saj.general.objects.PlayerData;
 import me.avankziar.saj.general.objects.StatisticEntry;
 
@@ -50,6 +51,7 @@ public class MysqlBaseSetup
 	{
 		register.add(new PlayerData());
 		register.add(new StatisticEntry());
+		register.add(new AchievementGoal());
 	}
 	
 	public boolean loadMysqlSetup(ServerType serverType)
@@ -60,11 +62,11 @@ public class MysqlBaseSetup
 		}
 		for(MysqlTable<?> mh : register)
 		{
-			if(serverType != mh.getServerType())
+			if(mh.getServerType() == ServerType.ALL 
+					|| serverType == mh.getServerType())
 			{
-				continue;
+				mh.setupMysql(this, serverType);
 			}
-			mh.setupMysql(this, serverType);
 		}
 		return true;
 	}

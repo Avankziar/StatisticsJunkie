@@ -66,13 +66,13 @@ public class YamlHandler implements YamlHandling
 		return mvelang;
 	}
 	
-	private LinkedHashMap<GuiType, YamlDocument> gui;
+	private LinkedHashMap<GuiType, YamlDocument> gui = new LinkedHashMap<>();
 	public YamlDocument getGui(GuiType guiType)
 	{
 		return gui.get(guiType);
 	}
 	
-	private ArrayList<YamlDocument> fileAchievementGoal;
+	private ArrayList<YamlDocument> fileAchievementGoal = new ArrayList<>();
 	public ArrayList<YamlDocument> getFileAchievementGoal()
 	{
 		return fileAchievementGoal;
@@ -205,10 +205,10 @@ public class YamlHandler implements YamlHandling
 					}
 					fileAchievementGoal.add(y);
 				}
-				
 		    } catch (Exception e)
 		    {
-		    	logger.severe("Could not create/load achievementgoalfile! Plugin will shut down!");
+		    	logger.severe("Could not create achievementgoalfile!");
+		    	e.printStackTrace();
 		    	return false;
 		    }
 		} else
@@ -223,9 +223,11 @@ public class YamlHandler implements YamlHandling
 				{
 					YamlDocument y = YamlDocument
 							.create(f, getClass().getResourceAsStream("/default.yml"),gsd,lsd,dsd,usd);
-					fileAchievementGoal.add( y);
+					fileAchievementGoal.add(y);
 				} catch(Exception e)
 				{
+					logger.severe("Could not load achievementgoalfile!");
+			    	e.printStackTrace();
 					continue;
 				}
 			}
@@ -257,6 +259,7 @@ public class YamlHandler implements YamlHandling
 					{
 						return false;
 					}
+					gui.put(gt, y);
 				} catch (IOException e1) 
 				{
 					continue;
@@ -274,7 +277,7 @@ public class YamlHandler implements YamlHandling
 				{
 					YamlDocument y = YamlDocument
 							.create(f, getClass().getResourceAsStream("/default.yml"),gsd,lsd,dsd,usd);
-					gui.put(GuiType.valueOf(y.getFile().getName()), y);
+					gui.put(GuiType.valueOf(y.getFile().getName().replace(".yml", "")), y);
 				} catch(Exception e)
 				{
 					continue;

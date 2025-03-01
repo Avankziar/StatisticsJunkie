@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 import java.util.logging.Level;
 
-import me.avankziar.ifh.general.enums.StatisticType;
+import me.avankziar.ifh.general.statistic.StatisticType;
 import me.avankziar.saj.general.database.MysqlBaseHandler;
 import me.avankziar.saj.general.database.MysqlBaseSetup;
 import me.avankziar.saj.general.database.MysqlTable;
@@ -82,7 +82,7 @@ public class StatisticEntry implements MysqlTable<StatisticEntry>
 
 	public String getMysqlTableName()
 	{
-		return "sjStatisticEntry";
+		return "sajStatisticEntry";
 	}
 	
 	public boolean setupMysql(MysqlBaseSetup mysqlSetup, ServerType serverType)

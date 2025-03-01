@@ -223,6 +223,27 @@ public class MysqlBaseHandler
 		return 0;
 	}
 	
+	public <T extends MysqlTable<T>> double getSum(T t, String sum, String whereColumn, Object... whereObject)
+	{
+		try (Connection conn = mysqlBaseSetup.getConnection();)
+		{
+			PreparedStatement ps = getPreparedStatement(conn,
+					"SELECT sum("+sum+") FROM `" + t.getMysqlTableName() + "` WHERE "+whereColumn,
+					1,
+					whereObject);
+	        ResultSet rs = ps.executeQuery();
+	        MysqlBaseHandler.addRows(QueryType.READ, rs.getMetaData().getColumnCount());
+	        while (rs.next()) 
+	        {
+	        	return rs.getInt(1);
+	        }
+	    } catch (SQLException e) 
+		{
+	    	t.log(logger, Level.WARNING, "Could not summarized "+t.getClass().getName()+" Object!", e);
+		}
+		return 0;
+	}
+	
 	public <T extends MysqlTable<T>> ArrayList<T> getList(T t, String orderByColumn, int start, int quantity, String whereColumn, Object...whereObject)
 	{
 		try (Connection conn = mysqlBaseSetup.getConnection();)

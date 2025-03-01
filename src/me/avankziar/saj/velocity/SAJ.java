@@ -50,7 +50,7 @@ public class SAJ
     private final ProxyServer server;
     private Logger logger = null;
     private Path dataDirectory;
-    public String pluginname = "StatisticsJunkie";
+    public String pluginname = "StatisticalAchievementJunkie";
     private final Metrics.Factory metricsFactory;
     private YamlHandler yamlHandler;
     private YamlManager yamlManager;
@@ -77,13 +77,13 @@ public class SAJ
     	PluginDescription pd = server.getPluginManager().getPlugin(pluginname.toLowerCase()).get().getDescription();
         List<String> dependencies = new ArrayList<>();
         pd.getDependencies().stream().allMatch(x -> dependencies.add(x.getId()));
-        //https://patorjk.com/software/taag/#p=display&f=ANSI%20Shadow&t=SJ
-		logger.info("  | Id: "+pd.getId());
-		logger.info("  | Version: "+pd.getVersion().get());
-		logger.info("  | Author: ["+String.join(", ", pd.getAuthors())+"]");
-		logger.info("  | Description: "+(pd.getDescription().isPresent() ? pd.getDescription().get() : "/"));
-		logger.info("  | Plugin Website:"+pd.getUrl().toString());
-		logger.info("  | Dependencies Plugins: ["+String.join(", ", dependencies)+"]");
+        //https://patorjk.com/software/taag/#p=display&f=ANSI%20Shadow&t=SAJ
+		logger.info(" ███████╗ █████╗      ██╗ | Id: "+pd.getId());
+		logger.info(" ██╔════╝██╔══██╗     ██║ | Version: "+pd.getVersion().get());
+		logger.info(" ███████╗███████║     ██║ | Author: ["+String.join(", ", pd.getAuthors())+"]");
+		logger.info(" ╚════██║██╔══██║██   ██║ | Description: "+(pd.getDescription().isPresent() ? pd.getDescription().get() : "/"));
+		logger.info(" ███████║██║  ██║╚█████╔╝ | Plugin Website:"+pd.getUrl().toString());
+		logger.info(" ╚══════╝╚═╝  ╚═╝ ╚════╝  | Dependencies Plugins: ["+String.join(", ", dependencies)+"]");
         
 		setupIFHAdministration();
 		
@@ -225,7 +225,7 @@ public class SAJ
     
     public void setupBstats()
 	{
-    	int pluginId = 0;
+    	int pluginId = 24850;
         metricsFactory.make(this, pluginId);
 	}
 }

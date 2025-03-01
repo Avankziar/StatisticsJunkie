@@ -1,9 +1,9 @@
 package me.avankziar.saj.spigot.assistance;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -18,7 +18,7 @@ import me.avankziar.saj.spigot.handler.MessageHandler;
 public class BackgroundTask
 {
 	private static SAJ plugin;
-	public static HashMap<UUID, ArrayList<FileAchievementGoal>> playerAchievementGoal = new HashMap<>();
+	public static ConcurrentHashMap<UUID, ArrayList<FileAchievementGoal>> playerAchievementGoal = new ConcurrentHashMap<>();
 	
 	public BackgroundTask(SAJ plugin)
 	{
@@ -56,15 +56,15 @@ public class BackgroundTask
 				ArrayList<FileAchievementGoal> l = playerAchievementGoal.get(uuid);
 				AchievementGoal ag = new AchievementGoal();
 				StatisticEntry se = new StatisticEntry();
-				for(Iterator<FileAchievementGoal> iter = l.iterator(); 
-						iter.hasNext();)
+				Iterator<FileAchievementGoal> iter = l.listIterator();
+				while(iter.hasNext())
 				{
 					FileAchievementGoal favg = iter.next();
 					if(SAJ.getPlugin().getMysqlHandler().exist(ag, 
 							"`player_uuid` = ? AND `achievement_goal_uniquename` = ?", 
 							uuid.toString(), favg.getAchievementGoalUniqueName()))
 					{
-						l.remove(favg);
+						iter.remove();;
 						continue;
 					}
 					if(!SAJ.getPlugin().getMysqlHandler().exist(se, 
@@ -84,6 +84,6 @@ public class BackgroundTask
 				playerAchievementGoal.put(uuid, l);
 			}
 		}.runTaskTimerAsynchronously(plugin, 10*20L, 
-				20L*60*plugin.getYamlHandler().getConfig().getInt("Task.CheckIfPlayerAchievedSomething"));
+				20L*60*plugin.getYamlHandler().getConfig().getInt("Task.CheckIfPlayerAchievedSomething", 5));
 	}
 }

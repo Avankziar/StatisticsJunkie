@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.bukkit.Material;
 
+import me.avankziar.ifh.general.statistic.StatisticType;
+
 public class FileAchievementGoal 
 {
 	private String achievementGoalUniqueName;

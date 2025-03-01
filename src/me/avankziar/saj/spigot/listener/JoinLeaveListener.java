@@ -8,9 +8,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import me.avankziar.ifh.general.statistic.StatisticType;
 import me.avankziar.saj.general.objects.PlayerData;
 import me.avankziar.saj.general.objects.StatisticEntry;
-import me.avankziar.saj.general.objects.StatisticType;
 import me.avankziar.saj.spigot.SAJ;
 import me.avankziar.saj.spigot.assistance.BackgroundTask;
 

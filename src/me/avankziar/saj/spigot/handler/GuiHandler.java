@@ -102,6 +102,7 @@ public class GuiHandler
 				boolean notA = false;
 				for(FileAchievementGoal nAfavg : notAchieved)
 				{
+					SAJ.logger.info(nAfavg.getAchievementGoalUniqueName()+" : "+favg.getAchievementGoalUniqueName()); //REMOVEME
 					if(nAfavg.getAchievementGoalUniqueName().equals(favg.getAchievementGoalUniqueName()))
 					{
 						notA = true;
@@ -111,8 +112,10 @@ public class GuiHandler
 				ItemStack is = null;
 				if(notA)
 				{
+					SAJ.logger.info(favg.getAchievementGoalUniqueName()+" notA"); //REMOVEME
 					if(favg.getDisplayItemIfNotAchievedMaterial() == null)
 					{
+						SAJ.logger.info(favg.getAchievementGoalUniqueName()+" favg.getDisplayItemIfNotAchievedMaterial() == null"); //REMOVEME
 						continue;
 					}
 					is = new ItemStack(favg.getDisplayItemIfNotAchievedMaterial());
@@ -127,7 +130,6 @@ public class GuiHandler
 							{
 								l.add(ChatApiS.tlItem(x
 										.replace("%player%", othername)
-										
 										));
 							});
 							im.setLore(l);
@@ -138,13 +140,19 @@ public class GuiHandler
 						}
 						is.setItemMeta(im);
 					}
+					SAJ.logger.info("Added to Gui"); //REMOVEME
+					LinkedHashMap<String, Entry<GUIApi.Type, Object>> map = new LinkedHashMap<>();
+					gui.add(i, is, SettingsLevel.BASE, true, map, new ClickFunction[0]);
+					i++;
 				} else
 				{
+					SAJ.logger.info(favg.getAchievementGoalUniqueName()+" A"); //REMOVEME
 					AchievementGoal ag = plugin.getMysqlHandler().getData(new AchievementGoal(), 
 							"`player_uuid` = ? AND `achievement_goal_uniquename` = ?", 
 							other.toString(), favg.getAchievementGoalUniqueName());
 					if(favg.getDisplayItemMaterial() == null || ag == null)
 					{
+						SAJ.logger.info(favg.getAchievementGoalUniqueName()+" favg.getDisplayItemMaterial() == null || ag == null"); //REMOVEME
 						continue;
 					}
 					is = new ItemStack(favg.getDisplayItemMaterial());
@@ -170,13 +178,13 @@ public class GuiHandler
 						}
 						is.setItemMeta(im);
 					}
+					SAJ.logger.info("Added to Gui"); //REMOVEME
+					LinkedHashMap<String, Entry<GUIApi.Type, Object>> map = new LinkedHashMap<>();
+					gui.add(i, is, SettingsLevel.BASE, true, map, new ClickFunction[0]);
+					i++;
 				}
-				LinkedHashMap<String, Entry<GUIApi.Type, Object>> map = new LinkedHashMap<>();
-				map.put(PDT_PAGE, new AbstractMap.SimpleEntry<GUIApi.Type, Object>(GUIApi.Type.INTEGER,
-						pagination));
-				gui.add(i, is, SettingsLevel.BASE, true, map, new ClickFunction[0]);
-				i++;
 			}
+			break;
 		}
 		int allAchiv = FileAchievementGoalHandler.getFileAchievementGoal().size();
 		double pagecount = (double) allAchiv / 45.0;

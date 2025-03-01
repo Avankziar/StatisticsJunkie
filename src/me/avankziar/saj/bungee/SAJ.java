@@ -19,7 +19,7 @@ public class SAJ extends Plugin
 {
 	public static SAJ plugin;
 	public static Logger logger;
-	public static String pluginname = "StatisticsJunkie";
+	public static String pluginname = "StatisticalAchievementJunkie";
 	private static YamlHandler yamlHandler;
 	private static YamlManager yamlManager;
 	private static MysqlHandler mysqlHandler;
@@ -31,13 +31,13 @@ public class SAJ extends Plugin
 		plugin = this;
 		logger = Logger.getLogger("SJ");
 		
-		//https://patorjk.com/software/taag/#p=display&f=ANSI%20Shadow&t=SJ
-		logger.info("  | Version: "+plugin.getDescription().getVersion());
-		logger.info("  | Author: "+plugin.getDescription().getAuthor());
-		logger.info("  | Plugin Website: https://www.spigotmc.org/resources/rootadministration.104833/");
-		logger.info("  | Depend Plugins: "+plugin.getDescription().getDepends().toString());
-		logger.info("  | SoftDepend Plugins: "+plugin.getDescription().getSoftDepends().toString());
-		logger.info("  | Have Fun^^");
+		//https://patorjk.com/software/taag/#p=display&f=ANSI%20Shadow&t=SAJ
+		logger.info(" ███████╗ █████╗      ██╗ | Version: "+plugin.getDescription().getVersion());
+		logger.info(" ██╔════╝██╔══██╗     ██║ | Author: "+plugin.getDescription().getAuthor());
+		logger.info(" ███████╗███████║     ██║ | Plugin Website: https://www.spigotmc.org/resources/rootadministration.104833/");
+		logger.info(" ╚════██║██╔══██║██   ██║ | Depend Plugins: "+plugin.getDescription().getDepends().toString());
+		logger.info(" ███████║██║  ██║╚█████╔╝ | SoftDepend Plugins: "+plugin.getDescription().getSoftDepends().toString());
+		logger.info(" ╚══════╝╚═╝  ╚═╝ ╚════╝  | Have Fun^^");
 		
 		setupIFHAdministration();
 		
@@ -153,7 +153,7 @@ public class SAJ extends Plugin
 	
 	public void setupBstats()
 	{
-		int pluginId = 0;
+		int pluginId = 24849;
         new Metrics(this, pluginId);
 	}
 }

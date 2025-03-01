@@ -84,7 +84,7 @@ public class ARG_Info extends ArgumentModule
 		msg.add(plugin.getYamlHandler().getLang().getString("Achievement.Info.AchievedVersusTotal")
 				.replace("%total%", String.valueOf(allAchievements))
 				.replace("%achieved%", String.valueOf(receivedAchievements))
-				.replace("%place%", String.valueOf(place)));
+				.replace("%place%", place > 0 ? String.valueOf(place) : "/"));
 		msg.add(plugin.getYamlHandler().getLang().getString("Achievement.Info.PlayerCount")
 				.replace("%achievementtotal%", String.valueOf(count))
 				.replace("%playercount%", String.valueOf(l.size())));

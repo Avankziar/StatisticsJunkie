@@ -3,9 +3,9 @@ package me.avankziar.saj.velocity.hook;
 import com.velocitypowered.api.event.Subscribe;
 import com.vexsoftware.votifier.velocity.event.VotifierEvent;
 
+import me.avankziar.ifh.general.statistic.StatisticType;
 import me.avankziar.saj.general.objects.PlayerData;
 import me.avankziar.saj.general.objects.StatisticEntry;
-import me.avankziar.saj.general.objects.StatisticType;
 import me.avankziar.saj.velocity.SAJ;
 
 public class VotifierListener 
