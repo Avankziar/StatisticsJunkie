@@ -16,12 +16,13 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import me.avankziar.ifh.general.statistic.StatisticType;
 import me.avankziar.ifh.general.statistic.StatisticType.SortingType;
-import me.avankziar.saj.general.assistance.ChatApiB;
 import me.avankziar.saj.general.assistance.ChatApiS;
 import me.avankziar.saj.general.assistance.MatchApi;
+import me.avankziar.saj.general.assistance.TimeHandler;
 import me.avankziar.saj.general.cmdtree.ArgumentConstructor;
 import me.avankziar.saj.general.cmdtree.CommandConstructor;
 import me.avankziar.saj.general.cmdtree.CommandSuggest;
@@ -32,19 +33,21 @@ import me.avankziar.saj.spigot.SAJ;
 import me.avankziar.saj.spigot.ModifierValueEntry.Bypass;
 import me.avankziar.saj.spigot.cmdtree.ArgumentModule;
 import me.avankziar.saj.spigot.handler.MessageHandler;
-import net.md_5.bungee.api.chat.ClickEvent;
 
 public class StatisticCommandExecutor implements CommandExecutor
 {
 	private SAJ plugin;
 	private static CommandConstructor cc;
-	private boolean km;
-	private double cm_to_m = Double.valueOf("100.0");
-	private double cm_to_km = Double.valueOf("100000.0");
-	private double cm_to_yard = Double.valueOf("91.44");
-	private boolean mile;
-	private double cm_to_mile = Double.valueOf("160934.0");
+	private static boolean km;
+	private static double cm_to_m = Double.valueOf("100.0");
+	private static double cm_to_km = Double.valueOf("100000.0");
+	private static double cm_to_yard = Double.valueOf("91.44");
+	private static boolean mile;
+	private static double cm_to_mile = Double.valueOf("160934.0");
 	private static ArrayList<String> matORent = new ArrayList<>();
+	private static long dd = 1000*60*60*24;
+	private static long MM = 1000*60*60*24*30;
+	private final static long yyyy = 1000*60*60*24*365;
 	
 	public StatisticCommandExecutor(SAJ plugin, CommandConstructor cc)
 	{
@@ -77,14 +80,21 @@ public class StatisticCommandExecutor implements CommandExecutor
 				plugin.getLogger().info("Cmd is only for Player!");
 				return false;
 			}
-			Player player = (Player) sender;
+			final Player player = (Player) sender;
 			if(!player.hasPermission(cc.getPermission()))
 			{
 				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApiS.tl(plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
-			baseCommand(player);
+			new BukkitRunnable()
+			{
+				@Override
+				public void run()
+				{
+					baseCommand(player);
+				}
+			}.runTaskAsynchronously(plugin);
 			return true;
 		}
 		int length = args.length-1;
@@ -158,33 +168,50 @@ public class StatisticCommandExecutor implements CommandExecutor
 				}
 			}
 		}
-		sender.spigot().sendMessage(ChatApiB.clickEvent(plugin.getYamlHandler().getLang().getString("InputIsWrong"),
-				ClickEvent.Action.RUN_COMMAND, CommandSuggest.getCmdString(CommandSuggest.Type.SAJ)));
+		MessageHandler.sendMessage(sender, ChatApiS.click(plugin.getYamlHandler().getLang().getString("InputIsWrong"),
+				"RUN_COMMAND", CommandSuggest.getCmdString(CommandSuggest.Type.SAJ)));
 		return false;
 	}
 	
-	private void baseCommand(Player player)
+	private void baseCommand(final Player player)
 	{
 		ArrayList<String> msg = new ArrayList<>();
-		msg.add(plugin.getYamlHandler().getLang().getString("Statistic.Base.Headline"));
+		msg.add(plugin.getYamlHandler().getLang().getString("Statistic.Base.Headline").replace("%player%", player.getName()));
 		for(StatisticType.SortingType sortingType : new ArrayList<StatisticType.SortingType>(EnumSet.allOf(StatisticType.SortingType.class)))
 		{
 			HashSet<StatisticType> st = StatisticType.getStatisticTypes(sortingType);
-			if(st.isEmpty())
+			if(st == null || st.isEmpty())
 			{
 				continue;
 			}
+			StringBuilder sb1 = new StringBuilder();
+			sb1.append("`player_uuid` = ? AND ");
+			ArrayList<Object> ob = new ArrayList<>();
+			ob.add(player.getUniqueId().toString());
+			sb1.append("(");
+			int i = 0;
+			String cmd = null;
+			switch(sortingType)
+			{
+			case CHAT_AND_COMMAND: cmd = CommandSuggest.getCmdString(Type.STATISTIC_CHATANDCOMMAND).strip(); break;
+			case DAMAGE_AND_DEATH: cmd = CommandSuggest.getCmdString(Type.STATISTIC_DAMAGEANDDEATH).strip(); break;
+			case ECONOMY: cmd = CommandSuggest.getCmdString(Type.STATISTIC_ECONOMY).strip(); break;
+			case INTERACTION_WITH_BLOCKS: cmd = CommandSuggest.getCmdString(Type.STATISTIC_INTERACTIONWITHBLOCKS).strip(); break;
+			case MISCELLANEOUS: cmd = CommandSuggest.getCmdString(Type.STATISTIC_MISCELLANEOUS).strip(); break;
+			case MOVEMENT: cmd = CommandSuggest.getCmdString(Type.STATISTIC_MOVEMENT).strip(); break;
+			case PLUGINS: cmd = CommandSuggest.getCmdString(Type.STATISTIC_PLUGINS).strip(); break;
+			case SKILL: cmd = CommandSuggest.getCmdString(Type.STATISTIC_SKILL).strip(); break;
+			case SPECIAL: cmd = CommandSuggest.getCmdString(Type.STATISTIC_SPECIAL).strip(); break;
+			case TIME: cmd = CommandSuggest.getCmdString(Type.STATISTIC_TIME).strip(); break;
+			case WITH_SUBSTATISTIC: cmd = CommandSuggest.getCmdString(Type.STATISTIC_WITHSUBSTATISTIC).strip(); break;
+			}
 			if(sortingType == SortingType.MOVEMENT)
 			{
-				StringBuilder sb1 = new StringBuilder();
-				ArrayList<Object> ob = new ArrayList<>();
-				ob.add(player.getUniqueId().toString());
-				sb1.append("(");
-				int i = 0;
 				for(StatisticType s : st)
 				{
 					if(StatisticType.JUMP.toString().equals(s.toString()))
 					{
+						i++;
 						continue;
 					}
 					sb1.append("`statistic_type` = ?");
@@ -197,35 +224,28 @@ public class StatisticCommandExecutor implements CommandExecutor
 				}
 				sb1.append(")");
 				double mov = plugin.getMysqlHandler().getSum(new StatisticEntry(), "`statistic_value`",
-						"`player_uuid` = ? AND "+sb1.toString(), ob.toArray(new Object[ob.size()]));
+						sb1.toString(), ob.toArray(new Object[ob.size()]));
 				StatisticEntry se = plugin.getMysqlHandler().getData(new StatisticEntry(),
-						"`player_uuid` = ? AND `statistic_type` = ?", StatisticType.JUMP.toString());
+						"`player_uuid` = ? AND `statistic_type` = ?",
+						player.getUniqueId().toString(), StatisticType.JUMP.toString());
 				mov += se != null ? se.getStatisticValue() * 100.0 : 0.0;
 				msg.add(plugin.getYamlHandler().getLang().getString("Statistic.Base."+sortingType.toString())
-						.replace("%statisticcmd%", CommandSuggest.getCmdString(Type.STATISTIC))
+						.replace("%statisticcmd%", cmd)
 						.replace("%value%", formatDouble(convertFromCentiMeter(mov))+getUnit(mov)));
 			} else
 			{
-				StringBuilder sb1 = new StringBuilder();
-				sb1.append("`player_uuid` = ? AND ");
-				ArrayList<Object> ob = new ArrayList<>();
-				ob.add(player.getUniqueId().toString());
-				sb1.append("(");
-				int i = 0;
 				for(StatisticType s : st)
 				{
-					sb1.append("`statistic_type` = ?");
-					ob.add(s.toString());
-					if(i + 1 < st.size())
-					{
-						sb1.append(" OR ");
-					}
+					if (i > 0) sb1.append(" OR ");
+				    sb1.append("`statistic_type` = ?");
+				    ob.add(s.toString());
+				    i++;
 				}
 				sb1.append(")");
 				double mov = plugin.getMysqlHandler().getSum(new StatisticEntry(), "`statistic_value`",
-						sb1.toString(), st.toString());
+						sb1.toString(), ob.toArray(new Object[ob.size()]));
 				msg.add(plugin.getYamlHandler().getLang().getString("Statistic.Base."+sortingType.toString())
-						.replace("%statisticcmd%", CommandSuggest.getCmdString(Type.STATISTIC))
+						.replace("%statisticcmd%", cmd)
 						.replace("%value%", formatDouble(mov)));
 			}
 		}
@@ -254,7 +274,7 @@ public class StatisticCommandExecutor implements CommandExecutor
 						player.getUniqueId().toString(), st.toString(), "null");
 				msg.add(plugin.getYamlHandler().getLang().getString("Statistic.Substatistic.Info")
 						.replace("%statistic%", st.toString())
-						.replace("%value%", String.valueOf(se.getStatisticValue())));
+						.replace("%value%", String.valueOf(se == null ? 0 : se.getStatisticValue())));
 			}
 			msg.forEach(x -> MessageHandler.sendMessage(player, x));
 			return;
@@ -306,12 +326,22 @@ public class StatisticCommandExecutor implements CommandExecutor
 					uuid.toString(), st.toString(), "null");
 			ase.addAll(se);
 		}
+		if(ase == null || ase.isEmpty())
+		{
+			MessageHandler.sendMessage(player, plugin.getYamlHandler().getLang().getString("Statistic.NoEntryExist")
+					.replace("%statistic%", sortingType.toString()));
+			return;
+		}
 		msg.add(plugin.getYamlHandler().getLang().getString("Statistic.Headline")
 				.replace("%statistic%", st.toString()));
 		for(StatisticEntry se : ase)
 		{
+			if(se == null)
+			{
+				continue;
+			}
 			msg.add(plugin.getYamlHandler().getLang().getString("Statistic.Substatistic.Info")
-					.replace("%statistic%", se.getMaterialEntityType())
+					.replace("%statistic%", translate(se.getMaterialEntityType()))
 					.replace("%value%", String.valueOf(se.getStatisticValue())));
 		}
 		msg.forEach(x -> MessageHandler.sendMessage(player, x));
@@ -352,39 +382,90 @@ public class StatisticCommandExecutor implements CommandExecutor
 			return;
 		}
 		StringBuilder sb1 = new StringBuilder();
-		sb1.append("`player_uuid` = ? AND ");
 		ArrayList<Object> ob = new ArrayList<>();
-		ob.add(uuid.toString());
-		sb1.append("(");
-		int i = 0;
-		for(StatisticType s : hst)
+		if(hst == null || hst.isEmpty())
 		{
-			if(page*20 >= i)
+			sb1.append("`player_uuid` = ?");
+			ob.add(uuid.toString());
+		} else
+		{
+			sb1.append("`player_uuid` = ? AND ");
+			ob.add(uuid.toString());
+			sb1.append("(");
+			int i = 0;
+			for(StatisticType s : hst)
 			{
-				break;
+				if(20 <= i)
+				{
+					break;
+				}
+				if (i > 0) sb1.append(" OR ");
+				sb1.append("`statistic_type` = ?");
+				ob.add(s.toString());
+				i++;
 			}
-			sb1.append("`statistic_type` = ?");
-			ob.add(s.toString());
-			if(i + 1 < hst.size())
-			{
-				sb1.append(" OR ");
-			}
+			sb1.append(")");
 		}
-		sb1.append(")");
 		ArrayList<StatisticEntry> ase = plugin.getMysqlHandler().getList(new StatisticEntry(),
-				"`id` ASC", page*20, 20, sb1.toString(), 
-				ob.toArray(new Object[ob.size()]));
+				"`id` ASC", page*20, 20, sb1.toString(), ob.toArray(new Object[ob.size()]));
+		if(ase == null || ase.isEmpty())
+		{
+			MessageHandler.sendMessage(player, plugin.getYamlHandler().getLang().getString("Statistic.NoEntryExist")
+					.replace("%statistic%", sortingType.toString()));
+			return;
+		}
+		msg.add(plugin.getYamlHandler().getLang().getString("Statistic.Headline")
+				.replace("%statistic%", sortingType.toString()));
 		for(StatisticEntry se : ase)
 		{
-			msg.add(plugin.getYamlHandler().getLang().getString("Statistic.Statistic.Info")
-					.replace("%statistic%", se.getStatisticType().toString())
-					.replace("%value%", String.valueOf(se.getStatisticValue())));
+			if(se == null)
+			{
+				continue;
+			}
+			if(se.getStatisticType().toString().endsWith("ONE_CM"))
+			{
+				double mov = se != null ? se.getStatisticValue() * 100.0 : 0.0;
+				msg.add(plugin.getYamlHandler().getLang().getString("Statistic.Statistic.Info")
+						.replace("%statistic%", se.getStatisticType().toString())
+						.replace("%value%", formatDouble(convertFromCentiMeter(mov))+getUnit(mov)));
+				
+			} else if(se.getStatisticType().toString().endsWith("ONE_MINUTE"))
+			{
+				double mov = se != null ? se.getStatisticValue() * 1000.0 : 0.0;
+				long time = (long) mov;
+				String format = null;
+				if(time < dd)
+				{
+					format = TimeHandler.getRepeatingTime(time, 
+							SAJ.getPlugin().getYamlHandler().getLang().getString("Statistic.TimeScale.UnderDays"));
+				} else if(time < MM && time >= dd)
+				{
+					format = TimeHandler.getRepeatingTime(time, 
+							SAJ.getPlugin().getYamlHandler().getLang().getString("Statistic.TimeScale.UnderMonths"));
+				} else if(time < yyyy && time >= MM)
+				{
+					format = TimeHandler.getRepeatingTime(time, 
+							SAJ.getPlugin().getYamlHandler().getLang().getString("Statistic.TimeScale.UnderYears"));
+				} else
+				{
+					format = TimeHandler.getRepeatingTime(time, 
+							SAJ.getPlugin().getYamlHandler().getLang().getString("Statistic.TimeScale.OverYears"));
+				}
+				msg.add(plugin.getYamlHandler().getLang().getString("Statistic.Statistic.Info")
+						.replace("%statistic%", se.getStatisticType().toString())
+						.replace("%value%", format));
+			} else
+			{
+				msg.add(plugin.getYamlHandler().getLang().getString("Statistic.Statistic.Info")
+						.replace("%statistic%", se.getStatisticType().toString())
+						.replace("%value%", String.valueOf(se.getStatisticValue())));
+			}
 		}
 		msg.forEach(x -> MessageHandler.sendMessage(player, x));
 		return;
 	}
 	
-	private double convertFromCentiMeter(double v)
+	private static double convertFromCentiMeter(double v)
 	{
 		if(km)
 		{
@@ -410,36 +491,36 @@ public class StatisticCommandExecutor implements CommandExecutor
 		}
 	}
 	
-	private String getUnit(double v)
+	private static String getUnit(double v)
 	{
 		if(km)
 		{
 			if(v < cm_to_km)
 			{
-				return plugin.getYamlHandler().getLang().getString("Statistic.Unit.Meter");
+				return SAJ.getPlugin().getYamlHandler().getLang().getString("Statistic.Unit.Meter");
 			}
-			return plugin.getYamlHandler().getLang().getString("Statistic.Unit.Kilometer");
+			return SAJ.getPlugin().getYamlHandler().getLang().getString("Statistic.Unit.Kilometer");
 		} else if(mile)
 		{
 			if(v < cm_to_mile)
 			{
-				return plugin.getYamlHandler().getLang().getString("Statistic.Unit.Yard");
+				return SAJ.getPlugin().getYamlHandler().getLang().getString("Statistic.Unit.Yard");
 			}
-			return plugin.getYamlHandler().getLang().getString("Statistic.Unit.Mile");
+			return SAJ.getPlugin().getYamlHandler().getLang().getString("Statistic.Unit.Mile");
 		} else
 		{
 			if(v < cm_to_km)
 			{
-				return plugin.getYamlHandler().getLang().getString("Statistic.Unit.Meter");
+				return SAJ.getPlugin().getYamlHandler().getLang().getString("Statistic.Unit.Meter");
 			}
-			return plugin.getYamlHandler().getLang().getString("Statistic.Unit.Kilometer");
+			return SAJ.getPlugin().getYamlHandler().getLang().getString("Statistic.Unit.Kilometer");
 		}
 	}
 	
-	private String formatDouble(double d)
+	private static String formatDouble(double d)
 	{
 		Locale l = null;
-		switch(plugin.getYamlManager().getLanguageType())
+		switch(SAJ.getPlugin().getYamlManager().getLanguageType())
 		{
 		default:
 		case ENG: l = Locale.US; break;
@@ -454,5 +535,28 @@ public class StatisticCommandExecutor implements CommandExecutor
 		DecimalFormatSymbols symbols = formatter.getDecimalFormatSymbols();
 		formatter.setDecimalFormatSymbols(symbols);
 		return formatter.format(d);
+	}
+	
+	private static String translate(String n)
+	{
+		if(n.equals("null"))
+		{
+			return SAJ.getPlugin().getYamlHandler().getLang().getString("Statistic.Translate.null");
+		}
+		if(SAJ.getPlugin().getEnumTl() == null)
+		{
+			return n;
+		}
+		try
+		{
+			Material m = Material.valueOf(n);
+			return SAJ.getPlugin().getEnumTl().getLocalization(m);
+		} catch(Exception e) {}
+		try
+		{
+			EntityType e = EntityType.valueOf(n);
+			return SAJ.getPlugin().getEnumTl().getLocalization(e);
+		} catch(Exception e) {}
+		return n;
 	}
 }

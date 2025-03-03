@@ -144,7 +144,7 @@ public class StatisticHandler
 						{
 							String matORent = eee.getKey();
 							long add = eee.getValue();
-							SAJ.logger.info("Update "+uuid.toString()+" | "+st.toString()+" | "+matORent+" | "+add);
+							SAJ.logger.info("Update "+uuid.toString()+" | "+st.toString()+" | "+matORent+" | "+add); //REMOVEME
 							StatisticEntry se = SAJ.getPlugin().getMysqlHandler().getData(new StatisticEntry(), 
 									"`player_uuid` = ? AND `statistic_type` = ? AND `material_or_entitytype` = ?", 
 									uuid.toString(), st.toString(),	matORent);
@@ -174,7 +174,7 @@ public class StatisticHandler
 						{
 							String matORent = eee.getKey();
 							long add = eee.getValue();
-							SAJ.logger.info("Update "+uuid.toString()+" | "+st.toString()+" | "+matORent+" | "+add);
+							SAJ.logger.info("Update "+uuid.toString()+" | "+st.toString()+" | "+matORent+" | "+add); //REMOVEME
 							StatisticEntry se = SAJ.getPlugin().getMysqlHandler().getData(new StatisticEntry(), 
 									"`player_uuid` = ? AND `statistic_type` = ? AND `material_or_entitytype` = ?", 
 									uuid.toString(), st.toString(),	matORent);

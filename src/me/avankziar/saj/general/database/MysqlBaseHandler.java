@@ -225,9 +225,10 @@ public class MysqlBaseHandler
 	
 	public <T extends MysqlTable<T>> double getSum(T t, String sum, String whereColumn, Object... whereObject)
 	{
+		PreparedStatement ps = null;
 		try (Connection conn = mysqlBaseSetup.getConnection();)
 		{
-			PreparedStatement ps = getPreparedStatement(conn,
+			ps = getPreparedStatement(conn,
 					"SELECT sum("+sum+") FROM `" + t.getMysqlTableName() + "` WHERE "+whereColumn,
 					1,
 					whereObject);
@@ -239,7 +240,7 @@ public class MysqlBaseHandler
 	        }
 	    } catch (SQLException e) 
 		{
-	    	t.log(logger, Level.WARNING, "Could not summarized "+t.getClass().getName()+" Object!", e);
+	    	t.log(logger, Level.WARNING, "Could not summarized "+t.getClass().getName()+" Object! QUERY: "+ps.toString(), e);
 		}
 		return 0;
 	}

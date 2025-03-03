@@ -53,7 +53,12 @@ public class TimeHandler
 	
 	public static String getTime(long l)
 	{
-		return new Time(l).toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+		return getTime(l, "HH:mm:ss");
+	}
+	
+	public static String getTime(long l, String format)
+	{
+		return new Time(l).toLocalTime().format(DateTimeFormatter.ofPattern(format));
 	}
 	
 	public static String getRepeatingTime(long l, String timeformat) // yyyy-dd-HH:mm

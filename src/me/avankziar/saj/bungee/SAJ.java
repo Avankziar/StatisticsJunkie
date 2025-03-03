@@ -8,6 +8,7 @@ import me.avankziar.ifh.bungee.plugin.RegisteredServiceProvider;
 import me.avankziar.saj.bungee.database.MysqlHandler;
 import me.avankziar.saj.bungee.database.MysqlSetup;
 import me.avankziar.saj.bungee.hook.VotifierListener;
+import me.avankziar.saj.bungee.listener.PlayerChatAndCommandListener;
 import me.avankziar.saj.bungee.listener.PlayerJoinLeaveListener;
 import me.avankziar.saj.bungee.metric.Metrics;
 import me.avankziar.saj.general.database.YamlHandler;
@@ -116,6 +117,7 @@ public class SAJ extends Plugin
 	{
 		PluginManager pm = getProxy().getPluginManager();
 		pm.registerListener(plugin, new PlayerJoinLeaveListener(plugin));
+		pm.registerListener(plugin, new PlayerChatAndCommandListener());
         if(getProxy().getPluginManager().getPlugin("NuVotifier") != null
         		|| getProxy().getPluginManager().getPlugin("VotifierPlus") != null) 
         {

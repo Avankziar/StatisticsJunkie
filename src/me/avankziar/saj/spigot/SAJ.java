@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -25,6 +26,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import me.avankziar.ifh.general.statistic.StatisticType;
 import me.avankziar.ifh.general.statistic.StatisticType.SortingType;
 import me.avankziar.ifh.spigot.administration.Administration;
+import me.avankziar.ifh.spigot.interfaces.EnumTranslation;
 import me.avankziar.ifh.spigot.tobungee.chatlike.MessageToBungee;
 import me.avankziar.ifh.spigot.tovelocity.chatlike.MessageToVelocity;
 import me.avankziar.saj.general.assistance.Utility;
@@ -33,6 +35,7 @@ import me.avankziar.saj.general.cmdtree.BaseConstructor;
 import me.avankziar.saj.general.cmdtree.CommandConstructor;
 import me.avankziar.saj.general.cmdtree.CommandSuggest;
 import me.avankziar.saj.general.cmdtree.CommandSuggest.Type;
+import me.avankziar.saj.general.database.Language.ISO639_2B;
 import me.avankziar.saj.general.database.YamlHandler;
 import me.avankziar.saj.general.database.YamlManager;
 import me.avankziar.saj.general.objects.PlayerData;
@@ -43,6 +46,7 @@ import me.avankziar.saj.spigot.cmd.SAJCommandExecutor;
 import me.avankziar.saj.spigot.cmd.StatisticCommandExecutor;
 import me.avankziar.saj.spigot.cmd.TabCompletion;
 import me.avankziar.saj.spigot.cmd.achievement.ARG_Info;
+import me.avankziar.saj.spigot.cmd.statistic.ARG_ChatAndCommand;
 import me.avankziar.saj.spigot.cmd.statistic.ARG_DamageAndDeath;
 import me.avankziar.saj.spigot.cmd.statistic.ARG_Economy;
 import me.avankziar.saj.spigot.cmd.statistic.ARG_InteractionWithBlocks;
@@ -63,6 +67,7 @@ import me.avankziar.saj.spigot.handler.StatisticHandler;
 import me.avankziar.saj.spigot.hook.VotifierListener;
 import me.avankziar.saj.spigot.hook.WorldGuardHook;
 import me.avankziar.saj.spigot.listener.JoinLeaveListener;
+import me.avankziar.saj.spigot.listener.PlayerChatAndCommandListener;
 import me.avankziar.saj.spigot.listener.PlayerMoveListener;
 import me.avankziar.saj.spigot.listener.StatisticIncrementListener;
 import me.avankziar.saj.spigot.metric.Metrics;
@@ -84,6 +89,7 @@ public class SAJ extends JavaPlugin
 	
 	private MessageToVelocity mtvConsumer;
 	private MessageToBungee mtbConsumer;
+	private EnumTranslation enumTranslationConsumer;
 	
 	public void onLoad() 
 	{
@@ -213,12 +219,21 @@ public class SAJ extends JavaPlugin
 		
 		playerMapI.put(1, playerarray);
 		
+		ArrayList<String> page = new ArrayList<>();
+		if(yamlManager.getLanguageType() == ISO639_2B.GER)
+		{
+			page.add("<Seitenzahl>");
+		} else
+		{
+			page.add("<page>");
+		}
+		
 		ArrayList<String> sortingType = new ArrayList<>();
 		new ArrayList<StatisticType.SortingType>(EnumSet.allOf(StatisticType.SortingType.class)).forEach(x -> sortingType.add(x.toString()));
 		
-		LinkedHashMap<Integer, ArrayList<String>> statistic_page_playername = new LinkedHashMap<>();
-		statistic_page_playername.put(1, sortingType);
-		statistic_page_playername.put(3, playerarray);
+		LinkedHashMap<Integer, ArrayList<String>> page_playername = new LinkedHashMap<>();
+		page_playername.put(1, page);
+		page_playername.put(2, playerarray);
 		
 		ArrayList<String> withSubStatistic = new ArrayList<>();
 		HashSet<StatisticType> hm = StatisticType.getStatisticTypes(SortingType.WITH_SUBSTATISTIC);
@@ -230,10 +245,10 @@ public class SAJ extends JavaPlugin
 			}
 		}		
 		
-		LinkedHashMap<Integer, ArrayList<String>> statistic_sub_page_playername = new LinkedHashMap<>();
-		statistic_sub_page_playername.put(1, sortingType);
-		statistic_sub_page_playername.put(2, withSubStatistic);
-		statistic_sub_page_playername.put(4, playerarray);
+		LinkedHashMap<Integer, ArrayList<String>> sub_page_playername = new LinkedHashMap<>();
+		sub_page_playername.put(1, withSubStatistic);
+		sub_page_playername.put(2, page);
+		sub_page_playername.put(3, playerarray);
 		
 		TabCompletion tab = new TabCompletion();
 		
@@ -249,30 +264,33 @@ public class SAJ extends JavaPlugin
 		
 		new ARG_Info(ach_info);
 		
+		ArgumentConstructor st_cac = new ArgumentConstructor(Type.STATISTIC_CHATANDCOMMAND, "statistic_chatandcommand",
+				0, 0, 2, false, false, page_playername);
 		ArgumentConstructor st_dad = new ArgumentConstructor(Type.STATISTIC_DAMAGEANDDEATH, "statistic_damageanddeath",
-				0, 0, 2, false, false, statistic_page_playername);
+				0, 0, 2, false, false, page_playername);
 		ArgumentConstructor st_eco = new ArgumentConstructor(Type.STATISTIC_ECONOMY, "statistic_economy",
-				0, 0, 2, false, false, statistic_page_playername);
+				0, 0, 2, false, false, page_playername);
 		ArgumentConstructor st_iwb = new ArgumentConstructor(Type.STATISTIC_INTERACTIONWITHBLOCKS, "statistic_interactionwithblocks",
-				0, 0, 2, false, false, statistic_page_playername);
+				0, 0, 2, false, false, page_playername);
 		ArgumentConstructor st_misc = new ArgumentConstructor(Type.STATISTIC_MISCELLANEOUS, "statistic_miscellaneous",
-				0, 0, 2, false, false, statistic_page_playername);
+				0, 0, 2, false, false, page_playername);
 		ArgumentConstructor st_move = new ArgumentConstructor(Type.STATISTIC_MOVEMENT, "statistic_movement",
-				0, 0, 2, false, false, statistic_page_playername);
+				0, 0, 2, false, false, page_playername);
 		ArgumentConstructor st_plugin = new ArgumentConstructor(Type.STATISTIC_PLUGINS, "statistic_plugins",
-				0, 0, 2, false, false, statistic_page_playername);
+				0, 0, 2, false, false, page_playername);
 		ArgumentConstructor st_skill = new ArgumentConstructor(Type.STATISTIC_SKILL, "statistic_skill",
-				0, 0, 2, false, false, statistic_page_playername);
+				0, 0, 2, false, false, page_playername);
 		ArgumentConstructor st_special = new ArgumentConstructor(Type.STATISTIC_SPECIAL, "statistic_special",
-				0, 0, 2, false, false, statistic_page_playername);
+				0, 0, 2, false, false, page_playername);
 		ArgumentConstructor st_time = new ArgumentConstructor(Type.STATISTIC_TIME, "statistic_time",
-				0, 0, 2, false, false, statistic_page_playername);
+				0, 0, 2, false, false, page_playername);
 		ArgumentConstructor st_wsub = new ArgumentConstructor(Type.STATISTIC_WITHSUBSTATISTIC, "statistic_withsubstatistic",
-				0, 0, 3, false, false, statistic_sub_page_playername);
+				0, 0, 3, false, false, sub_page_playername);
 		
 		CommandConstructor statistic = new CommandConstructor(CommandSuggest.Type.STATISTIC, "statistic", false, false,
-				st_dad, st_eco, st_iwb, st_misc, st_move, st_plugin, st_skill, st_special, st_time, st_wsub);
+				st_cac, st_dad, st_eco, st_iwb, st_misc, st_move, st_plugin, st_skill, st_special, st_time, st_wsub);
 		registerCommand(statistic, new StatisticCommandExecutor(plugin, statistic), tab);
+		new ARG_ChatAndCommand(st_cac);
 		new ARG_DamageAndDeath(st_dad);
 		new ARG_Economy(st_eco);
 		new ARG_InteractionWithBlocks(st_iwb);
@@ -390,12 +408,16 @@ public class SAJ extends JavaPlugin
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvents(new JoinLeaveListener(), plugin);
 		pm.registerEvents(new StatisticIncrementListener(), plugin);
-		pm.registerEvents(new PlayerMoveListener(), plugin);
+		if(plugin.getYamlHandler().getConfig().getBoolean("UsePlayerMoveEvent", true))
+		{
+			pm.registerEvents(new PlayerMoveListener(), plugin);
+		}
 		
 		pm.registerEvents(new GuiPreListener(plugin), plugin);
 		pm.registerEvents(new UpperListener(plugin), plugin);
 		if(!SAJ.getPlugin().getYamlHandler().getConfig().getBoolean("IsInstalledOnProxy"))
 		{
+			pm.registerEvents(new PlayerChatAndCommandListener(), plugin);
 			//VoteListener
 			if(plugin.getServer().getPluginManager().isPluginEnabled("NuVotifier")
 					|| plugin.getServer().getPluginManager().isPluginEnabled("VotifierPlus")) 
@@ -439,6 +461,8 @@ public class SAJ extends JavaPlugin
 	public void setupIFHConsumer()
 	{
 		setupIFHMessageToVelocity();
+		setupIFHMessageTBungee();
+		setupIFHEnumTranslation();
 	}
 	
 	private void setupIFHMessageToVelocity() 
@@ -458,7 +482,6 @@ public class SAJ extends JavaPlugin
 					if(i == 20)
 				    {
 						cancel();
-						setupIFHMessageTBungee();
 						return;
 				    }
 				    RegisteredServiceProvider<me.avankziar.ifh.spigot.tovelocity.chatlike.MessageToVelocity> rsp = 
@@ -526,6 +549,49 @@ public class SAJ extends JavaPlugin
 	public MessageToBungee getMtB()
 	{
 		return mtbConsumer;
+	}
+	
+	private void setupIFHEnumTranslation() 
+	{
+		if(!plugin.getServer().getPluginManager().isPluginEnabled("InterfaceHub")) 
+	    {
+	    	return;
+	    }
+        new BukkitRunnable()
+        {
+        	int i = 0;
+			@Override
+			public void run()
+			{
+				try
+				{
+					if(i == 20)
+				    {
+						cancel();
+				    	return;
+				    }
+				    RegisteredServiceProvider<me.avankziar.ifh.spigot.interfaces.EnumTranslation> rsp = 
+		                             getServer().getServicesManager().getRegistration(
+		                            		 me.avankziar.ifh.spigot.interfaces.EnumTranslation.class);
+				    if(rsp == null) 
+				    {
+				    	i++;
+				        return;
+				    }
+				    enumTranslationConsumer = rsp.getProvider();
+				    logger.info(pluginname + " detected InterfaceHub >>> EnumTranslation.class is consumed!");
+				    cancel();
+				} catch(NoClassDefFoundError e)
+				{
+					cancel();
+				}			    
+			}
+        }.runTaskTimer(plugin, 0L, 20*2);
+	}
+	
+	public EnumTranslation getEnumTl()
+	{
+		return enumTranslationConsumer;
 	}
 	
 	private void setupWordEditGuard()

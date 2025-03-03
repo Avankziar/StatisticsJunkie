@@ -639,6 +639,20 @@ public class YamlManager
 				"Legt fest, ob StatisticsJunkie auf den Proxy (Bungeecord/Velocity) installiert ist.",
 				"",
 				""});
+		addConfig("UsePlayerMoveEvent",
+				new Object[] {
+				true},
+				new Object[] {
+				"",
+				"Legt fest, ob die Erhebung für folgende Statistiken erfolgt:",
+				"SWIM_ONE_CM, CRAWLING_ONE_CM, CLIMB_ONE_CM, FLY_ONE_CM, AVIATE_ONE_CM,",
+				"BOAT_ONE_CM, HORSE_ONE_CM, PIG_ONE_CM, MINECART_ONE_CM, STRIDER_ONE_CM,",
+				"CROUCH_ONE_CM, SPRINT_ONE_CM, WALK_ONE_CM",
+				"",
+				"Determines whether the collection is carried out for the following statistics:",
+				"SWIM_ONE_CM, CRAWLING_ONE_CM, CLIMB_ONE_CM, FLY_ONE_CM, AVIATE_ONE_CM,",
+				"BOAT_ONE_CM, HORSE_ONE_CM, PIG_ONE_CM, MINECART_ONE_CM, STRIDER_ONE_CM,",
+				"CROUCH_ONE_CM, SPRINT_ONE_CM, WALK_ONE_CM"});
 		addConfig("Task.CheckIfPlayerAchievedSomething",
 				new Object[] {
 				15},
@@ -713,84 +727,92 @@ public class YamlManager
 				"<yellow>Zeigt eine Liste klickbarere Nachichten an, welche Statistikkategorien es gibt. Mit zusammengezählten Zahlen pro Kategorie.",
 				"<yellow>Shows a list of clickable messages, which statistics categories there are. With total numbers per category.");
 		basePermission = "statistic";
-		argumentInput("statistic_damageanddeath", "damageanddeath", basePermission,
-				"/statistic damageanddeath [page] [playername]", "/statistic damageanddeath ", false,
-				"<red>/statistic damageanddeath [Seite] [Spielername] <white>| Zeigt alle Statistiken zu Schaden und Toden an.",
-				"<red>/statistic damageanddeath [page] [playername] <white>| Displays all damage and death statistics.",
-				"<aque>Befehlsrecht für <white>/statistic damageanddeath",
-				"<aque>Commandright for <white>/statistic damageanddeath",
+		argumentInput("statistic_chatandcommand", "CHAT_AND_COMMAND", basePermission,
+				"/statistic CHAT_AND_COMMAND [page] [playername]", "/statistic CHAT_AND_COMMAND ", false,
+				"<red>/statistic CHAT_AND_COMMAND [Seite] [Spielername] <white>| Zeigt alle Statistiken zu Chat und Befehlen an.",
+				"<red>/statistic CHAT_AND_COMMAND [page] [playername] <white>| Displays all chat and commands statistics.",
+				"<aque>Befehlsrecht für <white>/statistic CHAT_AND_COMMAND",
+				"<aque>Commandright for <white>/statistic CHAT_AND_COMMAND",
+				"<yellow>Zeigt alle Statistiken zu Chat und Befehlen an.",
+				"<yellow>Displays all chat and command statistics.");
+		argumentInput("statistic_damageanddeath", "DAMAGE_AND_DEATH", basePermission,
+				"/statistic DAMAGE_AND_DEATH [page] [playername]", "/statistic DAMAGE_AND_DEATH ", false,
+				"<red>/statistic DAMAGE_AND_DEATH [Seite] [Spielername] <white>| Zeigt alle Statistiken zu Schaden und Toden an.",
+				"<red>/statistic DAMAGE_AND_DEATH [page] [playername] <white>| Displays all damage and death statistics.",
+				"<aque>Befehlsrecht für <white>/statistic DAMAGE_AND_DEATH",
+				"<aque>Commandright for <white>/statistic DAMAGE_AND_DEATH",
 				"<yellow>Zeigt alle Statistiken zu Schaden und Toden an.",
 				"<yellow>Displays all damage and death statistics.");
-		argumentInput("statistic_economy", "economy", basePermission,
-				"/statistic economy [page] [playername]", "/statistic economy ", false,
-				"<red>/statistic economy [Seite] [Spielername] <white>| Zeigt alle Statistiken zu Geldwerten an.",
-				"<red>/statistic economy [page] [playername] <white>| Displays all statistics related to monetary values.",
-				"<aque>Befehlsrecht für <white>/statistic economy",
-				"<aque>Commandright for <white>/statistic economy",
+		argumentInput("statistic_economy", "ECONOMY", basePermission,
+				"/statistic ECONOMY [page] [playername]", "/statistic ECONOMY ", false,
+				"<red>/statistic ECONOMY [Seite] [Spielername] <white>| Zeigt alle Statistiken zu Geldwerten an.",
+				"<red>/statistic ECONOMY [page] [playername] <white>| Displays all statistics related to monetary values.",
+				"<aque>Befehlsrecht für <white>/statistic ECONOMY",
+				"<aque>Commandright for <white>/statistic ECONOMY",
 				"<yellow>Zeigt alle Statistiken zu Geldwerten an.",
 				"<yellow>Displays all statistics related to monetary values.");
-		argumentInput("statistic_interactionwithblocks", "interactionwithblocks", basePermission,
-				"/statistic interactionwithblocks [page] [playername]", "/statistic interactionwithblocks ", false,
-				"<red>/statistic interactionwithblocks [Seite] [Spielername] <white>| Zeigt alle Statistiken zu Interaktionen mit Blöcken an.",
-				"<red>/statistic interactionwithblocks [page] [playername] <white>| Displays all statistics about block interactions.",
-				"<aque>Befehlsrecht für <white>/statistic interactionwithblocks",
-				"<aque>Commandright for <white>/statistic interactionwithblocks",
+		argumentInput("statistic_interactionwithblocks", "INTERACTION_WITH_BLOCKS", basePermission,
+				"/statistic INTERACTION_WITH_BLOCKS [page] [playername]", "/statistic INTERACTION_WITH_BLOCKS ", false,
+				"<red>/statistic INTERACTION_WITH_BLOCKS [Seite] [Spielername] <white>| Zeigt alle Statistiken zu Interaktionen mit Blöcken an.",
+				"<red>/statistic INTERACTION_WITH_BLOCKS [page] [playername] <white>| Displays all statistics about block interactions.",
+				"<aque>Befehlsrecht für <white>/statistic INTERACTION_WITH_BLOCKS",
+				"<aque>Commandright for <white>/statistic INTERACTION_WITH_BLOCKS",
 				"<yellow>Zeigt alle Statistiken zu Interaktionen mit Blöcken an.",
 				"<yellow>Displays all statistics about block interactions.");
-		argumentInput("statistic_miscellaneous", "miscellaneous", basePermission,
-				"/statistic miscellaneous [page] [playername]", "/statistic miscellaneous ", false,
-				"<red>/statistic miscellaneous [Seite] [Spielername] <white>| Zeigt alle Statistiken zu Sonstigem an.",
-				"<red>/statistic miscellaneous [page] [playername] <white>| Displays all statistics about block interactions.",
-				"<aque>Befehlsrecht für <white>/statistic miscellaneous",
-				"<aque>Commandright for <white>/statistic miscellaneous",
+		argumentInput("statistic_miscellaneous", "MISCELLANEOUS", basePermission,
+				"/statistic MISCELLANEOUS [page] [playername]", "/statistic MISCELLANEOUS ", false,
+				"<red>/statistic MISCELLANEOUS [Seite] [Spielername] <white>| Zeigt alle Statistiken zu Sonstigem an.",
+				"<red>/statistic MISCELLANEOUS [page] [playername] <white>| Displays all statistics about block interactions.",
+				"<aque>Befehlsrecht für <white>/statistic MISCELLANEOUS",
+				"<aque>Commandright for <white>/statistic MISCELLANEOUS",
 				"<yellow>Zeigt alle Statistiken zu Sonstigem an.",
 				"<yellow>Displays all statistics about block interactions.");
-		argumentInput("statistic_movement", "movement", basePermission,
-				"/statistic movement [page] [playername]", "/statistic movement ", false,
-				"<red>/statistic movement [Seite] [Spielername] <white>| Zeigt alle Statistiken zu Bewegung an.",
-				"<red>/statistic movement [page] [playername] <white>| Displays all movement statistics.",
-				"<aque>Befehlsrecht für <white>/statistic movement",
-				"<aque>Commandright for <white>/statistic movement",
+		argumentInput("statistic_movement", "MOVEMENT", basePermission,
+				"/statistic MOVEMENT [page] [playername]", "/statistic MOVEMENT ", false,
+				"<red>/statistic MOVEMENT [Seite] [Spielername] <white>| Zeigt alle Statistiken zu Bewegung an.",
+				"<red>/statistic MOVEMENT [page] [playername] <white>| Displays all MOVEMENT statistics.",
+				"<aque>Befehlsrecht für <white>/statistic MOVEMENT",
+				"<aque>Commandright for <white>/statistic MOVEMENT",
 				"<yellow>Zeigt alle Statistiken zu Bewegung an.",
-				"<yellow>Displays all movement statistics.");
-		argumentInput("statistic_plugins", "plugins", basePermission,
-				"/statistic plugins [page] [playername]", "/statistic plugins ", false,
-				"<red>/statistic plugins [Seite] [Spielername] <white>| Zeigt alle Statistiken zu custom Plugins an.",
-				"<red>/statistic plugins [page] [playername] <white>| Shows all statistics about custom plugins.",
-				"<aque>Befehlsrecht für <white>/statistic plugins",
-				"<aque>Commandright for <white>/statistic plugins",
+				"<yellow>Displays all MOVEMENT statistics.");
+		argumentInput("statistic_plugins", "PLUGINS", basePermission,
+				"/statistic PLUGINS [page] [playername]", "/statistic PLUGINS ", false,
+				"<red>/statistic PLUGINS [Seite] [Spielername] <white>| Zeigt alle Statistiken zu custom Plugins an.",
+				"<red>/statistic PLUGINS [page] [playername] <white>| Shows all statistics about custom PLUGINS.",
+				"<aque>Befehlsrecht für <white>/statistic PLUGINS",
+				"<aque>Commandright for <white>/statistic PLUGINS",
 				"<yellow>Zeigt alle Statistiken zu custom Plugins an.",
-				"<yellow>Shows all statistics about custom plugins.");
-		argumentInput("statistic_skill", "skill", basePermission,
-				"/statistic skill [page] [playername]", "/statistic skill ", false,
-				"<red>/statistic skill [Seite] [Spielername] <white>| Zeigt alle Statistiken zu Skillwerten an.",
-				"<red>/statistic skill [page] [playername] <white>| Shows all statistics about skill.",
-				"<aque>Befehlsrecht für <white>/statistic skill",
-				"<aque>Commandright for <white>/statistic skill",
+				"<yellow>Shows all statistics about custom PLUGINS.");
+		argumentInput("statistic_skill", "SKILL", basePermission,
+				"/statistic SKILL [page] [playername]", "/statistic SKILL ", false,
+				"<red>/statistic SKILL [Seite] [Spielername] <white>| Zeigt alle Statistiken zu Skillwerten an.",
+				"<red>/statistic SKILL [page] [playername] <white>| Shows all statistics about SKILL.",
+				"<aque>Befehlsrecht für <white>/statistic SKILL",
+				"<aque>Commandright for <white>/statistic SKILL",
 				"<yellow>Zeigt alle Statistiken zu Skillwerten an.",
-				"<yellow>Shows all statistics about skill.");
-		argumentInput("statistic_special", "special", basePermission,
-				"/statistic special [page] [playername]", "/statistic special ", false,
-				"<red>/statistic special [Seite] [Spielername] <white>| Zeigt alle Statistiken zu Spezialwerten an.",
-				"<red>/statistic special [page] [playername] <white>| Displays all statistics on special values.",
-				"<aque>Befehlsrecht für <white>/statistic special",
-				"<aque>Commandright for <white>/statistic special",
+				"<yellow>Shows all statistics about SKILL.");
+		argumentInput("statistic_special", "SPECIAL", basePermission,
+				"/statistic SPECIAL [page] [playername]", "/statistic SPECIAL ", false,
+				"<red>/statistic SPECIAL [Seite] [Spielername] <white>| Zeigt alle Statistiken zu Spezialwerten an.",
+				"<red>/statistic SPECIAL [page] [playername] <white>| Displays all statistics on SPECIAL values.",
+				"<aque>Befehlsrecht für <white>/statistic SPECIAL",
+				"<aque>Commandright for <white>/statistic SPECIAL",
 				"<yellow>Zeigt alle Statistiken zu Spezialwerten an.",
-				"<yellow>Displays all statistics on special values.");
-		argumentInput("statistic_time", "time", basePermission,
-				"/statistic time [page] [playername]", "/statistic time ", false,
-				"<red>/statistic time [Seite] [Spielername] <white>| Zeigt alle Statistiken zu Zeitwerten an.",
-				"<red>/statistic time [page] [playername] <white>| Displays all statistics on time values.",
-				"<aque>Befehlsrecht für <white>/statistic time",
-				"<aque>Commandright for <white>/statistic time",
+				"<yellow>Displays all statistics on SPECIAL values.");
+		argumentInput("statistic_time", "TIME", basePermission,
+				"/statistic TIME [page] [playername]", "/statistic TIME ", false,
+				"<red>/statistic TIME [Seite] [Spielername] <white>| Zeigt alle Statistiken zu Zeitwerten an.",
+				"<red>/statistic TIME [page] [playername] <white>| Displays all statistics on  values.",
+				"<aque>Befehlsrecht für <white>/statistic TIME",
+				"<aque>Commandright for <white>/statistic TIME",
 				"<yellow>Zeigt alle Statistiken zu Zeitwerten an.",
-				"<yellow>Displays all statistics on time values.");
-		argumentInput("statistic_withsubstatistic", "withsubstatistic", basePermission,
-				"/statistic withsubstatistic <substatistic> [page] [playername]", "/statistic withsubstatistic ", false,
-				"<red>/statistic withsubstatistic [Substatistik] [Seite] [Spielername] <white>| Zeigt alle Statistiken mit Substatistiken an. Wahlweise im Detail oder zusammengefasst.",
-				"<red>/statistic withsubstatistic [substatistic] [page] [playername] <white>| Shows all statistics with substatistics. Either in detail or summarized.",
-				"<aque>Befehlsrecht für <white>/statistic withsubstatistic",
-				"<aque>Commandright for <white>/statistic withsubstatistic",
+				"<yellow>Displays all statistics on  values.");
+		argumentInput("statistic_withsubstatistic", "WITH_SUBSTATISTIC", basePermission,
+				"/statistic WITH_SUBSTATISTIC <substatistic> [page] [playername]", "/statistic WITH_SUBSTATISTIC ", false,
+				"<red>/statistic WITH_SUBSTATISTIC [Substatistik] [Seite] [Spielername] <white>| Zeigt alle Statistiken mit Substatistiken an. Wahlweise im Detail oder zusammengefasst.",
+				"<red>/statistic WITH_SUBSTATISTIC [substatistic] [page] [playername] <white>| Shows all statistics with substatistics. Either in detail or summarized.",
+				"<aque>Befehlsrecht für <white>/statistic WITH_SUBSTATISTIC",
+				"<aque>Commandright for <white>/statistic WITH_SUBSTATISTIC",
 				"<yellow>Zeigt alle Statistiken mit Substatistiken an. Wahlweise im Detail oder zusammengefasst.",
 				"<yellow>Shows all statistics with substatistics. Either in detail or summarized.");
 	}
@@ -967,50 +989,74 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"<white>yd",
 						"<white>yd"}));
+		languageKeys.put("Statistic.TimeScale.UnderDays", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"<white>HH<gray>h <white>mm<dark_gray>min",
+						"<white>HH<gray>h <white>mm<dark_gray>mins"}));
+		languageKeys.put("Statistic.TimeScale.UnderMonths", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"<white>dd<yellow>Tage <white>HH<gray>h <white>mm<dark_gray>min",
+						"<white>dd<yellow>Days <white>HH<gray>h <white>mm<dark_gray>mins"}));
+		languageKeys.put("Statistic.TimeScale.UnderYears", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"<white>MM<#FF4D00>Monate <white>dd<yellow>Tage <white>HH<gray>h <white>mm<dark_gray>min",
+						"<white>MM<#FF4D00>Months <white>dd<yellow>Days <white>HH<gray>h <white>mm<dark_gray>mins"}));
+		languageKeys.put("Statistic.TimeScale.OverYears", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"<white>yyyy<red>Jahre <white>MM<#FF4D00>Monate <white>dd<yellow>Tage <white>HH<gray>h <white>mm<dark_gray>min",
+						"<white>yyyy<red>Years <white>MM<#FF4D00>Months <white>dd<yellow>Days <white>HH<gray>h <white>mm<dark_gray>mins"}));
 		languageKeys.put("Statistic.Base.Headline", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"<gray>========<gold>Statistik <white>%player%<gray>========",
 						"<gray>========<gold>Statistic <white>%player%<gray>========"}));
 		languageKeys.put("Statistic.Base."+SortingType.MOVEMENT.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"<hover:show_text:'<yello>Klicke hier für die Bewegungsstatistik!'><click:run_command:'%statisticcmd% MOVEMENT'><red>Insgesamte Bewegung: %value%</click></hover>",
-						"<hover:show_text:'<yello>Click here for the movement statistics!'><click:run_command:'%statisticcmd% MOVEMENT'><red>Total movement: %value%</click></hover>"}));
+						"<hover:show_text:'<yellow>Klicke hier für die Bewegungsstatistik!'><click:run_command:'%statisticcmd%'><red>Insgesamte Bewegung: <white>%value%</click></hover>",
+						"<hover:show_text:'<yellow>Click here for the movement statistics!'><click:run_command:'%statisticcmd%'><red>Total movement: <white>%value%</click></hover>"}));
+		languageKeys.put("Statistic.Base."+SortingType.CHAT_AND_COMMAND.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"<hover:show_text:'<yellow>Klicke hier für die Chat und Command Statistik!'><click:run_command:'%statisticcmd%'><red>Insgesamter Chat und Commands: <white>%value%</click></hover>",
+						"<hover:show_text:'<yellow>Click here for the chat and command statistics!'><click:run_command:'%statisticcmd%'><red>Total chat and commands: <white>%value%</click></hover>"}));
 		languageKeys.put("Statistic.Base."+SortingType.DAMAGE_AND_DEATH.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"<hover:show_text:'<yello>Klicke hier für die Schaden- und Todesstatistik!'><click:run_command:'%statisticcmd% DAMAGE_AND_DEATH'><red>Insgesamter Schaden und Tode: %value%</click></hover>",
-						"<hover:show_text:'<yello>Click here for the damage and death statistics!'><click:run_command:'%statisticcmd% DAMAGE_AND_DEATH'><red>Total damage and deaths: %value%</click></hover>"}));
+						"<hover:show_text:'<yellow>Klicke hier für die Schaden- und Todesstatistik!'><click:run_command:'%statisticcmd%'><red>Insgesamter Schaden und Tode: <white>%value%</click></hover>",
+						"<hover:show_text:'<yellow>Click here for the damage and death statistics!'><click:run_command:'%statisticcmd%'><red>Total damage and deaths: <white>%value%</click></hover>"}));
 		languageKeys.put("Statistic.Base."+SortingType.ECONOMY.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"<hover:show_text:'<yello>Klicke hier für die Schaden- und Todesstatistik!'><click:run_command:'%statisticcmd% ECONOMY'><red>Insgesamte Vermögenswerte: %value%</click></hover>",
-						"<hover:show_text:'<yello>Click here for damage and death statistics!'><click:run_command:'%statisticcmd% ECONOMY'><red>Total assets: %value%</click></hover>"}));
+						"<hover:show_text:'<yellow>Klicke hier für die Wirtschaftsstatistik!'><click:run_command:'%statisticcmd%'><red>Insgesamte Vermögenswerte: <white>%value%</click></hover>",
+						"<hover:show_text:'<yellow>Click here for economy statistics!'><click:run_command:'%statisticcmd%'><red>Total assets: <white>%value%</click></hover>"}));
 		languageKeys.put("Statistic.Base."+SortingType.INTERACTION_WITH_BLOCKS.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"<hover:show_text:'<yello>Klicke hier für die Schaden- und Todesstatistik!'><click:run_command:'%statisticcmd% INTERACTION_WITH_BLOCKS'><red>Insgesamte Interaktion mit Blöcken: %value%</click></hover>",
-						"<hover:show_text:'<yello>Click here for damage and death statistics!'><click:run_command:'%statisticcmd% INTERACTION_WITH_BLOCKS'><red>Total interaction with blocks: %value%</click></hover>"}));
+						"<hover:show_text:'<yellow>Klicke hier für die Interaktion mit Blöcken Statistik!'><click:run_command:'%statisticcmd%'><red>Insgesamte Interaktion mit Blöcken: <white>%value%</click></hover>",
+						"<hover:show_text:'<yellow>Click here for interaction with blocks statistics!'><click:run_command:'%statisticcmd%'><red>Total interaction with blocks: <white>%value%</click></hover>"}));
 		languageKeys.put("Statistic.Base."+SortingType.MISCELLANEOUS.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"<hover:show_text:'<yello>Klicke hier für die Schaden- und Todesstatistik!'><click:run_command:'%statisticcmd% MISCELLANEOUS'><red>Insgesamtes Sonstiges: %value%</click></hover>",
-						"<hover:show_text:'<yello>Click here for the damage and death statistics!'><click:run_command:'%statisticcmd% MISCELLANEOUS'><red>Total miscellaneous: %value%</click></hover>"}));
+						"<hover:show_text:'<yellow>Klicke hier für die Sonstiges Statistik!'><click:run_command:'%statisticcmd%'><red>Insgesamtes Sonstiges: <white>%value%</click></hover>",
+						"<hover:show_text:'<yellow>Click here for the misc statistics!'><click:run_command:'%statisticcmd%'><red>Total miscellaneous: <white>%value%</click></hover>"}));
 		languageKeys.put("Statistic.Base."+SortingType.PLUGINS.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"<hover:show_text:'<yello>Klicke hier für die Schaden- und Todesstatistik!'><click:run_command:'%statisticcmd% PLUGINS'><red>Insgesamte Custom Pluginswerte: %value%</click></hover>",
-						"<hover:show_text:'<yello>Click here for the damage and death statistics!'><click:run_command:'%statisticcmd% PLUGINS'><red>Total custom plugin values: %value%</click></hover>"}));
+						"<hover:show_text:'<yellow>Klicke hier für die Pluginstatistik!'><click:run_command:'%statisticcmd%'><red>Insgesamte Custom Pluginswerte: <white>%value%</click></hover>",
+						"<hover:show_text:'<yellow>Click here for the plugin statistics!'><click:run_command:'%statisticcmd%'><red>Total custom plugin values: <white>%value%</click></hover>"}));
 		languageKeys.put("Statistic.Base."+SortingType.SKILL.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"<hover:show_text:'<yello>Klicke hier für die Schaden- und Todesstatistik!'><click:run_command:'%statisticcmd% SKILL'><red>Insgesamter Skillwerte: %value%</click></hover>",
-						"<hover:show_text:'<yello>Click here for damage and death statistics!'><click:run_command:'%statisticcmd% SKILL'><red>Total skill value: %value%</click></hover>"}));
+						"<hover:show_text:'<yellow>Klicke hier für die Skillstatistik!'><click:run_command:'%statisticcmd%'><red>Insgesamter Skillwerte: <white>%value%</click></hover>",
+						"<hover:show_text:'<yellow>Click here for skill statistics!'><click:run_command:'%statisticcmd%'><red>Total skill value: <white>%value%</click></hover>"}));
 		languageKeys.put("Statistic.Base."+SortingType.SPECIAL.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"<hover:show_text:'<yello>Klicke hier für die Schaden- und Todesstatistik!'><click:run_command:'%statisticcmd% SPECIAL'><red>Insgesamte Spezialwerte: %value%</click></hover>",
-						"<hover:show_text:'<yello>Click here for damage and death statistics!'><click:run_command:'%statisticcmd% SPECIAL'><red>Total special values: %value%</click></hover>"}));
+						"<hover:show_text:'<yellow>Klicke hier für die Spezialstatistik!'><click:run_command:'%statisticcmd%'><red>Insgesamte Spezialwerte: <white>%value%</click></hover>",
+						"<hover:show_text:'<yellow>Click here for special statistics!'><click:run_command:'%statisticcmd%'><red>Total special values: <white>%value%</click></hover>"}));
 		languageKeys.put("Statistic.Base."+SortingType.TIME.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"<hover:show_text:'<yello>Klicke hier für die Schaden- und Todesstatistik!'><click:run_command:'%statisticcmd% TIME'><red>Insgesamte Zeitwerde: %value%</click></hover>",
-						"<hover:show_text:'<yello>Click here for damage and death statistics!'><click:run_command:'%statisticcmd% TIME'><red>Total time: %value%</click></hover>"}));
+						"<hover:show_text:'<yellow>Klicke hier für die Zeitstatistik!'><click:run_command:'%statisticcmd%'><red>Insgesamte Zeitwerte: <white>%value%</click></hover>",
+						"<hover:show_text:'<yellow>Click here for time statistics!'><click:run_command:'%statisticcmd%'><red>Total time: <white>%value%</click></hover>"}));
 		languageKeys.put("Statistic.Base."+SortingType.WITH_SUBSTATISTIC.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"<hover:show_text:'<yello>Klicke hier für die Schaden- und Todesstatistik!'><click:run_command:'%statisticcmd% WITH_SUBSTATISTIC'><red>Insgesamte Werte mit Substatistiken: %value%</click></hover>",
-						"<hover:show_text:'<yello>Click here for the damage and death statistics!'><click:run_command:'%statisticcmd% WITH_SUBSTATISTIC'><red>Total values ​​with substats: %value%</click></hover>"}));
+						"<hover:show_text:'<yellow>Klicke hier für die Statistik mit Substatistiken!'><click:run_command:'%statisticcmd%'><red>Insgesamte Werte mit Substatistiken: <white>%value%</click></hover>",
+						"<hover:show_text:'<yellow>Click here for the statistic with substatistics!'><click:run_command:'%statisticcmd%'><red>Total values ​​with substats: <white>%value%</click></hover>"}));
+		languageKeys.put("Statistic.NoEntryExist", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"<red>Du hast keine Einträge in der Statistik <white>%statistic%<red>!",
+						"<red>You have no entries in the statistics <white>%statistic%<red>!"}));
 		languageKeys.put("Statistic.Headline", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"<gray>========<yellow>Statistik %statistic%<gray>========",
@@ -1023,6 +1069,346 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"<red>%statistic%<white>: %value%",
 						"<red>%statistic%<white>: %value%"}));
+		languageKeys.put("Statistic.Translate.null", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"Gesamt",
+						"Total"}));
+		languageKeys.put("Statistic.Translate."+StatisticType.AFK_ONE_MINUTE.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"Afkzeit",
+						"Afktime"}));
+		languageKeys.put("Statistic.Translate."+StatisticType.ANIMALS_BRED.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"Tiere gepaart",
+						"Animals bred"}));
+		languageKeys.put("Statistic.Translate."+StatisticType.ARMOR_CLEANED.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"Rüstung gesäubert",
+						"Armor cleaned"}));
+		languageKeys.put("Statistic.Translate."+StatisticType.AVIATE_ONE_CM.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"Gleitdistanz",
+						"Aviate distance"}));
+		languageKeys.put("Statistic.Translate."+StatisticType.BANNER_CLEANED.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"Banner gesäubert",
+						"Banner cleaned"}));
+		languageKeys.put("Statistic.Translate."+StatisticType.BEACON_INTERACTION.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"Interagiert mit Beacon",
+						"Interaction with beacon"}));
+		languageKeys.put("Statistic.Translate."+StatisticType.BELL_RING.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"Glocke gerungen",
+						"Bell ring"}));
+		languageKeys.put("Statistic.Translate."+StatisticType.BOAT_ONE_CM.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.BREAK_ITEM.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.BREWINGSTAND_INTERACTION.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.CAKE_SLICES_EATEN.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.CAULDRON_FILLED.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.CAULDRON_USED.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.CHAT_CHARACTER.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.CHAT_WORD.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.CHEST_OPENED.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.CLEAN_SHULKER_BOX.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.CLIMB_ONE_CM.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.COMMAND_EXECUTED.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.CRAFT_ITEM.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.CRAFTING_TABLE_INTERACTION.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.CRAWLING_ONE_CM.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.CROUCH_ONE_CM.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.DAMAGE_ABSORBED.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.DAMAGE_BLOCKED_BY_SHIELD.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.DAMAGE_DEALT.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.DAMAGE_DEALT_ABSORBED.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.DAMAGE_DEALT_RESISTED.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.DAMAGE_RESISTED.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.DAMAGE_TAKEN.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.DEATHS.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.DISPENSER_INSPECTED.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.DROP.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.DROP_COUNT.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.DROPPER_INSPECTED.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.ENDERCHEST_OPENED.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.ENTITY_KILLED_BY.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.FISH_CAUGHT.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.FLOWER_POTTED.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.FLY_ONE_CM.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.FURNACE_INTERACTION.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.HOPPER_INSPECTED.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.HORSE_ONE_CM.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.INTERACT_WITH_ANVIL.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.INTERACT_WITH_BLAST_FURNACE.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.INTERACT_WITH_CAMPFIRE.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.INTERACT_WITH_CARTOGRAPHY_TABLE.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.INTERACT_WITH_GRINDSTONE.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.INTERACT_WITH_LECTERN.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.INTERACT_WITH_LOOM.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.INTERACT_WITH_SMITHING_TABLE.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.INTERACT_WITH_SMOKER.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.INTERACT_WITH_STONECUTTER.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.ITEM_ENCHANTED.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.JUMP.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.KILL_ENTITY.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.LOGIN.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.MINE_BLOCK.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.MINECART_ONE_CM.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.MOB_KILLS.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.NOTEBLOCK_PLAYED.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.NOTEBLOCK_TUNED.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.OPEN_BARREL.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.PICKUP.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.PIG_ONE_CM.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.PLAY_ONE_MINUTE.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.PLAYER_KILLS.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.RAID_TRIGGER.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.RAID_WIN.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.RECORD_PLAYED.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.SHULKER_BOX_OPENED.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.SLEEP_IN_BED.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.SNEAK_TIME_ONE_MINUTE.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.SPRINT_ONE_CM.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.STRIDER_ONE_CM.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.SWIM_ONE_CM.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.TALKED_TO_VILLAGER.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.TARGET_HIT.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.TOTAL_ONLINE_ONE_MINUTE.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.TRADED_WITH_VILLAGER.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.TRAPPED_CHEST_TRIGGERED.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.USE_ITEM.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.VOTE.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
+		languageKeys.put("Statistic.Translate."+StatisticType.WALK_ONE_CM.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"",
+						""}));
 	}
 	
 	public void initFileAchievementGoal() 

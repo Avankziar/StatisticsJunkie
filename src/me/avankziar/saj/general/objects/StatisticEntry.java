@@ -152,11 +152,12 @@ public class StatisticEntry implements MysqlTable<StatisticEntry>
 	@Override
 	public ArrayList<StatisticEntry> get(Connection conn, String orderby, String limit, String whereColumn, Object... whereObject)
 	{
+		PreparedStatement ps = null;
 		try
 		{
 			String sql = "SELECT * FROM `" + getMysqlTableName()
 				+ "` WHERE "+whereColumn+" ORDER BY "+orderby+limit;
-			PreparedStatement ps = conn.prepareStatement(sql);
+			ps = conn.prepareStatement(sql);
 			int i = 1;
 			for(Object o : whereObject)
 			{
@@ -178,7 +179,8 @@ public class StatisticEntry implements MysqlTable<StatisticEntry>
 			return al;
 		} catch (SQLException e)
 		{
-			this.log(MysqlBaseHandler.getLogger(), Level.WARNING, "SQLException! Could not get a "+this.getClass().getSimpleName()+" Object!", e);
+			this.log(MysqlBaseHandler.getLogger(), Level.WARNING, 
+					"SQLException! Could not get a "+this.getClass().getSimpleName()+" Object! QUERY: "+ps.toString(), e);
 		}
 		return new ArrayList<>();
 	}

@@ -20,9 +20,9 @@ public class PlayerMoveListener implements Listener
 	@EventHandler
 	public void onMove(PlayerMoveEvent event)
 	{
-		if(event.getFrom().getBlockX() == event.getTo().getBlockX() 
-				 && event.getFrom().getBlockY() == event.getTo().getBlockY() 
-				 && event.getFrom().getBlockZ() == event.getTo().getBlockZ())
+		if(event.getFrom().getX() == event.getTo().getX() 
+				 && event.getFrom().getY() == event.getTo().getY() 
+				 && event.getFrom().getZ() == event.getTo().getZ())
 		{
 			return;
 		}

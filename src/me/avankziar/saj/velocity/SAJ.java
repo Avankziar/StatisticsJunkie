@@ -31,6 +31,7 @@ import me.avankziar.saj.velocity.database.MysqlHandler;
 import me.avankziar.saj.velocity.database.MysqlSetup;
 import me.avankziar.saj.velocity.hook.VotifierListener;
 import me.avankziar.saj.velocity.listener.JoinLeaveListener;
+import me.avankziar.saj.velocity.listener.PlayerChatAndCommandListener;
 import me.avankziar.saj.velocity.metric.Metrics;
 
 @Plugin(
@@ -74,6 +75,7 @@ public class SAJ
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) 
     {
+    	logger = Logger.getLogger("SAJ");
     	PluginDescription pd = server.getPluginManager().getPlugin(pluginname.toLowerCase()).get().getDescription();
         List<String> dependencies = new ArrayList<>();
         pd.getDependencies().stream().allMatch(x -> dependencies.add(x.getId()));
@@ -185,6 +187,7 @@ public class SAJ
     {
     	EventManager em = server.getEventManager();
     	em.register(this, new JoinLeaveListener(plugin));
+    	em.register(this, new PlayerChatAndCommandListener());
     	Optional<PluginContainer> nuv = plugin.getServer().getPluginManager().getPlugin("nuvotifier");
     	Optional<PluginContainer> vp = plugin.getServer().getPluginManager().getPlugin("votifierplus");
         if (nuv.isPresent() || vp.isPresent()) 
