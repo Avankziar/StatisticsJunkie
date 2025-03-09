@@ -207,20 +207,13 @@ public class StatisticCommandExecutor implements CommandExecutor
 			}
 			if(sortingType == SortingType.MOVEMENT)
 			{
+				st.remove(StatisticType.JUMP);
 				for(StatisticType s : st)
 				{
-					if(StatisticType.JUMP.toString().equals(s.toString()))
-					{
-						i++;
-						continue;
-					}
-					sb1.append("`statistic_type` = ?");
-					ob.add(s.toString());
-					if(i + 1 < st.size())
-					{
-						sb1.append(" OR ");
-					}
-					i++;
+					if (i > 0) sb1.append(" OR ");
+				    sb1.append("`statistic_type` = ?");
+				    ob.add(s.toString());
+				    i++;
 				}
 				sb1.append(")");
 				double mov = plugin.getMysqlHandler().getSum(new StatisticEntry(), "`statistic_value`",

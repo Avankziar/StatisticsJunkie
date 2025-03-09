@@ -1458,6 +1458,38 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"Gehdistanze",
 						"Walk distance"}));
+		languageKeys.put("Statistic.Translate.CLIENT_BUY_AMOUNT_MATERIAL", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"Shop(Einkaufanzahl als Kunde)",
+						"Shop (Number of sales as a customer)"}));
+		languageKeys.put("Statistic.Translate.CLIENT_SELL_AMOUNT_MATERIAL", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"Shop(Verkaufanzahl als Kunde)",
+						"Shop (Number of sales as a customer)"}));
+		languageKeys.put("Statistic.Translate.SHOPOWNER_BUY_AMOUNT_MATERIAL", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"Shop(Ankaufanzahl als Besitzer)",
+						"Shop(Number of purchases as owner)"}));
+		languageKeys.put("Statistic.Translate.SHOPOWNER_SELL_AMOUNT_MATERIAL", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"Shop(Verkaufanzahl als Besitzer)",
+						"Shop(number of sales as owner)"}));
+		languageKeys.put("Statistic.Translate.CLIENT_BUY_AMOUNT_CURRENCY", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"Shop(Gezahlter Preis als Kunde)",
+						"Shop(Price paid as customer)"}));
+		languageKeys.put("Statistic.Translate.CLIENT_SELL_AMOUNT_CURRENCY", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"Shop(Eingenommenes Geld als Kunde)",
+						"Shop(Money earned as a customer)"}));
+		languageKeys.put("Statistic.Translate.SHOPOWNER_BUY_AMOUNT_CURRENCY", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"Shop(Gezahlter Preis als Besitzer)",
+						"Shop(Price paid as owner)"}));
+		languageKeys.put("Statistic.Translate.SHOPOWNER_SELL_AMOUNT_CURRENCY", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"Shop(Eingenommenes Geld als Besitzer)",
+						"Shop (Earned money as owner)"}));
 	}
 	
 	public void initFileAchievementGoal() 
@@ -1477,7 +1509,7 @@ public class YamlManager
 						"<reset><green>Block mined: <white>1"},
 				new Object[] {
 						"<reset><white>Du hast 1",
-						"<reset><white>Blöcke aller Art abgebaut!",
+						"<reset><white>beliebige Block abgebaut!",
 						"<reset><white>You have mined 1",
 						"<reset><white>blocks of all types!"
 				}, true, 
@@ -1500,7 +1532,7 @@ public class YamlManager
 						"<reset><green>Block mined: <white>10"},
 				new Object[] {
 						"<reset><white>Du hast 10",
-						"<reset><white>Blöcke aller Art abgebaut!",
+						"<reset><white>beliebige Blöcke abgebaut!",
 						"<reset><white>You have mined 10",
 						"<reset><white>blocks of all types!"
 				}, true, 
@@ -1523,7 +1555,7 @@ public class YamlManager
 						"<reset><green>Block mined: <white>100"},
 				new Object[] {
 						"<reset><white>Du hast 100",
-						"<reset><white>Blöcke aller Art abgebaut!",
+						"<reset><white>beliebige Blöcke abgebaut!",
 						"<reset><white>You have mined 100",
 						"<reset><white>blocks of all types!"
 				}, true, 
@@ -1546,7 +1578,7 @@ public class YamlManager
 						"<reset><green>Block mined: <white>1k"},
 				new Object[] {
 						"<reset><white>Du hast 1k",
-						"<reset><white>Blöcke aller Art abgebaut!",
+						"<reset><white>beliebige Blöcke abgebaut!",
 						"<reset><white>You have mined 1k",
 						"<reset><white>blocks of all types!"
 				}, true, 
@@ -1569,7 +1601,7 @@ public class YamlManager
 						"<reset><green>Block mined: <white>10k"},
 				new Object[] {
 						"<reset><white>Du hast 10k",
-						"<reset><white>Blöcke aller Art abgebaut!",
+						"<reset><white>beliebige Blöcke abgebaut!",
 						"<reset><white>You have mined 10k",
 						"<reset><white>blocks of all types!"
 				}, true, 
@@ -1592,7 +1624,7 @@ public class YamlManager
 						"<reset><green>Block mined: <white>100k"},
 				new Object[] {
 						"<reset><white>Du hast 100k",
-						"<reset><white>Blöcke aller Art abgebaut!",
+						"<reset><white>beliebige Blöcke abgebaut!",
 						"<reset><white>You have mined 100k",
 						"<reset><white>blocks of all types!"
 				}, true, 
@@ -1615,7 +1647,7 @@ public class YamlManager
 						"<reset><green>Block mined: <white>1 million"},
 				new Object[] {
 						"<reset><white>Du hast 1 Millionen",
-						"<reset><white>Blöcke aller Art abgebaut!",
+						"<reset><white>beliebige Blöcke abgebaut!",
 						"<reset><white>You have mined 1 million",
 						"<reset><white>blocks of all types!"
 				}, true, 
@@ -1638,7 +1670,7 @@ public class YamlManager
 						"<reset><green>Block mined: <white>10 million"},
 				new Object[] {
 						"<reset><white>Du hast 10 Millionen",
-						"<reset><white>Blöcke aller Art abgebaut!",
+						"<reset><white>beliebige Blöcke abgebaut!",
 						"<reset><white>You have mined 10 million",
 						"<reset><white>blocks of all types!"
 				}, true, 
@@ -1661,7 +1693,7 @@ public class YamlManager
 						"<reset><green>Block mined: <white>100 million"},
 				new Object[] {
 						"<reset><white>Du hast 100 Millionen",
-						"<reset><white>Blöcke aller Art abgebaut!",
+						"<reset><white>beliebige Blöcke abgebaut!",
 						"<reset><white>You have mined 100 million",
 						"<reset><white>blocks of all types!"
 				}, true, 
