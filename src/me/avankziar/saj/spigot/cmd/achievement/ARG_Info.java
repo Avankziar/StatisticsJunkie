@@ -78,7 +78,6 @@ public class ARG_Info extends ArgumentModule
 			i++;
 		}
 		int average = l.size() > 0 ? count/l.size() : 0;
-		int median = l.size() > 1 ? l.get(l.size()/2) : 0;
 		ArrayList<String> msg = new ArrayList<>();
 		msg.add(plugin.getYamlHandler().getLang().getString("Achievement.Info.Headline").replace("%player%", othername));
 		msg.add(plugin.getYamlHandler().getLang().getString("Achievement.Info.AchievedVersusTotal")
@@ -89,8 +88,7 @@ public class ARG_Info extends ArgumentModule
 				.replace("%achievementtotal%", String.valueOf(count))
 				.replace("%playercount%", String.valueOf(l.size())));
 		msg.add(plugin.getYamlHandler().getLang().getString("Achievement.Info.AverageAndMedian")
-				.replace("%average%", String.valueOf(average))
-				.replace("%median%", String.valueOf(median)));
+				.replace("%average%", String.valueOf(average)));
 		MessageHandler.sendMessage(player, msg.toArray(new String[msg.size()]));
 	}
 }

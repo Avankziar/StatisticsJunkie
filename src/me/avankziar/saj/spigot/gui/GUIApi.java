@@ -217,44 +217,43 @@ public class GUIApi
 		pdc.set(new NamespacedKey(plugin, INVENTORYIDENTIFIER), PersistentDataType.STRING, this.inventoryIdentifier);
 		pdc.set(new NamespacedKey(plugin, CLICKEVENTCANCEL), PersistentDataType.STRING, String.valueOf(clickEventCancel));
 		pdc.set(new NamespacedKey(plugin, SETTINGLEVEL), PersistentDataType.STRING, settingsLevel.getName());
-		if(clickFunction == null || clickFunction.length <= 0)
+		if(clickFunction != null && clickFunction.length > 0)
 		{
-			return;
-		}
-		for(ClickFunction cf : clickFunction)
-		{
-			switch(cf.getClickType())
+			for(ClickFunction cf : clickFunction)
 			{
-			case DROP:
-				pdc.set(new NamespacedKey(plugin, DROP_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
-			case LEFT:
-				pdc.set(new NamespacedKey(plugin, LEFT_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
-			case RIGHT:
-				pdc.set(new NamespacedKey(plugin, RIGHT_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
-			case NUMPAD_1:
-				pdc.set(new NamespacedKey(plugin, NUMPAD_1_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
-			case NUMPAD_2:
-				pdc.set(new NamespacedKey(plugin, NUMPAD_2_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
-			case NUMPAD_3:
-				pdc.set(new NamespacedKey(plugin, NUMPAD_3_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
-			case NUMPAD_4:
-				pdc.set(new NamespacedKey(plugin, NUMPAD_4_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
-			case NUMPAD_5:
-				pdc.set(new NamespacedKey(plugin, NUMPAD_5_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
-			case NUMPAD_6:
-				pdc.set(new NamespacedKey(plugin, NUMPAD_6_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
-			case NUMPAD_7:
-				pdc.set(new NamespacedKey(plugin, NUMPAD_7_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
-			case NUMPAD_8:
-				pdc.set(new NamespacedKey(plugin, NUMPAD_8_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
-			case NUMPAD_9:
-				pdc.set(new NamespacedKey(plugin, NUMPAD_9_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
-			case CTRL_DROP:
-				pdc.set(new NamespacedKey(plugin, SHIFT_DROP_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
-			case SHIFT_LEFT:
-				pdc.set(new NamespacedKey(plugin, SHIFT_LEFT_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
-			case SHIFT_RIGHT:
-				pdc.set(new NamespacedKey(plugin, SHIFT_RIGHT_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
+				switch(cf.getClickType())
+				{
+				case DROP:
+					pdc.set(new NamespacedKey(plugin, DROP_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
+				case LEFT:
+					pdc.set(new NamespacedKey(plugin, LEFT_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
+				case RIGHT:
+					pdc.set(new NamespacedKey(plugin, RIGHT_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
+				case NUMPAD_1:
+					pdc.set(new NamespacedKey(plugin, NUMPAD_1_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
+				case NUMPAD_2:
+					pdc.set(new NamespacedKey(plugin, NUMPAD_2_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
+				case NUMPAD_3:
+					pdc.set(new NamespacedKey(plugin, NUMPAD_3_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
+				case NUMPAD_4:
+					pdc.set(new NamespacedKey(plugin, NUMPAD_4_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
+				case NUMPAD_5:
+					pdc.set(new NamespacedKey(plugin, NUMPAD_5_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
+				case NUMPAD_6:
+					pdc.set(new NamespacedKey(plugin, NUMPAD_6_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
+				case NUMPAD_7:
+					pdc.set(new NamespacedKey(plugin, NUMPAD_7_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
+				case NUMPAD_8:
+					pdc.set(new NamespacedKey(plugin, NUMPAD_8_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
+				case NUMPAD_9:
+					pdc.set(new NamespacedKey(plugin, NUMPAD_9_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
+				case CTRL_DROP:
+					pdc.set(new NamespacedKey(plugin, SHIFT_DROP_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
+				case SHIFT_LEFT:
+					pdc.set(new NamespacedKey(plugin, SHIFT_LEFT_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
+				case SHIFT_RIGHT:
+					pdc.set(new NamespacedKey(plugin, SHIFT_RIGHT_FUNCTION), PersistentDataType.STRING, cf.getFunction()); break;
+				}
 			}
 		}
 		if(values != null)
@@ -337,7 +336,7 @@ public class GUIApi
 	
 	public boolean isSlotOccupied(int slot)
 	{
-		return !(this.inventory.getItem(slot) == null || this.inventory.getItem(slot).getType() != Material.AIR);
+		return !(this.inventory.getItem(slot) == null || this.inventory.getItem(slot).getType() == Material.AIR);
 	}
 
 	public void open(Player player, GuiType gt) 

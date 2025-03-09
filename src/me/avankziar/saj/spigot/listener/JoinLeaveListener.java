@@ -39,7 +39,7 @@ public class JoinLeaveListener implements Listener
 	
 	private void join(UUID uuid, String name)
 	{
-		BackgroundTask.checkAchievementGoal(Bukkit.getPlayer(uuid));
+		BackgroundTask.joinAchievementGoal(Bukkit.getPlayer(uuid));
 		if(SAJ.getPlugin().getYamlHandler().getConfig().getBoolean("IsInstalledOnProxy"))
 		{
 			return;

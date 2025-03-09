@@ -66,17 +66,6 @@ public class GuiHandler
 			PDT_OTHER_UUID = "other_uuid",
 			PDT_OTHER_NAME = "other_name";
 	
-	//Replacer for Displayname & Lore
-	public static String 
-			ID = "%id%",
-			PLOT_NAME = "%plotname%",
-			LENGHT = "%l%",
-			WIDTH = "%w%",
-			AREA = "%area%",
-			BUY_COST = "%buycost%",
-			TAX_COST = "%tax%",
-			OWNER = "%owner%";
-	
 	public static void openAchievement(Player player, SettingsLevel settingsLevel, Inventory inv, boolean closeInv, int pagination, UUID other, String othername)
 	{
 		GuiType gt = GuiType.ACHIEVEMENT;
@@ -95,14 +84,13 @@ public class GuiHandler
 		{
 		case ACHIEVEMENT:
 			ArrayList<FileAchievementGoal> list = FileAchievementGoalHandler.getGuiSortedFileAchievement(pagination*45, pagination*45 + 45);
-			ArrayList<FileAchievementGoal> notAchieved = BackgroundTask.playerAchievementGoal.get(other);
-			int i = 0;
+			ArrayList<FileAchievementGoal> notAchieved = BackgroundTask.playerActualReachedAchievementGoal.get(other);
+			int j = 0;
 			for(FileAchievementGoal favg : list)
 			{
 				boolean notA = false;
 				for(FileAchievementGoal nAfavg : notAchieved)
 				{
-					SAJ.logger.info(nAfavg.getAchievementGoalUniqueName()+" : "+favg.getAchievementGoalUniqueName()); //REMOVEME
 					if(nAfavg.getAchievementGoalUniqueName().equals(favg.getAchievementGoalUniqueName()))
 					{
 						notA = true;
@@ -112,10 +100,8 @@ public class GuiHandler
 				ItemStack is = null;
 				if(notA)
 				{
-					SAJ.logger.info(favg.getAchievementGoalUniqueName()+" notA"); //REMOVEME
 					if(favg.getDisplayItemIfNotAchievedMaterial() == null)
 					{
-						SAJ.logger.info(favg.getAchievementGoalUniqueName()+" favg.getDisplayItemIfNotAchievedMaterial() == null"); //REMOVEME
 						continue;
 					}
 					is = new ItemStack(favg.getDisplayItemIfNotAchievedMaterial());
@@ -140,19 +126,16 @@ public class GuiHandler
 						}
 						is.setItemMeta(im);
 					}
-					SAJ.logger.info("Added to Gui"); //REMOVEME
 					LinkedHashMap<String, Entry<GUIApi.Type, Object>> map = new LinkedHashMap<>();
-					gui.add(i, is, SettingsLevel.BASE, true, map, new ClickFunction[0]);
-					i++;
+					gui.add(j, is, SettingsLevel.BASE, true, map);
+					j++;
 				} else
 				{
-					SAJ.logger.info(favg.getAchievementGoalUniqueName()+" A"); //REMOVEME
 					AchievementGoal ag = plugin.getMysqlHandler().getData(new AchievementGoal(), 
 							"`player_uuid` = ? AND `achievement_goal_uniquename` = ?", 
 							other.toString(), favg.getAchievementGoalUniqueName());
 					if(favg.getDisplayItemMaterial() == null || ag == null)
 					{
-						SAJ.logger.info(favg.getAchievementGoalUniqueName()+" favg.getDisplayItemMaterial() == null || ag == null"); //REMOVEME
 						continue;
 					}
 					is = new ItemStack(favg.getDisplayItemMaterial());
@@ -178,10 +161,9 @@ public class GuiHandler
 						}
 						is.setItemMeta(im);
 					}
-					SAJ.logger.info("Added to Gui"); //REMOVEME
 					LinkedHashMap<String, Entry<GUIApi.Type, Object>> map = new LinkedHashMap<>();
-					gui.add(i, is, SettingsLevel.BASE, true, map, new ClickFunction[0]);
-					i++;
+					gui.add(j, is, SettingsLevel.BASE, true, map);
+					j++;
 				}
 			}
 			break;
@@ -891,7 +873,7 @@ public class GuiHandler
 		im.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 		im.addItemFlags(ItemFlag.HIDE_DESTROYS);
 		im.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-		im.setDisplayName(ChatApiS.tlItem("&0"));
+		im.setDisplayName(ChatApiS.tlItem("<black>."));
 		im.setLore(new ArrayList<>());
 		is.setItemMeta(im);
 		LinkedHashMap<String, Entry<GUIApi.Type, Object>> map = new LinkedHashMap<>();

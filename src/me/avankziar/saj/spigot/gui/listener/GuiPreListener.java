@@ -116,7 +116,7 @@ public class GuiPreListener implements Listener
 			}
 			String[] split = key.getKey().split("---");
 			String purekey = split[0];
-			GUIApi.Type type = GUIApi.Type.valueOf(split[1]);
+			GUIApi.Type type = GUIApi.Type.valueOf(split[1].toUpperCase());
 			switch(type)
 			{
 			case BYTE:

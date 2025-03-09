@@ -58,7 +58,7 @@ public class StatisticIncrementListener implements Listener
 		final StatisticType statistic = event.getStatisticType();
 		final EntityType ent = event.getEntityType();
 		final Material mat = event.getMaterial();
-		long i = event.getIncrementValue();
+		double i = event.getIncrementValue();
 		if(event.isAsynchronous())
 		{
 			StatisticHandler.statisticIncrement(uuid, statistic, mat, ent, i);

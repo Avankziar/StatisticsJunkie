@@ -80,7 +80,7 @@ public class FileAchievementGoalHandler
 					broadcastMessage = y.getStringList("Reward.BroadcastMessage");
 				}
 				int guiSlot = y.getInt("Gui.SlotNumber");
-				Material displayItemMaterial = Material.valueOf(y.getString("Gui.Item.Material", Material.AIR.toString()));
+				Material displayItemMaterial = Material.valueOf(y.getString("Gui.Item.Material"));
 				String displayItemDisplayname = y.getString("Gui.Item.Displayname", null);
 				List<String> displayItemLore = List.of();
 				if(y.get("Gui.Item.Lore") != null)
@@ -90,7 +90,7 @@ public class FileAchievementGoalHandler
 				boolean displayItemEnchantmentGlintOverride = y.getBoolean("Gui.Item.EnchantmentGlintOverride", false);
 				
 				Material displayItemIfNotAchievedMaterial = 
-						Material.valueOf(y.getString("Gui.ItemIfNotAchieved.Material", Material.AIR.toString()));
+						Material.valueOf(y.getString("Gui.ItemIfNotAchieved.Material"));
 				String displayItemIfNotAchievedDisplayname = y.getString("Gui.ItemIfNotAchieved.Displayname", null);
 				List<String> displayItemIfNotAchievedLore = List.of();
 				if(y.get("Gui.ItemIfNotAchieved.Lore") != null)

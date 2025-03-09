@@ -637,8 +637,10 @@ public class YamlManager
 				new Object[] {
 				"",
 				"Legt fest, ob StatisticsJunkie auf den Proxy (Bungeecord/Velocity) installiert ist.",
+				"Die Distanz die im PlayerMoveEvent getrackt werden kann, ist etwa zu 95% dem, was der Spieler tatsächlich zurücklegt.",
 				"",
-				""});
+				"Determines whether StatisticsJunkie is installed on the proxy (Bungeecord/Velocity).",
+				"The distance that can be tracked in the PlayerMoveEvent is about 95% of what the player actually moves."});
 		addConfig("UsePlayerMoveEvent",
 				new Object[] {
 				true},
@@ -655,12 +657,12 @@ public class YamlManager
 				"CROUCH_ONE_CM, SPRINT_ONE_CM, WALK_ONE_CM"});
 		addConfig("Task.CheckIfPlayerAchievedSomething",
 				new Object[] {
-				15},
+				3},
 				new Object[] {
 				"",
 				"Ein Asynchroner Task in Minuten, der checkt ob Spieler irgendwelche AchievementGoals erreicht haben.",
 				"",
-				""});
+				"An asynchronous task in minutes that checks whether players have achieved any achievement goals."});
 		addConfig("Task.UpdateStatisticIncrementToDatabase",
 				new Object[] {
 				2},
@@ -668,24 +670,27 @@ public class YamlManager
 				"",
 				"Ein Asynchroner Task in Minuten, der die normalen Minecraft Statistischen Inkrements in die Datenbank einfügt.",
 				"",
-				""});
+				"An asynchronous task in minutes that inserts the normal Minecraft statistical increments into the database."});
 		addConfig("Statistic.UsedDistanceUnits.Kilometer",
 				new Object[] {
 				true},
 				new Object[] {
 				"",
 				"Definiert für die Distanze Statistik ob man in Kilometer rechnen möchte.",
-				"KiloMeter wird immer priorisiert vor der Meile, falls beide aktiv sein sollten.",
+				"Kilometer wird immer priorisiert vor der Meile, falls beide aktiv sein sollten.",
 				"",
-				""});
+				"Defines for the distance statistics whether to calculate in kilometers.",
+				"Kilometer is always prioritized over mile if both are active."});
 		addConfig("Statistic.UsedDistanceUnits.Mile",
 				new Object[] {
 				false},
 				new Object[] {
 				"",
+				"Definiert für die Distanze Statistik ob man in Meile rechnen möchte.",
+				"Kilometer wird immer priorisiert vor der Meile, falls beide aktiv sein sollten.",
 				"",
-				"",
-				""});
+				"Defines for the distance statistics whether you want to calculate in miles.",
+				"Kilometer is always prioritized over mile if both are active."});
 	}
 	
 	@SuppressWarnings("unused") //INFO:Commands
@@ -934,12 +939,12 @@ public class YamlManager
 						"<yellow>=====<gray>[<gold>StatisticalAchievementJunkie<gray>]<yellow>====="}));
 		languageKeys.put("Next", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"<yellow><understrike>nächste Seite <yellow>==>",
-						"<yellow><understrike>next page <yellow>==>"}));
+						"<yellow><underline>nächste Seite <yellow>==>",
+						"<yellow><underline>next page <yellow>==>"}));
 		languageKeys.put("Past", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"<yellow><== <understrike>vorherige Seite",
-						"<yellow><== <understrike>previous page"}));
+						"<yellow><== <underline>vorherige Seite",
+						"<yellow><== <underline>previous page"}));
 		languageKeys.put("IsTrue", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"<green>✔",
@@ -966,8 +971,8 @@ public class YamlManager
 						"<white>In total, <gold>%player count% <white>players have achieved <gold>%achievement total% <white>achievements."}));
 		languageKeys.put("Achievement.Info.AverageAndMedian", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"<white>Der Durchschnitt liegt dabei bei <gold>%average%<white>/Spieler und der Median bei <gold>%median%<white>.",
-						"<white>The average is <gold>%average%<white>/player and the median is <gold>%median%<white>."}));
+						"<white>Der Durchschnitt liegt dabei bei <gold>%average%<white>/Spieler.",
+						"<white>The average is <gold>%average%<white>/player."}));
 		initCmdStatistic();
 	}
 	
@@ -989,6 +994,10 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"<white>yd",
 						"<white>yd"}));
+		languageKeys.put("Statistic.Unit.Mile", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"<white>mile",
+						"<white>mile"}));
 		languageKeys.put("Statistic.TimeScale.UnderDays", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"<white>HH<gray>h <white>mm<dark_gray>min",
@@ -1003,8 +1012,8 @@ public class YamlManager
 						"<white>MM<#FF4D00>Months <white>dd<yellow>Days <white>HH<gray>h <white>mm<dark_gray>mins"}));
 		languageKeys.put("Statistic.TimeScale.OverYears", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"<white>yyyy<red>Jahre <white>MM<#FF4D00>Monate <white>dd<yellow>Tage <white>HH<gray>h <white>mm<dark_gray>min",
-						"<white>yyyy<red>Years <white>MM<#FF4D00>Months <white>dd<yellow>Days <white>HH<gray>h <white>mm<dark_gray>mins"}));
+						"<white>yyyy<#C93C20>Jahre <white>MM<#FF4D00>Monate <white>dd<yellow>Tage <white>HH<gray>h <white>mm<dark_gray>min",
+						"<white>yyyy<#C93C20>Years <white>MM<#FF4D00>Months <white>dd<yellow>Days <white>HH<gray>h <white>mm<dark_gray>mins"}));
 		languageKeys.put("Statistic.Base.Headline", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"<gray>========<gold>Statistik <white>%player%<gray>========",
@@ -1073,6 +1082,50 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"Gesamt",
 						"Total"}));
+		languageKeys.put("Statistic.Translate."+SortingType.CHAT_AND_COMMAND.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"Chat und Befehle",
+						"Chat and Commands"}));
+		languageKeys.put("Statistic.Translate."+SortingType.DAMAGE_AND_DEATH.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"Schaden und Tode",
+						"Damage and Death"}));
+		languageKeys.put("Statistic.Translate."+SortingType.ECONOMY.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"Wirtschaft",
+						"Economy"}));
+		languageKeys.put("Statistic.Translate."+SortingType.INTERACTION_WITH_BLOCKS.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"Interaktionen mit Blöcken",
+						"Interaction with blocks"}));
+		languageKeys.put("Statistic.Translate."+SortingType.MISCELLANEOUS.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"Sonstiges",
+						"Miscellaneous"}));
+		languageKeys.put("Statistic.Translate."+SortingType.MOVEMENT.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"Bewegung",
+						"Movement"}));
+		languageKeys.put("Statistic.Translate."+SortingType.PLUGINS.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"Plugins",
+						"Plugins"}));
+		languageKeys.put("Statistic.Translate."+SortingType.SKILL.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"Skill",
+						"Skill"}));
+		languageKeys.put("Statistic.Translate."+SortingType.SPECIAL.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"Spezial",
+						"Special"}));
+		languageKeys.put("Statistic.Translate."+SortingType.TIME.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"Zeit",
+						"Time"}));
+		languageKeys.put("Statistic.Translate."+SortingType.WITH_SUBSTATISTIC.toString(), 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"Mit Substatistiken",
+						"With Substatistics"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.AFK_ONE_MINUTE.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"Afkzeit",
@@ -1103,316 +1156,335 @@ public class YamlManager
 						"Bell ring"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.BOAT_ONE_CM.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Bootdistanz",
+						"Boat distance"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.BREAK_ITEM.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Item gebrochen",
+						"Item break"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.BREWINGSTAND_INTERACTION.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Interagieren mit Braustand",
+						"Interaction with Brewingstand"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.CAKE_SLICES_EATEN.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Küchenstücke gegessen",
+						"Cake slices eaten"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.CAULDRON_FILLED.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Kessel gefüllt",
+						"Cauldron filled"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.CAULDRON_USED.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Kessel genutzt",
+						"Cauldron used"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.CHAT_CHARACTER.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Chatzeichen geschrieben",
+						"Chat character written"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.CHAT_WORD.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Chatwörter geschrieben",
+						"Chat character written"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.CHEST_OPENED.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Interagiert mit Kisten",
+						"Interacted with chests"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.CLEAN_SHULKER_BOX.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Shulkerbox gesäubert",
+						"Shulker box cleaned"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.CLIMB_ONE_CM.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Kleiterdistanz",
+						"Climb distance"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.COMMAND_EXECUTED.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Befehle ausgeführt",
+						"Command executed"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.CRAFT_ITEM.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Item hergestellt",
+						"Item crafted"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.CRAFTING_TABLE_INTERACTION.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Interaktion mit Werkbank",
+						"Interaction mit crafting table"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.CRAWLING_ONE_CM.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Kriechdistanz",
+						"Crawling distance"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.CROUCH_ONE_CM.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Kauerdistanz",
+						"Crouch distanze"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.DAMAGE_ABSORBED.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Schaden absorbiert",
+						"Damage absorbed"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.DAMAGE_BLOCKED_BY_SHIELD.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Schaden blockiert mit Schild",
+						"Damage blocked by shield"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.DAMAGE_DEALT.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Schaden ausgeteilt",
+						"Damage dealt"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.DAMAGE_DEALT_ABSORBED.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Ausgeteilter Schaden absorbiert",
+						"Damage dealt absorbed"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.DAMAGE_DEALT_RESISTED.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Ausgeteilter Schaden widerstanden",
+						"Damage dealt resisted"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.DAMAGE_RESISTED.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Schaden widerstanden",
+						"Damage resisted"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.DAMAGE_TAKEN.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Schaden genommen",
+						"Damage take"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.DEATHS.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Tode",
+						"Deaths"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.DISPENSER_INSPECTED.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Werfer inspiziert",
+						"Dispenser inspected"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.DROP.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Item fallengelassen",
+						"Item dropped"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.DROP_COUNT.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Itemanzahl fallengelassen",
+						"Itemamount dropped"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.DROPPER_INSPECTED.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Spender inspeziert",
+						"Dropper inspected"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.ENDERCHEST_OPENED.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Interagiert mit Enderkiste",
+						"Interaction with enderchest"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.ENTITY_KILLED_BY.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Getötet bei Entitys",
+						"Entity killed by"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.FISH_CAUGHT.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Fische gefangen",
+						"Fish caught"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.FLOWER_POTTED.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Blumen eingetopft",
+						"Flower potted"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.FLY_ONE_CM.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Flugdistanz",
+						"Fly distance"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.FURNACE_INTERACTION.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Interagiert mit Öfen",
+						"Interaction with furnace"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.HOPPER_INSPECTED.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Interagiert mit Trichter",
+						"Interaction with hopper"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.HORSE_ONE_CM.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Pferdreitdistanz",
+						"Horse ride distance"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.INTERACT_WITH_ANVIL.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Interagiert mit Amboss",
+						"Interaction with anvil"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.INTERACT_WITH_BLAST_FURNACE.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Interagiert mit Schmelzofen",
+						"Interaction with blastfurnace"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.INTERACT_WITH_CAMPFIRE.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Interagiert mit Lagerfeuer",
+						"Interaction with campfire"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.INTERACT_WITH_CARTOGRAPHY_TABLE.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Interagiert mit Kartographietisch",
+						"Interaction with cartography table"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.INTERACT_WITH_GRINDSTONE.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Interagiert mit Schleifstein",
+						"Interaction with grindstone"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.INTERACT_WITH_LECTERN.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Interagiert mit Lesepult",
+						"Interaction with lectner"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.INTERACT_WITH_LOOM.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Interagiert mit Webstuhl",
+						"Interaction with loom"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.INTERACT_WITH_SMITHING_TABLE.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Interagiert mit Schmiedetisch",
+						"Interaction with smithing table"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.INTERACT_WITH_SMOKER.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Interagiert mit Räucherofen",
+						"Interaction with smoker"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.INTERACT_WITH_STONECUTTER.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Interagiert mit Steinsäge",
+						"Interaction with stonecutter"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.ITEM_ENCHANTED.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Item verzaubert",
+						"Item enchanted"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.JUMP.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Springen",
+						"Jump"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.KILL_ENTITY.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Getötet Entitys",
+						"Killed entity"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.LOGIN.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Login",
+						"Login"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.MINE_BLOCK.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Blöcke abgebaut",
+						"Block mined"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.MINECART_ONE_CM.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Lorendistanz",
+						"Minecart distance"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.MOB_KILLS.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Mob getötet",
+						"Mob kills"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.NOTEBLOCK_PLAYED.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Notenblock gespield",
+						"Noteblock played"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.NOTEBLOCK_TUNED.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Notenblock gestimmt",
+						"Noteblock tuned"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.OPEN_BARREL.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Interagiert mit Fäßer",
+						"Interaction with barrel"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.PICKUP.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Item aufgehoben",
+						"Item pickup"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.PIG_ONE_CM.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Schweinereitendistanze",
+						"Pig ride distance"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.PLAY_ONE_MINUTE.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Spielzeit",
+						"Playtime"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.PLAYER_KILLS.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Spieler getötet",
+						"Player kills"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.RAID_TRIGGER.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Raid ausgelöst",
+						"Raid trigger"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.RAID_WIN.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Raid gewonnen",
+						"Raid win"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.RECORD_PLAYED.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Disc gespielt",
+						"Record played"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.SHULKER_BOX_OPENED.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Interagiert mit Shulkerbox",
+						"Interaction with shulker box"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.SLEEP_IN_BED.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Bett geschlafen",
+						"Sleep in bed"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.SNEAK_TIME_ONE_MINUTE.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Zeit in der Hocke verbracht",
+						"Sneak time"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.SPRINT_ONE_CM.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Renndistanz",
+						"Sprint distance"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.STRIDER_ONE_CM.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Schreiterreitdistanze",
+						"Strider ride distance"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.SWIM_ONE_CM.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Schwimmdistanze",
+						"Swim distance"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.TALKED_TO_VILLAGER.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Mit Dörfler gesprochen",
+						"Talked to villager"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.TARGET_HIT.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
-		languageKeys.put("Statistic.Translate."+StatisticType.TOTAL_ONLINE_ONE_MINUTE.toString(), 
-				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Zielblock getroffen",
+						"Target hit"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.TRADED_WITH_VILLAGER.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Mit Dörfler gehandelt",
+						"Traded with villager"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.TRAPPED_CHEST_TRIGGERED.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Redstonetruhe getriggert",
+						"Traapped chest triggered"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.USE_ITEM.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Item benutzt",
+						"Item used"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.VOTE.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Vote",
+						"Vote"}));
 		languageKeys.put("Statistic.Translate."+StatisticType.WALK_ONE_CM.toString(), 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"",
-						""}));
+						"Gehdistanze",
+						"Walk distance"}));
 	}
 	
 	public void initFileAchievementGoal() 
 	{
+		setFileAchievementGoal("block_break_1",
+				"<red>Blöcke Abbauen: <white>1",
+				"<red>Block break: <white>1",
+				StatisticType.MINE_BLOCK, "null", 1,
+				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
+				new Object[] {
+				"<bold><gold>Gratulation!",
+				"<gold>Spieler <white>%player% <gold>hat 1 Block abgebaut!",
+				"<bold><gold>Congratulations!",
+				"<gold>Player <white>%player% <gold>has mined 1 block!"}, 0, 
+				Material.STONE, new Object[] {
+						"<reset><green>Blöcke Abbauen: <white>1",
+						"<reset><green>Block mined: <white>1"},
+				new Object[] {
+						"<reset><white>Du hast 1",
+						"<reset><white>Blöcke aller Art abgebaut!",
+						"<reset><white>You have mined 1",
+						"<reset><white>blocks of all types!"
+				}, true, 
+				Material.BARRIER, new Object[] {
+						"<reset><red>Blöcke Abbauen: <white>1",
+						"<reset><red>Block break: <white>1"},
+				null, false);
 		setFileAchievementGoal("block_break_10",
 				"<red>Blöcke Abbauen: <white>10",
 				"<red>Block break: <white>10",
@@ -1422,15 +1494,15 @@ public class YamlManager
 				"<bold><gold>Gratulation!",
 				"<gold>Spieler <white>%player% <gold>hat 10 Blöcke abgebaut!",
 				"<bold><gold>Congratulations!",
-				"<gold>Player <white>%player% <gold>has mined 10 blocks!"}, 0, 
+				"<gold>Player <white>%player% <gold>has mined 10 blocks!"}, 1, 
 				Material.STONE, new Object[] {
 						"<reset><green>Blöcke Abbauen: <white>10",
 						"<reset><green>Block mined: <white>10"},
 				new Object[] {
-						"<reset>Du hast 10",
-						"<reset>Blöcke aller Art abgebaut!",
-						"<reset>You have mined 10",
-						"<reset>blocks of all types!"
+						"<reset><white>Du hast 10",
+						"<reset><white>Blöcke aller Art abgebaut!",
+						"<reset><white>You have mined 10",
+						"<reset><white>blocks of all types!"
 				}, true, 
 				Material.BARRIER, new Object[] {
 						"<reset><red>Blöcke Abbauen: <white>10",
@@ -1445,42 +1517,987 @@ public class YamlManager
 				"<bold><gold>Gratulation!",
 				"<gold>Spieler <white>%player% <gold>hat 100 Blöcke abgebaut!",
 				"<bold><gold>Congratulations!",
-				"<gold>Player <white>%player% <gold>has mined 100 blocks!"}, 1, 
+				"<gold>Player <white>%player% <gold>has mined 100 blocks!"}, 2, 
 				Material.STONE, new Object[] {
 						"<reset><green>Blöcke Abbauen: <white>100",
 						"<reset><green>Block mined: <white>100"},
 				new Object[] {
-						"<reset>Du hast 100",
-						"<reset>Blöcke aller Art abgebaut!",
-						"<reset>You have mined 100",
-						"<reset>blocks of all types!"
+						"<reset><white>Du hast 100",
+						"<reset><white>Blöcke aller Art abgebaut!",
+						"<reset><white>You have mined 100",
+						"<reset><white>blocks of all types!"
 				}, true, 
 				Material.BARRIER, new Object[] {
 						"<reset><red>Blöcke Abbauen: <white>100",
 						"<reset><red>Block break: <white>100"},
 				null, false);
+		setFileAchievementGoal("block_break_1k",
+				"<red>Blöcke Abbauen: <white>1k",
+				"<red>Block break: <white>1k",
+				StatisticType.MINE_BLOCK, "null", 1_000,
+				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
+				new Object[] {
+				"<bold><gold>Gratulation!",
+				"<gold>Spieler <white>%player% <gold>hat 1k Blöcke abgebaut!",
+				"<bold><gold>Congratulations!",
+				"<gold>Player <white>%player% <gold>has mined 1k blocks!"}, 3, 
+				Material.STONE, new Object[] {
+						"<reset><green>Blöcke Abbauen: <white>1k",
+						"<reset><green>Block mined: <white>1k"},
+				new Object[] {
+						"<reset><white>Du hast 1k",
+						"<reset><white>Blöcke aller Art abgebaut!",
+						"<reset><white>You have mined 1k",
+						"<reset><white>blocks of all types!"
+				}, true, 
+				Material.BARRIER, new Object[] {
+						"<reset><red>Blöcke Abbauen: <white>1k",
+						"<reset><red>Block break: <white>1k"},
+				null, false);
+		setFileAchievementGoal("block_break_10k",
+				"<red>Blöcke Abbauen: <white>10k",
+				"<red>Block break: <white>10k",
+				StatisticType.MINE_BLOCK, "null", 10_000,
+				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
+				new Object[] {
+				"<bold><gold>Gratulation!",
+				"<gold>Spieler <white>%player% <gold>hat 10k Blöcke abgebaut!",
+				"<bold><gold>Congratulations!",
+				"<gold>Player <white>%player% <gold>has mined 10k blocks!"}, 4, 
+				Material.STONE, new Object[] {
+						"<reset><green>Blöcke Abbauen: <white>10k",
+						"<reset><green>Block mined: <white>10k"},
+				new Object[] {
+						"<reset><white>Du hast 10k",
+						"<reset><white>Blöcke aller Art abgebaut!",
+						"<reset><white>You have mined 10k",
+						"<reset><white>blocks of all types!"
+				}, true, 
+				Material.BARRIER, new Object[] {
+						"<reset><red>Blöcke Abbauen: <white>10k",
+						"<reset><red>Block break: <white>10k"},
+				null, false);
+		setFileAchievementGoal("block_break_100k",
+				"<red>Blöcke Abbauen: <white>100k",
+				"<red>Block break: <white>100k",
+				StatisticType.MINE_BLOCK, "null", 100_000,
+				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
+				new Object[] {
+				"<bold><gold>Gratulation!",
+				"<gold>Spieler <white>%player% <gold>hat 100k Blöcke abgebaut!",
+				"<bold><gold>Congratulations!",
+				"<gold>Player <white>%player% <gold>has mined 100k blocks!"}, 5, 
+				Material.STONE, new Object[] {
+						"<reset><green>Blöcke Abbauen: <white>100k",
+						"<reset><green>Block mined: <white>100k"},
+				new Object[] {
+						"<reset><white>Du hast 100k",
+						"<reset><white>Blöcke aller Art abgebaut!",
+						"<reset><white>You have mined 100k",
+						"<reset><white>blocks of all types!"
+				}, true, 
+				Material.BARRIER, new Object[] {
+						"<reset><red>Blöcke Abbauen: <white>100k",
+						"<reset><red>Block break: <white>100k"},
+				null, false);
 		setFileAchievementGoal("block_break_1M",
 				"<red>Blöcke Abbauen: <white>1 Millionen",
 				"<red>Block break: <white>1 Million",
-				StatisticType.MINE_BLOCK, "null", 1000000,
+				StatisticType.MINE_BLOCK, "null", 1_000_000,
 				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
 				new Object[] {
 				"<bold><gold>Gratulation!",
 				"<gold>Spieler <white>%player% <gold>hat 1 Millionen Blöcke abgebaut!",
 				"<bold><gold>Congratulations!",
-				"<gold>Player <white>%player% <gold>has mined 1 million blocks!"}, 3, 
+				"<gold>Player <white>%player% <gold>has mined 1 million blocks!"}, 6, 
 				Material.STONE, new Object[] {
 						"<reset><green>Blöcke Abbauen: <white>1 Millionen",
 						"<reset><green>Block mined: <white>1 million"},
 				new Object[] {
-						"<reset>Du hast 1 Millionen",
-						"<reset>Blöcke aller Art abgebaut!",
-						"<reset>You have mined 1 million",
-						"<reset>blocks of all types!"
+						"<reset><white>Du hast 1 Millionen",
+						"<reset><white>Blöcke aller Art abgebaut!",
+						"<reset><white>You have mined 1 million",
+						"<reset><white>blocks of all types!"
 				}, true, 
 				Material.BARRIER, new Object[] {
 						"<reset><red>Blöcke Abbauen: <white>1 Millionen",
 						"<reset><red>Block break: <white>1 Million"},
+				null, false);
+		setFileAchievementGoal("block_break_10M",
+				"<red>Blöcke Abbauen: <white>10 Millionen",
+				"<red>Block break: <white>10 Million",
+				StatisticType.MINE_BLOCK, "null", 10_000_000,
+				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
+				new Object[] {
+				"<bold><gold>Gratulation!",
+				"<gold>Spieler <white>%player% <gold>hat 10 Millionen Blöcke abgebaut!",
+				"<bold><gold>Congratulations!",
+				"<gold>Player <white>%player% <gold>has mined 10 million blocks!"}, 7, 
+				Material.STONE, new Object[] {
+						"<reset><green>Blöcke Abbauen: <white>10 Millionen",
+						"<reset><green>Block mined: <white>10 million"},
+				new Object[] {
+						"<reset><white>Du hast 10 Millionen",
+						"<reset><white>Blöcke aller Art abgebaut!",
+						"<reset><white>You have mined 10 million",
+						"<reset><white>blocks of all types!"
+				}, true, 
+				Material.BARRIER, new Object[] {
+						"<reset><red>Blöcke Abbauen: <white>10 Millionen",
+						"<reset><red>Block break: <white>10 Million"},
+				null, false);
+		setFileAchievementGoal("block_break_100M",
+				"<red>Blöcke Abbauen: <white>100 Millionen",
+				"<red>Block break: <white>100 Million",
+				StatisticType.MINE_BLOCK, "null", 100_000_000,
+				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
+				new Object[] {
+				"<bold><gold>Gratulation!",
+				"<gold>Spieler <white>%player% <gold>hat 100 Millionen Blöcke abgebaut!",
+				"<bold><gold>Congratulations!",
+				"<gold>Player <white>%player% <gold>has mined 100 million blocks!"}, 8, 
+				Material.STONE, new Object[] {
+						"<reset><green>Blöcke Abbauen: <white>100 Millionen",
+						"<reset><green>Block mined: <white>100 million"},
+				new Object[] {
+						"<reset><white>Du hast 100 Millionen",
+						"<reset><white>Blöcke aller Art abgebaut!",
+						"<reset><white>You have mined 100 million",
+						"<reset><white>blocks of all types!"
+				}, true, 
+				Material.BARRIER, new Object[] {
+						"<reset><red>Blöcke Abbauen: <white>100 Millionen",
+						"<reset><red>Block break: <white>100 Million"},
+				null, false);
+		setFileAchievementGoal("block_break_stone_1k",
+				"<red>Blöcke Abbauen(Stein): <white>1k",
+				"<red>Block break(Stone): <white>1k",
+				StatisticType.MINE_BLOCK, Material.STONE.toString(), 1_000,
+				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
+				new Object[] {
+				"<bold><gold>Gratulation!",
+				"<gold>Spieler <white>%player% <gold>hat 1k Stein Blöcke abgebaut!",
+				"<bold><gold>Congratulations!",
+				"<gold>Player <white>%player% <gold>has mined 1k stone blocks!"}, 9, 
+				Material.STONE, new Object[] {
+						"<reset><green>Blöcke Abbauen(Stein): <white>1k",
+						"<reset><green>Block mined(Stone): <white>1k"},
+				new Object[] {
+						"<reset><white>Du hast 1k",
+						"<reset><white>Stein Blöcke abgebaut!",
+						"<reset><white>You have mined 1k",
+						"<reset><white>stone blocks types!"
+				}, true, 
+				Material.BARRIER, new Object[] {
+						"<reset><red>Blöcke Abbauen(Stein): <white>1k",
+						"<reset><red>Block break(Stone): <white>1k"},
+				null, false);
+		setFileAchievementGoal("block_break_grass_block_1k",
+				"<red>Blöcke Abbauen(Grassblock): <white>1k",
+				"<red>Block break(Grassblock): <white>1k",
+				StatisticType.MINE_BLOCK, Material.GRASS_BLOCK.toString(), 1_000,
+				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
+				new Object[] {
+				"<bold><gold>Gratulation!",
+				"<gold>Spieler <white>%player% <gold>hat 1k Grassblock Blöcke abgebaut!",
+				"<bold><gold>Congratulations!",
+				"<gold>Player <white>%player% <gold>has mined 1k grassblock blocks!"}, 10, 
+				Material.GRASS_BLOCK, new Object[] {
+						"<reset><green>Blöcke Abbauen(Grassblock): <white>1k",
+						"<reset><green>Block mined(Grassblock): <white>1k"},
+				new Object[] {
+						"<reset><white>Du hast 1k",
+						"<reset><white>Grassblock Blöcke abgebaut!",
+						"<reset><white>You have mined 1k",
+						"<reset><white>grassblock blocks types!"
+				}, true, 
+				Material.BARRIER, new Object[] {
+						"<reset><red>Blöcke Abbauen(Grassblock): <white>1k",
+						"<reset><red>Block break(Grassblock): <white>1k"},
+				null, false);
+		setFileAchievementGoal("block_break_dirt_1k",
+				"<red>Blöcke Abbauen(Erde): <white>1k",
+				"<red>Block break(Dirt): <white>1k",
+				StatisticType.MINE_BLOCK, Material.DIRT.toString(), 1_000,
+				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
+				new Object[] {
+				"<bold><gold>Gratulation!",
+				"<gold>Spieler <white>%player% <gold>hat 1k Erde Blöcke abgebaut!",
+				"<bold><gold>Congratulations!",
+				"<gold>Player <white>%player% <gold>has mined 1k dirt blocks!"}, 11, 
+				Material.DIRT, new Object[] {
+						"<reset><green>Blöcke Abbauen(Erde): <white>1k",
+						"<reset><green>Block mined(Dirt): <white>1k"},
+				new Object[] {
+						"<reset><white>Du hast 1k",
+						"<reset><white>Erde Blöcke abgebaut!",
+						"<reset><white>You have mined 1k",
+						"<reset><white>dirt blocks types!"
+				}, true, 
+				Material.BARRIER, new Object[] {
+						"<reset><red>Blöcke Abbauen(Erde): <white>1k",
+						"<reset><red>Block break(Dirt): <white>1k"},
+				null, false);
+		setFileAchievementGoal("block_break_sand_1k",
+				"<red>Blöcke Abbauen(Sand): <white>1k",
+				"<red>Block break(Sand): <white>1k",
+				StatisticType.MINE_BLOCK, Material.SAND.toString(), 1_000,
+				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
+				new Object[] {
+				"<bold><gold>Gratulation!",
+				"<gold>Spieler <white>%player% <gold>hat 1k Sand Blöcke abgebaut!",
+				"<bold><gold>Congratulations!",
+				"<gold>Player <white>%player% <gold>has mined 1k sand blocks!"}, 12, 
+				Material.SAND, new Object[] {
+						"<reset><green>Blöcke Abbauen(Sand): <white>1k",
+						"<reset><green>Block mined(Sand): <white>1k"},
+				new Object[] {
+						"<reset><white>Du hast 1k",
+						"<reset><white>Sand Blöcke abgebaut!",
+						"<reset><white>You have mined 1k",
+						"<reset><white>sand blocks types!"
+				}, true, 
+				Material.BARRIER, new Object[] {
+						"<reset><red>Blöcke Abbauen(Sand): <white>1k",
+						"<reset><red>Block break(Sand): <white>1k"},
+				null, false);
+		setFileAchievementGoal("block_break_red_sand_1k",
+				"<red>Blöcke Abbauen(Roter Sand): <white>1k",
+				"<red>Block break(Red Sand): <white>1k",
+				StatisticType.MINE_BLOCK, Material.RED_SAND.toString(), 1_000,
+				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
+				new Object[] {
+				"<bold><gold>Gratulation!",
+				"<gold>Spieler <white>%player% <gold>hat 1k Roter Sand Blöcke abgebaut!",
+				"<bold><gold>Congratulations!",
+				"<gold>Player <white>%player% <gold>has mined 1k red sand blocks!"}, 13, 
+				Material.RED_SAND, new Object[] {
+						"<reset><green>Blöcke Abbauen(Roter Sand): <white>1k",
+						"<reset><green>Block mined(Red Sand): <white>1k"},
+				new Object[] {
+						"<reset><white>Du hast 1k",
+						"<reset><white>Roter Sand Blöcke abgebaut!",
+						"<reset><white>You have mined 1k",
+						"<reset><white>red sand blocks types!"
+				}, true, 
+				Material.BARRIER, new Object[] {
+						"<reset><red>Blöcke Abbauen(Roter Sand): <white>1k",
+						"<reset><red>Block break(Red Sand): <white>1k"},
+				null, false);
+		setFileAchievementGoal("block_break_andesite_1k",
+				"<red>Blöcke Abbauen(Andesit): <white>1k",
+				"<red>Block break(Andesite): <white>1k",
+				StatisticType.MINE_BLOCK, Material.ANDESITE.toString(), 1_000,
+				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
+				new Object[] {
+				"<bold><gold>Gratulation!",
+				"<gold>Spieler <white>%player% <gold>hat 1k Andesit Blöcke abgebaut!",
+				"<bold><gold>Congratulations!",
+				"<gold>Player <white>%player% <gold>has mined 1k andesite blocks!"}, 14, 
+				Material.STONE, new Object[] {
+						"<reset><green>Blöcke Abbauen(Andesit): <white>1k",
+						"<reset><green>Block mined(Andesite): <white>1k"},
+				new Object[] {
+						"<reset><white>Du hast 1k",
+						"<reset><white>Andesit Blöcke abgebaut!",
+						"<reset><white>You have mined 1k",
+						"<reset><white>andesite blocks types!"
+				}, true, 
+				Material.BARRIER, new Object[] {
+						"<reset><red>Blöcke Abbauen(Andesit): <white>1k",
+						"<reset><red>Block break(Andesite): <white>1k"},
+				null, false);
+		setFileAchievementGoal("block_break_granite_1k",
+				"<red>Blöcke Abbauen(Granit): <white>1k",
+				"<red>Block break(Granite): <white>1k",
+				StatisticType.MINE_BLOCK, Material.GRANITE.toString(), 1_000,
+				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
+				new Object[] {
+				"<bold><gold>Gratulation!",
+				"<gold>Spieler <white>%player% <gold>hat 1k Granit Blöcke abgebaut!",
+				"<bold><gold>Congratulations!",
+				"<gold>Player <white>%player% <gold>has mined 1k granite blocks!"}, 15, 
+				Material.GRANITE, new Object[] {
+						"<reset><green>Blöcke Abbauen(Granit): <white>1k",
+						"<reset><green>Block mined(Granite): <white>1k"},
+				new Object[] {
+						"<reset><white>Du hast 1k",
+						"<reset><white>Granit Blöcke abgebaut!",
+						"<reset><white>You have mined 1k",
+						"<reset><white>granite blocks types!"
+				}, true, 
+				Material.BARRIER, new Object[] {
+						"<reset><red>Blöcke Abbauen(Granit): <white>1k",
+						"<reset><red>Block break(Granite): <white>1k"},
+				null, false);
+		setFileAchievementGoal("block_break_diorite_1k",
+				"<red>Blöcke Abbauen(Diorit): <white>1k",
+				"<red>Block break(Diorite): <white>1k",
+				StatisticType.MINE_BLOCK, Material.DIORITE.toString(), 1_000,
+				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
+				new Object[] {
+				"<bold><gold>Gratulation!",
+				"<gold>Spieler <white>%player% <gold>hat 1k Diorit Blöcke abgebaut!",
+				"<bold><gold>Congratulations!",
+				"<gold>Player <white>%player% <gold>has mined 1k diorite blocks!"}, 16, 
+				Material.DIORITE, new Object[] {
+						"<reset><green>Blöcke Abbauen(Diorit): <white>1k",
+						"<reset><green>Block mined(Diorite): <white>1k"},
+				new Object[] {
+						"<reset><white>Du hast 1k",
+						"<reset><white>Diorit Blöcke abgebaut!",
+						"<reset><white>You have mined 1k",
+						"<reset><white>diorite blocks types!"
+				}, true, 
+				Material.BARRIER, new Object[] {
+						"<reset><red>Blöcke Abbauen(Diorit): <white>1k",
+						"<reset><red>Block break(Diorite): <white>1k"},
+				null, false);
+		setFileAchievementGoal("block_break_calcite_1k",
+				"<red>Blöcke Abbauen(Calcit): <white>1k",
+				"<red>Block break(Calcite): <white>1k",
+				StatisticType.MINE_BLOCK, Material.CALCITE.toString(), 1_000,
+				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
+				new Object[] {
+				"<bold><gold>Gratulation!",
+				"<gold>Spieler <white>%player% <gold>hat 1k Calcit Blöcke abgebaut!",
+				"<bold><gold>Congratulations!",
+				"<gold>Player <white>%player% <gold>has mined 1k calcite blocks!"}, 17, 
+				Material.CALCITE, new Object[] {
+						"<reset><green>Blöcke Abbauen(Calcit): <white>1k",
+						"<reset><green>Block mined(Calcite): <white>1k"},
+				new Object[] {
+						"<reset><white>Du hast 1k",
+						"<reset><white>Calcit Blöcke abgebaut!",
+						"<reset><white>You have mined 1k",
+						"<reset><white>calcite blocks types!"
+				}, true, 
+				Material.BARRIER, new Object[] {
+						"<reset><red>Blöcke Abbauen(Calcit): <white>1k",
+						"<reset><red>Block break(Calcite): <white>1k"},
+				null, false);
+		setFileAchievementGoal("kill_entity_1",
+				"<red>Entity getötet: <white>1",
+				"<red>Entity killed: <white>1",
+				StatisticType.KILL_ENTITY, "null", 1,
+				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
+				new Object[] {
+				"<bold><gold>Gratulation!",
+				"<gold>Spieler <white>%player% <gold>hat 1 Block abgebaut!",
+				"<bold><gold>Congratulations!",
+				"<gold>Player <white>%player% <gold>has killed 1 block!"}, 18, 
+				Material.COW_SPAWN_EGG, new Object[] {
+						"<reset><green>Entity getötet: <white>1",
+						"<reset><green>Entity killed: <white>1"},
+				new Object[] {
+						"<reset><white>Du hast 1",
+						"<reset><white>Entity aller Art getötet!",
+						"<reset><white>You have killed 1",
+						"<reset><white>entities of all types!"
+				}, true, 
+				Material.BARRIER, new Object[] {
+						"<reset><red>Entity getötet: <white>1",
+						"<reset><red>Entity killed: <white>1"},
+				null, false);
+		setFileAchievementGoal("kill_entity_10",
+				"<red>Entity getötet: <white>10",
+				"<red>Entity killed: <white>10",
+				StatisticType.KILL_ENTITY, "null", 10,
+				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
+				new Object[] {
+				"<bold><gold>Gratulation!",
+				"<gold>Spieler <white>%player% <gold>hat 10 Entity getötet!",
+				"<bold><gold>Congratulations!",
+				"<gold>Player <white>%player% <gold>has killed 10 entities!"}, 19, 
+				Material.COW_SPAWN_EGG, new Object[] {
+						"<reset><green>Entity getötet: <white>10",
+						"<reset><green>Entity killed: <white>10"},
+				new Object[] {
+						"<reset><white>Du hast 10",
+						"<reset><white>Entity aller Art getötet!",
+						"<reset><white>You have killed 10",
+						"<reset><white>entities of all types!"
+				}, true, 
+				Material.BARRIER, new Object[] {
+						"<reset><red>Entity getötet: <white>10",
+						"<reset><red>Entity killed: <white>10"},
+				null, false);
+		setFileAchievementGoal("kill_entity_100",
+				"<red>Entity getötet: <white>100",
+				"<red>Entity killed: <white>100",
+				StatisticType.KILL_ENTITY, "null", 100,
+				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
+				new Object[] {
+				"<bold><gold>Gratulation!",
+				"<gold>Spieler <white>%player% <gold>hat 100 Entity getötet!",
+				"<bold><gold>Congratulations!",
+				"<gold>Player <white>%player% <gold>has killed 100 entities!"}, 20, 
+				Material.COW_SPAWN_EGG, new Object[] {
+						"<reset><green>Entity getötet: <white>100",
+						"<reset><green>Entity killed: <white>100"},
+				new Object[] {
+						"<reset><white>Du hast 100",
+						"<reset><white>Entity aller Art getötet!",
+						"<reset><white>You have killed 100",
+						"<reset><white>entities of all types!"
+				}, true, 
+				Material.BARRIER, new Object[] {
+						"<reset><red>Entity getötet: <white>100",
+						"<reset><red>Entity killed: <white>100"},
+				null, false);
+		setFileAchievementGoal("kill_entity_1k",
+				"<red>Entity getötet: <white>1k",
+				"<red>Entity killed: <white>1k",
+				StatisticType.KILL_ENTITY, "null", 1_000,
+				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
+				new Object[] {
+				"<bold><gold>Gratulation!",
+				"<gold>Spieler <white>%player% <gold>hat 1k Entity getötet!",
+				"<bold><gold>Congratulations!",
+				"<gold>Player <white>%player% <gold>has killed 1k entities!"}, 21, 
+				Material.COW_SPAWN_EGG, new Object[] {
+						"<reset><green>Entity getötet: <white>1k",
+						"<reset><green>Entity killed: <white>1k"},
+				new Object[] {
+						"<reset><white>Du hast 1k",
+						"<reset><white>Entity aller Art getötet!",
+						"<reset><white>You have killed 1k",
+						"<reset><white>entities of all types!"
+				}, true, 
+				Material.BARRIER, new Object[] {
+						"<reset><red>Entity getötet: <white>1k",
+						"<reset><red>Entity killed: <white>1k"},
+				null, false);
+		setFileAchievementGoal("kill_entity_10k",
+				"<red>Entity getötet: <white>10k",
+				"<red>Entity killed: <white>10k",
+				StatisticType.KILL_ENTITY, "null", 10_000,
+				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
+				new Object[] {
+				"<bold><gold>Gratulation!",
+				"<gold>Spieler <white>%player% <gold>hat 10k Entity getötet!",
+				"<bold><gold>Congratulations!",
+				"<gold>Player <white>%player% <gold>has killed 10k entities!"}, 22, 
+				Material.COW_SPAWN_EGG, new Object[] {
+						"<reset><green>Entity getötet: <white>10k",
+						"<reset><green>Entity killed: <white>10k"},
+				new Object[] {
+						"<reset><white>Du hast 10k",
+						"<reset><white>Entity aller Art getötet!",
+						"<reset><white>You have killed 10k",
+						"<reset><white>entities of all types!"
+				}, true, 
+				Material.BARRIER, new Object[] {
+						"<reset><red>Entity getötet: <white>10k",
+						"<reset><red>Entity killed: <white>10k"},
+				null, false);
+		setFileAchievementGoal("kill_entity_100k",
+				"<red>Entity getötet: <white>100k",
+				"<red>Entity killed: <white>100k",
+				StatisticType.KILL_ENTITY, "null", 100_000,
+				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
+				new Object[] {
+				"<bold><gold>Gratulation!",
+				"<gold>Spieler <white>%player% <gold>hat 100k Entity getötet!",
+				"<bold><gold>Congratulations!",
+				"<gold>Player <white>%player% <gold>has killed 100k entities!"}, 23, 
+				Material.COW_SPAWN_EGG, new Object[] {
+						"<reset><green>Entity getötet: <white>100k",
+						"<reset><green>Entity killed: <white>100k"},
+				new Object[] {
+						"<reset><white>Du hast 100k",
+						"<reset><white>Entity aller Art getötet!",
+						"<reset><white>You have killed 100k",
+						"<reset><white>entities of all types!"
+				}, true, 
+				Material.BARRIER, new Object[] {
+						"<reset><red>Entity getötet: <white>100k",
+						"<reset><red>Entity killed: <white>100k"},
+				null, false);
+		setFileAchievementGoal("kill_entity_1M",
+				"<red>Entity getötet: <white>1 Millionen",
+				"<red>Entity killed: <white>1 Million",
+				StatisticType.KILL_ENTITY, "null", 1_000_000,
+				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
+				new Object[] {
+				"<bold><gold>Gratulation!",
+				"<gold>Spieler <white>%player% <gold>hat 1 Millionen Entity getötet!",
+				"<bold><gold>Congratulations!",
+				"<gold>Player <white>%player% <gold>has killed 1 million entities!"}, 24, 
+				Material.COW_SPAWN_EGG, new Object[] {
+						"<reset><green>Entity getötet: <white>1 Millionen",
+						"<reset><green>Entity killed: <white>1 million"},
+				new Object[] {
+						"<reset><white>Du hast 1 Millionen",
+						"<reset><white>Entity aller Art getötet!",
+						"<reset><white>You have killed 1 million",
+						"<reset><white>entities of all types!"
+				}, true, 
+				Material.BARRIER, new Object[] {
+						"<reset><red>Entity getötet: <white>1 Millionen",
+						"<reset><red>Entity killed: <white>1 Million"},
+				null, false);
+		setFileAchievementGoal("kill_entity_10M",
+				"<red>Entity getötet: <white>10 Millionen",
+				"<red>Entity killed: <white>10 Million",
+				StatisticType.KILL_ENTITY, "null", 10_000_000,
+				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
+				new Object[] {
+				"<bold><gold>Gratulation!",
+				"<gold>Spieler <white>%player% <gold>hat 10 Millionen Entity getötet!",
+				"<bold><gold>Congratulations!",
+				"<gold>Player <white>%player% <gold>has killed 10 million entities!"}, 25, 
+				Material.COW_SPAWN_EGG, new Object[] {
+						"<reset><green>Entity getötet: <white>10 Millionen",
+						"<reset><green>Entity killed: <white>10 million"},
+				new Object[] {
+						"<reset><white>Du hast 10 Millionen",
+						"<reset><white>Entity aller Art getötet!",
+						"<reset><white>You have killed 10 million",
+						"<reset><white>entities of all types!"
+				}, true, 
+				Material.BARRIER, new Object[] {
+						"<reset><red>Entity getötet: <white>10 Millionen",
+						"<reset><red>Entity killed: <white>10 Million"},
+				null, false);
+		setFileAchievementGoal("kill_entity_100M",
+				"<red>Entity getötet: <white>100 Millionen",
+				"<red>Entity killed: <white>100 Million",
+				StatisticType.KILL_ENTITY, "null", 100_000_000,
+				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
+				new Object[] {
+				"<bold><gold>Gratulation!",
+				"<gold>Spieler <white>%player% <gold>hat 100 Millionen Entity getötet!",
+				"<bold><gold>Congratulations!",
+				"<gold>Player <white>%player% <gold>has killed 100 million entities!"}, 26, 
+				Material.COW_SPAWN_EGG, new Object[] {
+						"<reset><green>Entity getötet: <white>100 Millionen",
+						"<reset><green>Entity killed: <white>100 million"},
+				new Object[] {
+						"<reset><white>Du hast 100 Millionen",
+						"<reset><white>Entity aller Art getötet!",
+						"<reset><white>You have killed 100 million",
+						"<reset><white>entities of all types!"
+				}, true, 
+				Material.BARRIER, new Object[] {
+						"<reset><red>Entity getötet: <white>100 Millionen",
+						"<reset><red>Entity killed: <white>100 Million"},
+				null, false);
+		//
+		setFileAchievementGoal("play_time_15_min",
+				"<red>Spielzeit: <white>15 min",
+				"<red>Playtime: <white>15 min",
+				StatisticType.PLAY_ONE_MINUTE, "null", 15,
+				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
+				new Object[] {
+				"<bold><gold>Gratulation!",
+				"<gold>Spieler <white>%player% <gold>hat 1 Minute gespielt!",
+				"<bold><gold>Congratulations!",
+				"<gold>Player <white>%player% <gold>has played 15 minute!"}, 27, 
+				Material.COPPER_BLOCK, new Object[] {
+						"<reset><green>Spielzeit: <white>15 min",
+						"<reset><green>Playtime: <white>15 min"},
+				new Object[] {
+						"<reset><white>Du hast",
+						"<reset><white>15 Minute gespielt!",
+						"<reset><white>You have played",
+						"<reset><white>15 minute!"
+				}, true, 
+				Material.BARRIER, new Object[] {
+						"<reset><red>Spielzeit: <white>15 min",
+						"<reset><red>Spielzeit: <white>15 min"},
+				null, false);
+		setFileAchievementGoal("play_time_30_min",
+				"<red>Spielzeit: <white>30 min",
+				"<red>Playtime: <white>30 min",
+				StatisticType.PLAY_ONE_MINUTE, "null", 30,
+				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
+				new Object[] {
+				"<bold><gold>Gratulation!",
+				"<gold>Spieler <white>%player% <gold>hat 30 Minute gespielt!",
+				"<bold><gold>Congratulations!",
+				"<gold>Player <white>%player% <gold>has played 30 minute!"}, 28, 
+				Material.COPPER_BLOCK, new Object[] {
+						"<reset><green>Spielzeit: <white>30 min",
+						"<reset><green>Playtime: <white>30 min"},
+				new Object[] {
+						"<reset><white>Du hast",
+						"<reset><white>30 Minute gespielt!",
+						"<reset><white>You have played",
+						"<reset><white>30 minute!"
+				}, true, 
+				Material.BARRIER, new Object[] {
+						"<reset><red>Spielzeit: <white>30 min",
+						"<reset><red>Spielzeit: <white>30 min"},
+				null, false);
+		setFileAchievementGoal("play_time_1_h",
+				"<red>Spielzeit: <white>1 Stunde",
+				"<red>Playtime: <white>1 hour",
+				StatisticType.PLAY_ONE_MINUTE, "null", 60,
+				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
+				new Object[] {
+				"<bold><gold>Gratulation!",
+				"<gold>Spieler <white>%player% <gold>hat 1 Stunde gespielt!",
+				"<bold><gold>Congratulations!",
+				"<gold>Player <white>%player% <gold>has played 1 hour!"}, 29, 
+				Material.EXPOSED_COPPER, new Object[] {
+						"<reset><green>Spielzeit: <white>1 Stunde",
+						"<reset><green>Playtime: <white>1 hour"},
+				new Object[] {
+						"<reset><white>Du hast",
+						"<reset><white>1 Stunde gespielt!",
+						"<reset><white>You have played",
+						"<reset><white>1 hour!"
+				}, true, 
+				Material.BARRIER, new Object[] {
+						"<reset><red>Spielzeit: <white>1 Stunde",
+						"<reset><red>Spielzeit: <white>1 hour"},
+				null, false);
+		setFileAchievementGoal("play_time_4_h",
+				"<red>Spielzeit: <white>4 Stunden",
+				"<red>Playtime: <white>4 hours",
+				StatisticType.PLAY_ONE_MINUTE, "null", 4*60,
+				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
+				new Object[] {
+				"<bold><gold>Gratulation!",
+				"<gold>Spieler <white>%player% <gold>hat 4 Stunden gespielt!",
+				"<bold><gold>Congratulations!",
+				"<gold>Player <white>%player% <gold>has played 4 hours!"}, 30, 
+				Material.EXPOSED_COPPER, new Object[] {
+						"<reset><green>Spielzeit: <white>4 Stunden",
+						"<reset><green>Playtime: <white>4 hours"},
+				new Object[] {
+						"<reset><white>Du hast",
+						"<reset><white>4 Stunden gespielt!",
+						"<reset><white>You have played",
+						"<reset><white>4 hours!"
+				}, true, 
+				Material.BARRIER, new Object[] {
+						"<reset><red>Spielzeit: <white>4 Stunden",
+						"<reset><red>Spielzeit: <white>4 hours"},
+				null, false);
+		setFileAchievementGoal("play_time_8_h",
+				"<red>Spielzeit: <white>8 Stunden",
+				"<red>Playtime: <white>8 hours",
+				StatisticType.PLAY_ONE_MINUTE, "null", 8*60,
+				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
+				new Object[] {
+				"<bold><gold>Gratulation!",
+				"<gold>Spieler <white>%player% <gold>hat 8 Stunden gespielt!",
+				"<bold><gold>Congratulations!",
+				"<gold>Player <white>%player% <gold>has played 8 hours!"}, 31, 
+				Material.EXPOSED_COPPER, new Object[] {
+						"<reset><green>Spielzeit: <white>8 Stunden",
+						"<reset><green>Playtime: <white>8 hours"},
+				new Object[] {
+						"<reset><white>Du hast",
+						"<reset><white>8 Stunden gespielt!",
+						"<reset><white>You have played",
+						"<reset><white>8 hours!"
+				}, true, 
+				Material.BARRIER, new Object[] {
+						"<reset><red>Spielzeit: <white>8 Stunden",
+						"<reset><red>Spielzeit: <white>8 hours"},
+				null, false);
+		setFileAchievementGoal("play_time_16_h",
+				"<red>Spielzeit: <white>16 Stunden",
+				"<red>Playtime: <white>16 hours",
+				StatisticType.PLAY_ONE_MINUTE, "null", 16*60,
+				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
+				new Object[] {
+				"<bold><gold>Gratulation!",
+				"<gold>Spieler <white>%player% <gold>hat 16 Stunden gespielt!",
+				"<bold><gold>Congratulations!",
+				"<gold>Player <white>%player% <gold>has played 16 hours!"}, 32, 
+				Material.EXPOSED_COPPER, new Object[] {
+						"<reset><green>Spielzeit: <white>16 Stunden",
+						"<reset><green>Playtime: <white>16 hours"},
+				new Object[] {
+						"<reset><white>Du hast",
+						"<reset><white>16 Stunden gespielt!",
+						"<reset><white>You have played",
+						"<reset><white>16 hours!"
+				}, true, 
+				Material.BARRIER, new Object[] {
+						"<reset><red>Spielzeit: <white>16 Stunden",
+						"<reset><red>Spielzeit: <white>16 hours"},
+				null, false);
+		setFileAchievementGoal("play_time_1_d",
+				"<red>Spielzeit: <white>1 Tag",
+				"<red>Playtime: <white>1 day",
+				StatisticType.PLAY_ONE_MINUTE, "null", 1*24*60,
+				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
+				new Object[] {
+				"<bold><gold>Gratulation!",
+				"<gold>Spieler <white>%player% <gold>hat 1 Tag gespielt!",
+				"<bold><gold>Congratulations!",
+				"<gold>Player <white>%player% <gold>has played 1 day!"}, 33, 
+				Material.WEATHERED_COPPER, new Object[] {
+						"<reset><green>Spielzeit: <white>1 Tag",
+						"<reset><green>Playtime: <white>1 day"},
+				new Object[] {
+						"<reset><white>Du hast",
+						"<reset><white>1 Tag gespielt!",
+						"<reset><white>You have played",
+						"<reset><white>1 day!"
+				}, true, 
+				Material.BARRIER, new Object[] {
+						"<reset><red>Spielzeit: <white>1 Tag",
+						"<reset><red>Spielzeit: <white>1 day"},
+				null, false);
+		setFileAchievementGoal("play_time_7_d",
+				"<red>Spielzeit: <white>7 Tage",
+				"<red>Playtime: <white>7 days",
+				StatisticType.PLAY_ONE_MINUTE, "null", 7*24*60,
+				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
+				new Object[] {
+				"<bold><gold>Gratulation!",
+				"<gold>Spieler <white>%player% <gold>hat 7 Tage gespielt!",
+				"<bold><gold>Congratulations!",
+				"<gold>Player <white>%player% <gold>has played 7 days!"}, 34, 
+				Material.WEATHERED_COPPER, new Object[] {
+						"<reset><green>Spielzeit: <white>7 Tage",
+						"<reset><green>Playtime: <white>7 days"},
+				new Object[] {
+						"<reset><white>Du hast",
+						"<reset><white>7 Tage gespielt!",
+						"<reset><white>You have played",
+						"<reset><white>7 days!"
+				}, true, 
+				Material.BARRIER, new Object[] {
+						"<reset><red>Spielzeit: <white>7 Tage",
+						"<reset><red>Spielzeit: <white>7 days"},
+				null, false);
+		setFileAchievementGoal("play_time_30_d",
+				"<red>Spielzeit: <white>30 Tage",
+				"<red>Playtime: <white>30 days",
+				StatisticType.PLAY_ONE_MINUTE, "null", 30*24*60,
+				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
+				new Object[] {
+				"<bold><gold>Gratulation!",
+				"<gold>Spieler <white>%player% <gold>hat 30 Tage gespielt!",
+				"<bold><gold>Congratulations!",
+				"<gold>Player <white>%player% <gold>has played 30 days!"}, 35, 
+				Material.WEATHERED_COPPER, new Object[] {
+						"<reset><green>Spielzeit: <white>30 Tage",
+						"<reset><green>Playtime: <white>30 days"},
+				new Object[] {
+						"<reset><white>Du hast",
+						"<reset><white>30 Tage gespielt!",
+						"<reset><white>You have played",
+						"<reset><white>30 days!"
+				}, true, 
+				Material.BARRIER, new Object[] {
+						"<reset><red>Spielzeit: <white>30 Tage",
+						"<reset><red>Spielzeit: <white>30 days"},
+				null, false);
+		//
+		setFileAchievementGoal("afk_time_15_min",
+				"<red>Afkzeit: <white>15 min",
+				"<red>Afktime: <white>15 min",
+				StatisticType.AFK_ONE_MINUTE, "null", 15,
+				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
+				new Object[] {
+				"<bold><gold>Gratulation!",
+				"<gold>Spieler <white>%player% <gold>war 1 Minute afk!",
+				"<bold><gold>Congratulations!",
+				"<gold>Player <white>%player% <gold>was afk 15 minute!"}, 36, 
+				Material.COPPER_BLOCK, new Object[] {
+						"<reset><green>Afkzeit: <white>15 min",
+						"<reset><green>Afktime: <white>15 min"},
+				new Object[] {
+						"<reset><white>Du warst",
+						"<reset><white>15 Minute afk!",
+						"<reset><white>You was afk",
+						"<reset><white>15 minute!"
+				}, true, 
+				Material.BARRIER, new Object[] {
+						"<reset><red>Afkzeit: <white>15 min",
+						"<reset><red>Afkzeit: <white>15 min"},
+				null, false);
+		setFileAchievementGoal("afk_time_30_min",
+				"<red>Afkzeit: <white>30 min",
+				"<red>Afktime: <white>30 min",
+				StatisticType.AFK_ONE_MINUTE, "null", 30,
+				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
+				new Object[] {
+				"<bold><gold>Gratulation!",
+				"<gold>Spieler <white>%player% <gold>war 30 Minute afk!",
+				"<bold><gold>Congratulations!",
+				"<gold>Player <white>%player% <gold>was afk 30 minute!"}, 37, 
+				Material.COPPER_BLOCK, new Object[] {
+						"<reset><green>Afkzeit: <white>30 min",
+						"<reset><green>Afktime: <white>30 min"},
+				new Object[] {
+						"<reset><white>Du warst",
+						"<reset><white>30 Minute afk!",
+						"<reset><white>You was afk",
+						"<reset><white>30 minute!"
+				}, true, 
+				Material.BARRIER, new Object[] {
+						"<reset><red>Afkzeit: <white>30 min",
+						"<reset><red>Afkzeit: <white>30 min"},
+				null, false);
+		setFileAchievementGoal("afk_time_1_h",
+				"<red>Afkzeit: <white>1 Stunde",
+				"<red>Afktime: <white>1 hour",
+				StatisticType.AFK_ONE_MINUTE, "null", 60,
+				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
+				new Object[] {
+				"<bold><gold>Gratulation!",
+				"<gold>Spieler <white>%player% <gold>war 1 Stunde afk!",
+				"<bold><gold>Congratulations!",
+				"<gold>Player <white>%player% <gold>was afk 1 hour!"}, 38, 
+				Material.EXPOSED_COPPER, new Object[] {
+						"<reset><green>Afkzeit: <white>1 Stunde",
+						"<reset><green>Afktime: <white>1 hour"},
+				new Object[] {
+						"<reset><white>Du warst",
+						"<reset><white>1 Stunde afk!",
+						"<reset><white>You was afk",
+						"<reset><white>1 hour!"
+				}, true, 
+				Material.BARRIER, new Object[] {
+						"<reset><red>Afkzeit: <white>1 Stunde",
+						"<reset><red>Afkzeit: <white>1 hour"},
+				null, false);
+		setFileAchievementGoal("afk_time_4_h",
+				"<red>Afkzeit: <white>4 Stunden",
+				"<red>Afktime: <white>4 hours",
+				StatisticType.AFK_ONE_MINUTE, "null", 4*60,
+				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
+				new Object[] {
+				"<bold><gold>Gratulation!",
+				"<gold>Spieler <white>%player% <gold>war 4 Stunden afk!",
+				"<bold><gold>Congratulations!",
+				"<gold>Player <white>%player% <gold>was afk 4 hours!"}, 39, 
+				Material.EXPOSED_COPPER, new Object[] {
+						"<reset><green>Afkzeit: <white>4 Stunden",
+						"<reset><green>Afktime: <white>4 hours"},
+				new Object[] {
+						"<reset><white>Du warst",
+						"<reset><white>4 Stunden afk!",
+						"<reset><white>You was afk",
+						"<reset><white>4 hours!"
+				}, true, 
+				Material.BARRIER, new Object[] {
+						"<reset><red>Afkzeit: <white>4 Stunden",
+						"<reset><red>Afkzeit: <white>4 hours"},
+				null, false);
+		setFileAchievementGoal("afk_time_8_h",
+				"<red>Afkzeit: <white>8 Stunden",
+				"<red>Afktime: <white>8 hours",
+				StatisticType.AFK_ONE_MINUTE, "null", 8*60,
+				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
+				new Object[] {
+				"<bold><gold>Gratulation!",
+				"<gold>Spieler <white>%player% <gold>war 8 Stunden afk!",
+				"<bold><gold>Congratulations!",
+				"<gold>Player <white>%player% <gold>was afk 8 hours!"}, 40, 
+				Material.EXPOSED_COPPER, new Object[] {
+						"<reset><green>Afkzeit: <white>8 Stunden",
+						"<reset><green>Afktime: <white>8 hours"},
+				new Object[] {
+						"<reset><white>Du warst",
+						"<reset><white>8 Stunden afk!",
+						"<reset><white>You was afk",
+						"<reset><white>8 hours!"
+				}, true, 
+				Material.BARRIER, new Object[] {
+						"<reset><red>Afkzeit: <white>8 Stunden",
+						"<reset><red>Afkzeit: <white>8 hours"},
+				null, false);
+		setFileAchievementGoal("afk_time_16_h",
+				"<red>Afkzeit: <white>16 Stunden",
+				"<red>Afktime: <white>16 hours",
+				StatisticType.AFK_ONE_MINUTE, "null", 16*60,
+				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
+				new Object[] {
+				"<bold><gold>Gratulation!",
+				"<gold>Spieler <white>%player% <gold>war 16 Stunden afk!",
+				"<bold><gold>Congratulations!",
+				"<gold>Player <white>%player% <gold>was afk 16 hours!"}, 41, 
+				Material.EXPOSED_COPPER, new Object[] {
+						"<reset><green>Afkzeit: <white>16 Stunden",
+						"<reset><green>Afktime: <white>16 hours"},
+				new Object[] {
+						"<reset><white>Du warst",
+						"<reset><white>16 Stunden afk!",
+						"<reset><white>You was afk",
+						"<reset><white>16 hours!"
+				}, true, 
+				Material.BARRIER, new Object[] {
+						"<reset><red>Afkzeit: <white>16 Stunden",
+						"<reset><red>Afkzeit: <white>16 hours"},
+				null, false);
+		setFileAchievementGoal("afk_time_1_d",
+				"<red>Afkzeit: <white>1 Tag",
+				"<red>Afktime: <white>1 day",
+				StatisticType.AFK_ONE_MINUTE, "null", 1*24*60,
+				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
+				new Object[] {
+				"<bold><gold>Gratulation!",
+				"<gold>Spieler <white>%player% <gold>war 1 Tag afk!",
+				"<bold><gold>Congratulations!",
+				"<gold>Player <white>%player% <gold>was afk 1 day!"}, 42, 
+				Material.WEATHERED_COPPER, new Object[] {
+						"<reset><green>Afkzeit: <white>1 Tag",
+						"<reset><green>Afktime: <white>1 day"},
+				new Object[] {
+						"<reset><white>Du warst",
+						"<reset><white>1 Tag afk!",
+						"<reset><white>You was afk",
+						"<reset><white>1 day!"
+				}, true, 
+				Material.BARRIER, new Object[] {
+						"<reset><red>Afkzeit: <white>1 Tag",
+						"<reset><red>Afkzeit: <white>1 day"},
+				null, false);
+		setFileAchievementGoal("afk_time_7_d",
+				"<red>Afkzeit: <white>7 Tage",
+				"<red>Afktime: <white>7 days",
+				StatisticType.AFK_ONE_MINUTE, "null", 7*24*60,
+				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
+				new Object[] {
+				"<bold><gold>Gratulation!",
+				"<gold>Spieler <white>%player% <gold>war 7 Tage afk!",
+				"<bold><gold>Congratulations!",
+				"<gold>Player <white>%player% <gold>was afk 7 days!"}, 43, 
+				Material.WEATHERED_COPPER, new Object[] {
+						"<reset><green>Afkzeit: <white>7 Tage",
+						"<reset><green>Afktime: <white>7 days"},
+				new Object[] {
+						"<reset><white>Du warst",
+						"<reset><white>7 Tage afk!",
+						"<reset><white>You was afk",
+						"<reset><white>7 days!"
+				}, true, 
+				Material.BARRIER, new Object[] {
+						"<reset><red>Afkzeit: <white>7 Tage",
+						"<reset><red>Afkzeit: <white>7 days"},
+				null, false);
+		setFileAchievementGoal("afk_time_30_d",
+				"<red>Afkzeit: <white>30 Tage",
+				"<red>Afktime: <white>30 days",
+				StatisticType.AFK_ONE_MINUTE, "null", 30*24*60,
+				new Object[] {"money give %player% 100", "xp add %player% 100 points"},	true,
+				new Object[] {
+				"<bold><gold>Gratulation!",
+				"<gold>Spieler <white>%player% <gold>war 30 Tage afk!",
+				"<bold><gold>Congratulations!",
+				"<gold>Player <white>%player% <gold>was afk 30 days!"}, 44, 
+				Material.WEATHERED_COPPER, new Object[] {
+						"<reset><green>Afkzeit: <white>30 Tage",
+						"<reset><green>Afktime: <white>30 days"},
+				new Object[] {
+						"<reset><white>Du warst",
+						"<reset><white>30 Tage afk!",
+						"<reset><white>You was afk",
+						"<reset><white>30 days!"
+				}, true, 
+				Material.BARRIER, new Object[] {
+						"<reset><red>Afkzeit: <white>30 Tage",
+						"<reset><red>Afkzeit: <white>30 days"},
 				null, false);
 	}
 	
@@ -1653,7 +2670,7 @@ public class YamlManager
 		String path = "";
 		path = "47"; //Past
 		w.put(path+".Material", new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				Material.ARROW.toString()}));
+				Material.PLAYER_HEAD.toString()}));
 		w.put(path+".HeadTexture",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"https://textures.minecraft.net/texture/1a1ef398a17f1af7477014517f7f141d886df41a32c738cc8a83fb50297bd921"}));

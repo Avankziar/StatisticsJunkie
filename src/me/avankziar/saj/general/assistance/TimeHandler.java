@@ -14,12 +14,12 @@ import java.util.TimeZone;
 
 public class TimeHandler
 {
-	private final static long ss = 1000;
-	private static long mm = 1000*60;
-	private static long HH = 1000*60*60;
-	private static long dd = 1000*60*60*24;
-	private static long MM = 1000*60*60*24*30;
-	private final static long yyyy = 1000*60*60*24*365;
+	private final static long ss = 1000L;
+	private final static long mm = 1000L*60;
+	private final static long HH = 1000L*60*60;
+	private final static long dd = 1000L*60*60*24;
+	private final static long MM = 1000L*60*60*24*30;
+	private final static long yyyy = 1000L*60*60*24*365;
 	
 	public static String getDateTime(long l)
 	{
@@ -61,34 +61,40 @@ public class TimeHandler
 		return new Time(l).toLocalTime().format(DateTimeFormatter.ofPattern(format));
 	}
 	
+	public static void main(String[] args)
+	{
+		long l = 1000*60*68;
+		System.out.println("time: "+l+" | timeformat: "+getRepeatingTime(l, "HH:mm"));
+	}
+	
 	public static String getRepeatingTime(long l, String timeformat) // yyyy-dd-HH:mm
 	{
 		long ll = l;
 		String year = "";
-		int y = 0;
+		long y = 0;
 		while(ll >= yyyy)
 		{
 			ll = ll - yyyy;
 			y++;
 		}
-		year += String.valueOf(y);
+		year = String.valueOf(y);
 		String month = "";
-		int M = 0;
+		long M = 0;
 		while(ll >= MM)
 		{
 			ll = ll - MM;
 			M++;
 		}
-		month += String.valueOf(M);
+		month = String.valueOf(M);
 		String day = "";
-		int d = 0;
+		long d = 0;
 		while(ll >= dd)
 		{
 			ll = ll - dd;
 			d++;
 		}
-		day += String.valueOf(d);
-		int H = 0;
+		day = String.valueOf(d);
+		long H = 0;
 		String hour = "";
 		while(ll >= HH)
 		{
@@ -100,7 +106,7 @@ public class TimeHandler
 			hour += String.valueOf(0);
 		}
 		hour += String.valueOf(H);
-		int m = 0;
+		long m = 0;
 		String min = "";
 		while(ll >= mm)
 		{
@@ -111,8 +117,8 @@ public class TimeHandler
 		{
 			min += String.valueOf(0);
 		}
-		min += String.valueOf(m)+":";
-		int s = 0;
+		min += String.valueOf(m);
+		long s = 0;
 		String sec = "";
 		while(ll >= ss)
 		{
@@ -123,7 +129,7 @@ public class TimeHandler
 		{
 			sec += String.valueOf(0);
 		}
-		sec+= String.valueOf(s);
+		sec += String.valueOf(s);
 		String time = timeformat.replace("yyyy", year)
 								.replace("MM", month)
 								.replace("dd", day)

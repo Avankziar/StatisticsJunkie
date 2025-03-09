@@ -8,7 +8,7 @@ import me.avankziar.saj.velocity.SAJ;
 
 public class StatisticHandler
 {	
-	public static void incrementStatistic(UUID uuid, StatisticType statisticType, long add)
+	public static void incrementStatistic(UUID uuid, StatisticType statisticType, double add)
 	{
 		StatisticEntry se = SAJ.getPlugin().getMysqlHandler().getData(new StatisticEntry(), 
 				"`player_uuid` = ? AND `statistic_type` = ? AND `material_or_entitytype` = ?", 

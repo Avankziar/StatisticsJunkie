@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -19,6 +18,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
+import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.SimplePluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -38,6 +38,7 @@ import me.avankziar.saj.general.cmdtree.CommandSuggest.Type;
 import me.avankziar.saj.general.database.Language.ISO639_2B;
 import me.avankziar.saj.general.database.YamlHandler;
 import me.avankziar.saj.general.database.YamlManager;
+import me.avankziar.saj.general.ifh.StatisticProvider;
 import me.avankziar.saj.general.objects.PlayerData;
 import me.avankziar.saj.spigot.ModifierValueEntry.Bypass;
 import me.avankziar.saj.spigot.assistance.BackgroundTask;
@@ -137,6 +138,7 @@ public class SAJ extends JavaPlugin
 		setupBypassPerm();
 		setupCommandTree();
 		setupListeners();
+		setupIFHProvider();
 		setupIFHConsumer();
 		setupBstats();
 		FileAchievementGoalHandler.init(false);
@@ -435,6 +437,24 @@ public class SAJ extends JavaPlugin
 		}
 		logger.info(pluginname+" hook with "+externPluginName);
 		return true;
+	}
+	
+	private void setupIFHProvider()
+	{
+		setupIFHStatistic();
+	}
+	
+	private void setupIFHStatistic()
+	{
+		if(plugin.getServer().getPluginManager().isPluginEnabled("InterfaceHub")) 
+		{
+            plugin.getServer().getServicesManager().register(
+        			me.avankziar.ifh.general.statistic.Statistic.class,
+        			new StatisticProvider(mysqlHandler),
+             		this,
+             		ServicePriority.Normal);
+            logger.info(pluginname + " detected InterfaceHub >>> Statistic.class is provided!");
+		}
 	}
 	
 	private void setupIFHAdministration()

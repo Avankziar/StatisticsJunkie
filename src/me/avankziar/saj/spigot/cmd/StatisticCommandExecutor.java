@@ -45,8 +45,8 @@ public class StatisticCommandExecutor implements CommandExecutor
 	private static boolean mile;
 	private static double cm_to_mile = Double.valueOf("160934.0");
 	private static ArrayList<String> matORent = new ArrayList<>();
-	private static long dd = 1000*60*60*24;
-	private static long MM = 1000*60*60*24*30;
+	private final static long dd = 1000*60*60*24;
+	private final static long MM = 1000*60*60*24*30;
 	private final static long yyyy = 1000*60*60*24*365;
 	
 	public StatisticCommandExecutor(SAJ plugin, CommandConstructor cc)
@@ -228,7 +228,7 @@ public class StatisticCommandExecutor implements CommandExecutor
 				StatisticEntry se = plugin.getMysqlHandler().getData(new StatisticEntry(),
 						"`player_uuid` = ? AND `statistic_type` = ?",
 						player.getUniqueId().toString(), StatisticType.JUMP.toString());
-				mov += se != null ? se.getStatisticValue() * 100.0 : 0.0;
+				mov += se != null ? se.getStatisticValue() * 125.0 : 0.0;
 				msg.add(plugin.getYamlHandler().getLang().getString("Statistic.Base."+sortingType.toString())
 						.replace("%statisticcmd%", cmd)
 						.replace("%value%", formatDouble(convertFromCentiMeter(mov))+getUnit(mov)));
@@ -244,9 +244,37 @@ public class StatisticCommandExecutor implements CommandExecutor
 				sb1.append(")");
 				double mov = plugin.getMysqlHandler().getSum(new StatisticEntry(), "`statistic_value`",
 						sb1.toString(), ob.toArray(new Object[ob.size()]));
-				msg.add(plugin.getYamlHandler().getLang().getString("Statistic.Base."+sortingType.toString())
-						.replace("%statisticcmd%", cmd)
-						.replace("%value%", formatDouble(mov)));
+				if(sortingType == SortingType.TIME)
+				{
+					mov = mov * 60 * 1000.0;
+					long time = (long) mov; //in ms
+					String format = null;
+					if(time < dd)
+					{
+						format = TimeHandler.getRepeatingTime(time, 
+								SAJ.getPlugin().getYamlHandler().getLang().getString("Statistic.TimeScale.UnderDays"));
+					} else if(time < MM && time >= dd)
+					{
+						format = TimeHandler.getRepeatingTime(time, 
+								SAJ.getPlugin().getYamlHandler().getLang().getString("Statistic.TimeScale.UnderMonths"));
+					} else if(time < yyyy && time >= MM)
+					{
+						format = TimeHandler.getRepeatingTime(time, 
+								SAJ.getPlugin().getYamlHandler().getLang().getString("Statistic.TimeScale.UnderYears"));
+					} else
+					{
+						format = TimeHandler.getRepeatingTime(time, 
+								SAJ.getPlugin().getYamlHandler().getLang().getString("Statistic.TimeScale.OverYears"));
+					}
+					msg.add(plugin.getYamlHandler().getLang().getString("Statistic.Base."+sortingType.toString())
+							.replace("%statisticcmd%", cmd)
+							.replace("%value%", format));
+				} else
+				{
+					msg.add(plugin.getYamlHandler().getLang().getString("Statistic.Base."+sortingType.toString())
+							.replace("%statisticcmd%", cmd)
+							.replace("%value%", formatDouble(mov)));
+				}
 			}
 		}
 		msg.forEach(x -> MessageHandler.sendMessage(player, x));
@@ -266,14 +294,14 @@ public class StatisticCommandExecutor implements CommandExecutor
 				return;
 			}
 			msg.add(plugin.getYamlHandler().getLang().getString("Statistic.Headline")
-					.replace("%statistic%", sortingType.toString()));
+					.replace("%statistic%", translate(sortingType)));
 			for(StatisticType st : hst)
 			{
 				StatisticEntry se = plugin.getMysqlHandler().getData(new StatisticEntry(),
 						"`player_uuid` = ? AND `statistic_type` = ? AND `material_or_entitytype` = ?", 
 						player.getUniqueId().toString(), st.toString(), "null");
 				msg.add(plugin.getYamlHandler().getLang().getString("Statistic.Substatistic.Info")
-						.replace("%statistic%", st.toString())
+						.replace("%statistic%", translate(st))
 						.replace("%value%", String.valueOf(se == null ? 0 : se.getStatisticValue())));
 			}
 			msg.forEach(x -> MessageHandler.sendMessage(player, x));
@@ -333,7 +361,7 @@ public class StatisticCommandExecutor implements CommandExecutor
 			return;
 		}
 		msg.add(plugin.getYamlHandler().getLang().getString("Statistic.Headline")
-				.replace("%statistic%", st.toString()));
+				.replace("%statistic%", translate(st.toString())));
 		for(StatisticEntry se : ase)
 		{
 			if(se == null)
@@ -411,11 +439,11 @@ public class StatisticCommandExecutor implements CommandExecutor
 		if(ase == null || ase.isEmpty())
 		{
 			MessageHandler.sendMessage(player, plugin.getYamlHandler().getLang().getString("Statistic.NoEntryExist")
-					.replace("%statistic%", sortingType.toString()));
+					.replace("%statistic%", translate(sortingType)));
 			return;
 		}
 		msg.add(plugin.getYamlHandler().getLang().getString("Statistic.Headline")
-				.replace("%statistic%", sortingType.toString()));
+				.replace("%statistic%", translate(sortingType)));
 		for(StatisticEntry se : ase)
 		{
 			if(se == null)
@@ -424,15 +452,15 @@ public class StatisticCommandExecutor implements CommandExecutor
 			}
 			if(se.getStatisticType().toString().endsWith("ONE_CM"))
 			{
-				double mov = se != null ? se.getStatisticValue() * 100.0 : 0.0;
+				double mov = se != null ? se.getStatisticValue() : 0.0;
 				msg.add(plugin.getYamlHandler().getLang().getString("Statistic.Statistic.Info")
-						.replace("%statistic%", se.getStatisticType().toString())
+						.replace("%statistic%", translate(se.getStatisticType()))
 						.replace("%value%", formatDouble(convertFromCentiMeter(mov))+getUnit(mov)));
 				
 			} else if(se.getStatisticType().toString().endsWith("ONE_MINUTE"))
 			{
-				double mov = se != null ? se.getStatisticValue() * 1000.0 : 0.0;
-				long time = (long) mov;
+				double mov = se != null ? se.getStatisticValue() * 60 * 1000.0 : 0.0;
+				long time = (long) mov; //in ms
 				String format = null;
 				if(time < dd)
 				{
@@ -452,12 +480,12 @@ public class StatisticCommandExecutor implements CommandExecutor
 							SAJ.getPlugin().getYamlHandler().getLang().getString("Statistic.TimeScale.OverYears"));
 				}
 				msg.add(plugin.getYamlHandler().getLang().getString("Statistic.Statistic.Info")
-						.replace("%statistic%", se.getStatisticType().toString())
+						.replace("%statistic%", translate(se.getStatisticType()))
 						.replace("%value%", format));
 			} else
 			{
 				msg.add(plugin.getYamlHandler().getLang().getString("Statistic.Statistic.Info")
-						.replace("%statistic%", se.getStatisticType().toString())
+						.replace("%statistic%", translate(se.getStatisticType()))
 						.replace("%value%", String.valueOf(se.getStatisticValue())));
 			}
 		}
@@ -534,7 +562,19 @@ public class StatisticCommandExecutor implements CommandExecutor
 		DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(l);
 		DecimalFormatSymbols symbols = formatter.getDecimalFormatSymbols();
 		formatter.setDecimalFormatSymbols(symbols);
+		formatter.setMaximumFractionDigits(3);
+		formatter.setMinimumFractionDigits(0);
 		return formatter.format(d);
+	}
+	
+	private static String translate(SortingType st)
+	{
+		return SAJ.getPlugin().getYamlHandler().getLang().getString("Statistic.Translate."+st.toString(), st.toString());
+	}
+	
+	private static String translate(StatisticType st)
+	{
+		return SAJ.getPlugin().getYamlHandler().getLang().getString("Statistic.Translate."+st.toString(), st.toString());
 	}
 	
 	private static String translate(String n)

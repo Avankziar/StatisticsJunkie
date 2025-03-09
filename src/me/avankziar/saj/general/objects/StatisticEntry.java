@@ -21,12 +21,12 @@ public class StatisticEntry implements MysqlTable<StatisticEntry>
 	private UUID uuid;
 	private StatisticType statisticType;
 	private String materialEntityType;
-	private long statisticValue;
+	private double statisticValue;
 	
 	public StatisticEntry() {}
 	
 	public StatisticEntry(long id, UUID uuid, StatisticType statisticType,
-			String materialEntityType, long statisticValue)
+			String materialEntityType, double statisticValue)
 	{
 		setId(id);
 		setUUID(uuid);
@@ -72,11 +72,11 @@ public class StatisticEntry implements MysqlTable<StatisticEntry>
 		this.materialEntityType = materialEntityType;
 	}
 
-	public long getStatisticValue() {
+	public double getStatisticValue() {
 		return statisticValue;
 	}
 
-	public void setStatisticValue(long statisticValue) {
+	public void setStatisticValue(double statisticValue) {
 		this.statisticValue = statisticValue;
 	}
 
@@ -93,7 +93,7 @@ public class StatisticEntry implements MysqlTable<StatisticEntry>
 				+ " player_uuid char(36) NOT NULL,"
 				+ " statistic_type text,"
 				+ " material_or_entitytype text,"
-				+ " statistic_value bigint);");
+				+ " statistic_value double);");
 		return mysqlSetup.baseSetup(sql.toString());
 	}
 
@@ -109,7 +109,7 @@ public class StatisticEntry implements MysqlTable<StatisticEntry>
 	        ps.setString(1, getUUID().toString());
 	        ps.setString(2, getStatisticType().toString());
 	        ps.setString(3, getMaterialEntityType());
-	        ps.setLong(4, getStatisticValue());
+	        ps.setDouble(4, getStatisticValue());
 	        int i = ps.executeUpdate();
 	        MysqlBaseHandler.addRows(QueryType.INSERT, i);
 	        return true;
@@ -132,7 +132,7 @@ public class StatisticEntry implements MysqlTable<StatisticEntry>
 			ps.setString(1, getUUID().toString());
 	        ps.setString(2, getStatisticType().toString());
 	        ps.setString(3, getMaterialEntityType());
-	        ps.setLong(4, getStatisticValue());
+	        ps.setDouble(4, getStatisticValue());
 			int i = 5;
 			for(Object o : whereObject)
 			{
@@ -174,7 +174,7 @@ public class StatisticEntry implements MysqlTable<StatisticEntry>
 						UUID.fromString(rs.getString("player_uuid")),
 						StatisticType.valueOf(rs.getString("statistic_type")),
 						rs.getString("material_or_entitytype"),
-						rs.getLong("statistic_value")));
+						rs.getDouble("statistic_value")));
 			}
 			return al;
 		} catch (SQLException e)

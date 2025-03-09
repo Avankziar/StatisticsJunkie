@@ -9,7 +9,7 @@ import me.avankziar.saj.general.objects.StatisticEntry;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
-public class VotifierListener  implements Listener
+public class VotifierListener implements Listener
 {
 	@EventHandler
 	public void onVote(VotifierEvent event)

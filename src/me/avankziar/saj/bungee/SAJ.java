@@ -5,14 +5,17 @@ import java.util.logging.Logger;
 import me.avankziar.ifh.bungee.IFH;
 import me.avankziar.ifh.bungee.administration.Administration;
 import me.avankziar.ifh.bungee.plugin.RegisteredServiceProvider;
+import me.avankziar.ifh.bungee.plugin.ServicePriority;
 import me.avankziar.saj.bungee.database.MysqlHandler;
 import me.avankziar.saj.bungee.database.MysqlSetup;
 import me.avankziar.saj.bungee.hook.VotifierListener;
 import me.avankziar.saj.bungee.listener.PlayerChatAndCommandListener;
 import me.avankziar.saj.bungee.listener.PlayerJoinLeaveListener;
+import me.avankziar.saj.bungee.listener.PlayerStatisticIncrementListener;
 import me.avankziar.saj.bungee.metric.Metrics;
 import me.avankziar.saj.general.database.YamlHandler;
 import me.avankziar.saj.general.database.YamlManager;
+import me.avankziar.saj.general.ifh.StatisticProvider;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.PluginManager;
 
@@ -55,7 +58,8 @@ public class SAJ extends Plugin
 			mysqlHandler = new MysqlHandler(plugin);
 		}
 		
-		ListenerSetup();
+		listenerSetup();
+		setupIFHProvider();
 		setupBstats();
 	}
 	
@@ -113,16 +117,34 @@ public class SAJ extends Plugin
 		SAJ.yamlManager = yamlManager;
 	}
 	
-	public void ListenerSetup()
+	public void listenerSetup()
 	{
 		PluginManager pm = getProxy().getPluginManager();
 		pm.registerListener(plugin, new PlayerJoinLeaveListener(plugin));
 		pm.registerListener(plugin, new PlayerChatAndCommandListener());
+		pm.registerListener(plugin, new PlayerStatisticIncrementListener());
         if(getProxy().getPluginManager().getPlugin("NuVotifier") != null
         		|| getProxy().getPluginManager().getPlugin("VotifierPlus") != null) 
         {
         	pm.registerListener(plugin, new VotifierListener());
         }
+	}
+	
+	private void setupIFHProvider()
+	{
+		Plugin ifhp = plugin.getProxy().getPluginManager().getPlugin("InterfaceHub");
+        if (ifhp == null) 
+        {
+            return;
+        }
+        me.avankziar.ifh.bungee.IFH ifh = (me.avankziar.ifh.bungee.IFH) ifhp;
+        try
+        {
+            ifh.getServicesManager().register(
+             		me.avankziar.ifh.general.statistic.Statistic.class,
+             		new StatisticProvider(mysqlHandler), plugin, ServicePriority.Normal);
+            logger.info(pluginname + " detected InterfaceHub >>> Statistic.class is provided!");
+        } catch(NoClassDefFoundError e){}
 	}
 	
 	private void setupIFHAdministration()

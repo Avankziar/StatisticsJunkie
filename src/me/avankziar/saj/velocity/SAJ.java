@@ -22,16 +22,19 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import me.avankziar.ifh.velocity.IFH;
 import me.avankziar.ifh.velocity.administration.Administration;
 import me.avankziar.ifh.velocity.plugin.RegisteredServiceProvider;
+import me.avankziar.ifh.velocity.plugin.ServicePriority;
 import me.avankziar.saj.general.assistance.Utility;
 import me.avankziar.saj.general.cmdtree.BaseConstructor;
 import me.avankziar.saj.general.database.YamlHandler;
 import me.avankziar.saj.general.database.YamlManager;
+import me.avankziar.saj.general.ifh.StatisticProvider;
 import me.avankziar.saj.velocity.assistance.BackgroundTask;
 import me.avankziar.saj.velocity.database.MysqlHandler;
 import me.avankziar.saj.velocity.database.MysqlSetup;
 import me.avankziar.saj.velocity.hook.VotifierListener;
 import me.avankziar.saj.velocity.listener.JoinLeaveListener;
 import me.avankziar.saj.velocity.listener.PlayerChatAndCommandListener;
+import me.avankziar.saj.velocity.listener.PlayerStatisticIncrementListener;
 import me.avankziar.saj.velocity.metric.Metrics;
 
 @Plugin(
@@ -105,6 +108,7 @@ public class SAJ
         
 		BaseConstructor.init(yamlHandler);
         setListeners();
+        setupIFHProvider();
         setupBstats();
         new BackgroundTask(plugin);
     }
@@ -188,6 +192,7 @@ public class SAJ
     	EventManager em = server.getEventManager();
     	em.register(this, new JoinLeaveListener(plugin));
     	em.register(this, new PlayerChatAndCommandListener());
+    	em.register(this, new PlayerStatisticIncrementListener());
     	Optional<PluginContainer> nuv = plugin.getServer().getPluginManager().getPlugin("nuvotifier");
     	Optional<PluginContainer> vp = plugin.getServer().getPluginManager().getPlugin("votifierplus");
         if (nuv.isPresent() || vp.isPresent()) 
@@ -196,6 +201,25 @@ public class SAJ
             return;
         }
     }
+    
+    private void setupIFHProvider()
+	{
+		Optional<PluginContainer> ifhp = getServer().getPluginManager().getPlugin("interfacehub");
+		Optional<PluginContainer> plugin = getServer().getPluginManager().getPlugin(pluginname.toLowerCase());
+        if (ifhp.isEmpty()) 
+        {
+        	logger.info(pluginname + " dont find InterfaceHub!");
+            return;
+        }
+        me.avankziar.ifh.velocity.IFH ifh = IFH.getPlugin();
+        try
+        {
+            ifh.getServicesManager().register(
+             		me.avankziar.ifh.general.statistic.Statistic.class,
+             		new StatisticProvider(mysqlHandler), plugin.get(), ServicePriority.Normal);
+            logger.info(pluginname + " detected InterfaceHub >>> Administration.class is provided!");
+        } catch(NoClassDefFoundError e){}
+	}
     
     private void setupIFHAdministration()
 	{ 
