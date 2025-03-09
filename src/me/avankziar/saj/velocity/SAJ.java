@@ -217,7 +217,7 @@ public class SAJ
             ifh.getServicesManager().register(
              		me.avankziar.ifh.general.statistic.Statistic.class,
              		new StatisticProvider(mysqlHandler), plugin.get(), ServicePriority.Normal);
-            logger.info(pluginname + " detected InterfaceHub >>> Administration.class is provided!");
+            logger.info(pluginname + " detected InterfaceHub >>> Statistic.class is provided!");
         } catch(NoClassDefFoundError e){}
 	}
     
